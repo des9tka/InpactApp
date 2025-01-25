@@ -1,7 +1,15 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Depends
 from typing import List, Optional
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+from core.db import init_db, get_session
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+	init_db()
+	yield
+
+app = FastAPI(lifespan=lifespan)
 
 
 # @app.get("/inpacts", response_model=List[InpactModel])

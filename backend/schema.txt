@@ -1,0 +1,37 @@
+/// Start Desc ///
+	* Main Instance -> Project (
+		Id: int (after order num);
+		Name | str;
+		Created_At | date;
+		Updated_At | date;
+		Workers | [WorkerId];
+		Founder | WorkerId;
+		Inpacts | [Inpactinstance];
+	)
+
+	* Project Child Instance -> Inpact (
+		Id: int (after order num);
+		Worker | WorkerId;
+		Title | str;
+		Description | str;
+		Type | "feat"/"fix"/"refactor"/"docs"/"style"/"perf"/"test"/"revert"/"wip"/"build"/"merge";
+		Inpact | float;
+		Created_At | date;
+		Updated_At | date;
+
+	) 
+
+	* User Intsance -> Worker (
+		Id | int (after order num);
+		email | str;
+		name | str;
+		surname | str;
+		Created_At | date;
+		Updated_At | date;
+	)
+/// End Desc /// 
+------
+/// Start ToolsList ///
+	Frontend: NextJS, Redux, @Redux/toolkit, Formik;
+	Backend: FastApi, SQLModel;
+	Storage: SQLite;

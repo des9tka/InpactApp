@@ -1,0 +1,16 @@
+### LIST Inpacts
+### Inpacts: All;
+GET http://127.0.0.1:8000/inpacts
+
+### Inpacts: Filter;
+GET http://127.0.0.1:8000/inpacts?type=feat
+
+### Inpacts: By ID;
+GET http://127.0.0.1:8000/inpacts/1
+
+### Inpacts: Filter Error;
+GET http://127.0.0.1:8000/inpacts?type=error
+
+### Inpacts: ID Error;
+GET http://127.0.0.1:8000/inpacts/123123
+
