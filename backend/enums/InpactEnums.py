@@ -1,6 +1,6 @@
 from enum import Enum
 
-class InpactTypeModel(Enum):
+class InpactTypeEnum(Enum):
     FEAT = "Feat"
     FIX = "Fix"
     REF = "Ref"

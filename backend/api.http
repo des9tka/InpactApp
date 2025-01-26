@@ -1,16 +1,52 @@
 ### LIST Inpacts
 ### Inpacts: All;
 GET http://127.0.0.1:8000/inpacts
+Content-Type: application/json
+
 
 ### Inpacts: Filter;
 GET http://127.0.0.1:8000/inpacts?type=feat
+Content-Type: application/json
+
 
 ### Inpacts: By ID;
 GET http://127.0.0.1:8000/inpacts/1
+Content-Type: application/json
+
 
 ### Inpacts: Filter Error;
 GET http://127.0.0.1:8000/inpacts?type=error
+Content-Type: application/json
+
 
 ### Inpacts: ID Error;
 GET http://127.0.0.1:8000/inpacts/123123
+Content-Type: application/json
 
+
+###
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+	"email": "test71@gmail.com",
+    "password": "test"
+}
+
+
+###
+POST http://127.0.0.1:8000/auth/register
+Content-Type: application/json
+
+{
+	"email": "test71@gmail.com",
+    "password": "test",
+    "username": "user45e342",
+    "name": null,
+    "surname": null
+}
+
+
+###
+GET http://127.0.0.1:8000/users
+Content-Type: application/json
