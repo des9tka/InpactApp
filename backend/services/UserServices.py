@@ -33,3 +33,7 @@ def getUserByService(session: Session, id=None, email=None, username=None):
     )
     return session.exec(query).first()
 	
+# Get All Users;
+def getAllUsers(session):
+    from models.UserModels import UserModel
+    return session.exec(select(UserModel)).all()

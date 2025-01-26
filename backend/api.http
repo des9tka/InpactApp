@@ -1,4 +1,5 @@
-###
+--- AUTH ---
+### Log in with Email amd Password (required);
 POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
@@ -8,7 +9,7 @@ Content-Type: application/json
 }
 
 
-###
+### Sign in with Email, Password, Username (required);
 POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
@@ -19,6 +20,8 @@ Content-Type: application/json
 }
 
 
-###
+---USERS---
+### Get all Users;
 GET http://127.0.0.1:8000/users
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODAwMDg4MH0.27SF3FAgBJECSPBIWF3SfR3_7LKK-_vhhLNUqqVzAFo

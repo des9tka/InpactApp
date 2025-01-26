@@ -1,35 +1,37 @@
 import os
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from datetime import timedelta, timezone
+from datetime import timedelta, timezone, datetime
 from jose import jwt, JWTError
 from enums.TokenEnums import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TokenEnum
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 # OAuth2 schema;
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
-# Create Access and Refresh Tokens;
-async def create_tokens(user_id: int):
-    # Генерация access токена
-    access_expires_delta = timedelta(hours=ACCESS_TOKEN_TYPE.EXPIRES_TIME.value)
-    access_token = await create_access_token(user_id, TokenEnum.ACCESS, access_expires_delta)
-
-    # Генерация refresh токена
-    refresh_expires_delta = timedelta(hours=REFRESH_TOKEN_TYPE.EXPIRES_TIME.value)
-    refresh_token = await create_access_token(user_id, TokenEnum.REFRESH, refresh_expires_delta)
-
-    return {"access_token": access_token, "refresh_token": refresh_token}
-
-
 # Create a single token (access or refresh);
-async def create_access_token(user_id: int, token_type: TokenEnum, expires_delta: timedelta):
+async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timedelta):
     encode = {"id": user_id, "type": token_type.value}
-    expires = timezone.utc() + expires_delta
+    expires = datetime.now(timezone.utc) + expires_delta
     encode.update({"exp": expires})
 
-    return jwt.encode(encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("HS256"))
+    return jwt.encode(encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM"))
+
+
+# Create Access and Refresh Tokens;
+async def create_access_refresh_tokens(user_id: int):
+
+    access_expires_delta = timedelta(hours=ACCESS_TOKEN_TYPE.EXPIRES_TIME.value)
+    access_token = await create_token(user_id, TokenEnum.ACCESS, access_expires_delta)
+
+    refresh_expires_delta = timedelta(hours=REFRESH_TOKEN_TYPE.EXPIRES_TIME.value)
+    refresh_token = await create_token(user_id, TokenEnum.REFRESH, refresh_expires_delta)
+
+    return {"access_token": access_token, "refresh_token": refresh_token}
 
 
 # Get User ID by Token;
@@ -54,11 +56,10 @@ async def get_user_id_by_token(token: str = Depends(oauth2_bearer)):
 # Refresh Access Token using Refresh Token;
 async def refresh_access_token(refresh_token: str = Depends(oauth2_bearer)):
     try:
-        # Декодируем refresh токен
+        
         payload = jwt.decode(refresh_token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("HS256")])
         token_type = payload.get("type")
 
-        # Проверяем, что это refresh токен
         if token_type != TokenEnum.REFRESH.value:
             raise HTTPException(detail="Invalid token type.", status_code=401)
         
@@ -66,9 +67,8 @@ async def refresh_access_token(refresh_token: str = Depends(oauth2_bearer)):
         if not user_id:
             raise HTTPException(detail="Couldn't validate user.", status_code=401)
 
-        # Создаем новый access токен для пользователя
         access_expires_delta = timedelta(hours=ACCESS_TOKEN_TYPE.EXPIRES_TIME.value)
-        new_access_token = await create_access_token(user_id, TokenEnum.ACCESS, access_expires_delta)
+        new_access_token = await create_token(user_id, TokenEnum.ACCESS, access_expires_delta)
 
         return {"access_token": new_access_token}
     

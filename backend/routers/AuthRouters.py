@@ -1,6 +1,5 @@
 from sqlmodel import Session
-from fastapi import APIRouter
-from fastapi import Depends, Body
+from fastapi import APIRouter, Depends, Body
 
 from core.db import get_session 
 
@@ -16,14 +15,12 @@ auth_router = APIRouter(
 	tags=["auth"]
 )
 
-
 @auth_router.post("/login", tags=["login"])
 async def login(
 	session: Session = Depends(get_session),
 	login_data: LoginUserEnum = Body(...), 
 ):
 	return await AuthRepository.login(session=session, login_data=login_data)
-
 
 @auth_router.post("/register", tags=["register"])
 async def register(

@@ -4,15 +4,16 @@ from passlib.hash import bcrypt
 from starlette.concurrency import run_in_threadpool
 
 from models.UserModels import UserModel
+from core.tokens import create_access_refresh_tokens
 
 
 class AuthRepository:
     # Login User;
     @classmethod
-    async def login(cls, session, login_data):
+    async def login(cls, session, login_data) -> dict:
         
         user = await run_in_threadpool(
-    		lambda: UserModel.getUserBy(
+    		lambda: UserModel.get_user_by(
                 session=session, 
                 email=login_data.email, 
             )
@@ -21,7 +22,9 @@ class AuthRepository:
         if not user or not bcrypt.verify(login_data.password, user.password):
             raise HTTPException(status_code=400, detail="Invalid email or password.")
         
-        return {"msg": "Login successful."}
+        tokens = await create_access_refresh_tokens(user_id=user.id)
+        return tokens
+    
 
 
 	# Register User;
@@ -49,7 +52,7 @@ class AuthRepository:
         hashed_password = bcrypt.hash(user_data.password)
 
         user = await run_in_threadpool(
-    		lambda: UserModel.createUser(
+    		lambda: UserModel.create_user(
                 session=session, 
                 user_data=user_data, 
                 hashed_password=hashed_password

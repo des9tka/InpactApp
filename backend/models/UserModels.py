@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field, Session
 from typing import Optional, Annotated
 from datetime import date
 
-from services.UserServices import getUserByService, createUserService
+from services.UserServices import getUserByService, createUserService, getAllUsers
 
 
 class UserModel(SQLModel, table=True):
@@ -19,7 +19,7 @@ class UserModel(SQLModel, table=True):
 
 
     @classmethod
-    def createUser(cls, session: Session, user_data, hashed_password):
+    def create_user(cls, session: Session, user_data, hashed_password):
         return createUserService(
             session=session,
             user_data=user_data,
@@ -27,10 +27,16 @@ class UserModel(SQLModel, table=True):
         )
 
     @classmethod
-    def getUserBy(cls, session: Session, id=None, email=None, username=None):
+    def get_user_by(cls, session: Session, id=None, email=None, username=None):
         return getUserByService(
             session, 
             id, 
             email, 
             username
+        )
+    
+    @classmethod
+    def get_all_users(cls, session: Session, id=None, email=None, username=None):
+        return getAllUsers(
+            session
         )
