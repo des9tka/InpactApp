@@ -1,30 +1,14 @@
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field
 from datetime import date
-from typing import List, Optional, Annotated, TYPE_CHECKING
+from typing import Optional, Annotated
 
-if TYPE_CHECKING:
-    from .UserModels import UserModel
-
+from models.UserModels import UserModel
 
 class ProjectModel(SQLModel, table=True):
     __tablename__ = "project"
     
     id: Optional[int] = Field(default=None, primary_key=True)
     name: Annotated[str, (0, 50)] = Field(..., max_length=50)
-    founder: Optional[UserModel] = Field(foreign_key="user")
+    founder_id: int = Field(..., foreign_key="user.id")
     created_at: Optional[date] = Field(default_factory=date.today)
     updated_at: Optional[date] = Field(default=None)
-    
-
-
-# class ProjectCreate(ProjectBase):
-#     pass
-
-# class ProjectRetrieve(ProjectBase, table=True):
-#     __tablename__ = "project"
-
-    # id: Optional[int] = Field(default=None, primary_key=True)
-    # founder_id: Optional[int] = Field(foreign_key="user.id")
-    # founder: Optional[UserRetrieve] = Relationship(back_populates="projects")
-    # workers: List[UserRetrieve] = Relationship(back_populates="projects") 
-    # inpacts: List[InpactRetrieve] = Relationship(back_populates="project")

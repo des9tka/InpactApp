@@ -8,7 +8,7 @@ from services.UserServices import getUserByService, createUserService
 class UserModel(SQLModel, table=True):
     __tablename__ = "user"
 
-    id: Optional[int] = Field(primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     email: Annotated[str, (0, 100)] = Field(..., unique=True)
     password: Annotated[str, (0, 100)] = Field(..., exclude=True)
     username: Annotated[str, (0, 50)] = Field(..., max_length=50, unique=True)
