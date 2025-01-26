@@ -13,11 +13,9 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "user1@gmail.com",
-    "password": "user1",
-    "username": "user1",
-    "name": null,
-    "surname": null
+	"email": "user2@gmail.com",
+    "password": "user2",
+    "username": "user2"
 }
 
 
