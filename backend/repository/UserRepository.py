@@ -5,6 +5,7 @@ from starlette.concurrency import run_in_threadpool
 from typing import List
 
 from models.UserModels import UserModel
+from core.tokens import get_user_id_by_token
 
 
 class UserRepository:
@@ -12,8 +13,11 @@ class UserRepository:
 	@classmethod
 	async def get_all_users(
         cls,
+		token,
         session
     ) -> List[UserModel]:
+		await get_user_id_by_token(token)
+
 		users = await run_in_threadpool(
     		lambda: UserModel.get_all_users(
                 session=session, 

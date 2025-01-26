@@ -18,4 +18,4 @@ async def get_all_users(
 	token: str = Depends(oauth2_bearer),
 	session: Session = Depends(get_session)
 ) -> List[UserModel]:
-	return await UserRepository.get_all_users(session)
+	return await UserRepository.get_all_users(session=session, token=token)
