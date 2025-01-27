@@ -4,8 +4,8 @@ POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "user1@gmail.com",
-    "password": "user1"
+	"email": "user5@gmail.com",
+    "password": "user5"
 }
 
 
@@ -14,20 +14,24 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "user2@gmail.com",
-    "password": "user2",
-    "username": "user2"
+	"email": "user3@gmail.com",
+    "password": "user3",
+    "username": "user3"
 }
 
 ### Refresh Access/Refresh Tokens;
 POST http://127.0.0.1:8000/auth/refresh
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3Mzc5ODg0MzV9.gO3dLCwz_G89ykW8vbS36m7_GigY-V0reo-X0s1yh9Q
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6InJlZnJlc2giLCJleHAiOjE3Mzc5OTA3MDl9.DgEJ6OkN_SDiUX-IKZ9l0Al204AHYMjAmn2x06KYj4U
 
 
 ---USERS---
 ### Get all Users;
 GET http://127.0.0.1:8000/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczNzk4ODM2Mn0.v7IpijNDtGiT20sLxKqZtkFppB0b9WVxd5bB-gnsyFE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczNzk5MTQ3NH0.LuQg-AYzj_ZXixSqD0x2kFH4XyeMoxNEXN16eC3uJYM
+
+
+---DEBUG---
+### Get Redis Data;
+GET http://127.0.0.1:8000/debug/get_redis_data

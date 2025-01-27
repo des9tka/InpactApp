@@ -72,6 +72,8 @@ async def validate_token(token: str = Depends(oauth2_bearer)) -> int:
     elif token_type == TokenEnum.REFRESH:
         if not await is_in_store(user_id=user_id, refresh_token=token):
             raise HTTPException(detail="Token is blacklisted.", status_code=401)
+    else:
+        raise HTTPException(detail="Invalid token type.", status_code=400)
     
     return user_id
 

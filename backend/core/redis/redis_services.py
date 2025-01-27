@@ -48,26 +48,32 @@ async def is_in_store(user_id: int, access_token: Optional[str] = None, refresh_
 		return None, None
      
 	if access_token:
-		if redis.exists(access_key) == 0:
+		print(redis.exists(access_key))
+		if redis.get(access_key) != access_token:
 			if double_check:
 				access_token = None
 			else: return None
-		else:
-			if double_check:
-				access_token = True
-			else: return True
 
 	if refresh_token:
-		if redis.exists(refresh_key) == 0:
+		print(redis.exists(refresh_key))
+		if redis.get(refresh_key) != refresh_token:
 			if double_check:
 				refresh_token = None
 			else: return None
-		else:
-			if double_check:
-				refresh_token = True
-			else: return True
 	
 	return access_token, refresh_token
+
+# Dev Get all Info from Redis (for debug);
+@redis_retry
+async def get_all_info_from_redis():
+	state = []
+	redis = RedisConnection.get_instance()
+	cursor, keys = redis.scan(cursor=0)
+	for key in keys:
+		value = redis.get(key)
+		state.append(f"Key: {key}, Value: {value}")
+	return state
+
 
 
 # V.1 -> BlackListing Tokens;
