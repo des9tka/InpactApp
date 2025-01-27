@@ -19,9 +19,15 @@ Content-Type: application/json
     "username": "user2"
 }
 
+### Refresh Access/Refresh Tokens;
+POST http://127.0.0.1:8000/auth/refresh
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNDgyNjZ9.7I2P5vrQoPWmitND2KMwwSS-vWQyBAWIfjc7o3HDaWc
+
+
 
 ---USERS---
 ### Get all Users;
 GET http://127.0.0.1:8000/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODAwMjUwMH0.t6LOa6OnA3b9Esz_W2gtMPh3RercGdhxnhDqBDHdCrs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczNzk4MDUxMn0.MJIzsoGvv0RGFy-quojEoJaR1Dusr6Pdc397oPrx-Lc

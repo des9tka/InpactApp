@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 # Enum for Token Types
 class TokenEnum(str, Enum):
     ACCESS = "access"
@@ -7,6 +8,6 @@ class TokenEnum(str, Enum):
 
 # Token expiration times
 TOKEN_EXPIRATION = {
-    TokenEnum.ACCESS: 24,  # hours
-    TokenEnum.REFRESH: 48  # hours
+    TokenEnum.ACCESS: 1,  # hours
+    TokenEnum.REFRESH: 2  # hours
 }

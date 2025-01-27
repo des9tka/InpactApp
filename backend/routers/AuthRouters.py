@@ -1,13 +1,12 @@
 from sqlmodel import Session
 from fastapi import APIRouter, Depends, Body
 
-from core.db import get_session 
-
+from core.db import get_session
 from repository.AuthRepository import AuthRepository
-
 from models.UserModels import UserModel
-
-from enums.UserEnums import LoginUserEnum 
+from enums.UserEnums import LoginUserEnum
+from core.tokens import oauth2_bearer
+from enums.TokenEnums import TokenEnum
 
 
 auth_router = APIRouter(
@@ -28,3 +27,9 @@ async def register(
 	session: Session = Depends(get_session)
 ) -> UserModel:
 	return await AuthRepository.register(session=session, user_data=user_data)
+
+@auth_router.post("/refresh", tags=["refresh"])
+async def refresh(
+	refresh_token: str = Depends(oauth2_bearer),
+):
+	return await AuthRepository.refresh(refresh_token=refresh_token)

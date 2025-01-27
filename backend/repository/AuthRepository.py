@@ -4,7 +4,7 @@ from passlib.hash import bcrypt
 from starlette.concurrency import run_in_threadpool
 
 from models.UserModels import UserModel
-from core.tokens import create_access_refresh_tokens
+from core.tokens import create_access_refresh_tokens, refresh_access_token
 
 
 class AuthRepository:
@@ -60,3 +60,10 @@ class AuthRepository:
 		)
         
         return user
+
+    
+    #Refresh User tokens;
+    @classmethod
+    async def refresh(cls, refresh_token: str) -> str:
+        tokens = await refresh_access_token(refresh_token=refresh_token)
+        return tokens

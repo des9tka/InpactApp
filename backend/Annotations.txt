@@ -1,0 +1,8 @@
+Backend:
+	- Start Backend Server -> uvicorn main:app --reload;
+	- Start Backend Server + debug -> uvicorn main:app --reload --log-level debug;
+
+	- Start Local Redis App -> redis-server --port 6380 --slaveof 127.0.0.1 6379;
+
+Frontend:
+	
