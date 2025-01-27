@@ -5,7 +5,7 @@ from starlette.concurrency import run_in_threadpool
 from typing import List
 
 from models.UserModels import UserModel
-from core.tokens import verify_token
+from core.tokens import validate_token
 
 
 class UserRepository:
@@ -16,7 +16,7 @@ class UserRepository:
 		token,
         session
     ) -> List[UserModel]:
-		await verify_token(token)
+		await validate_token(token)
 
 		users = await run_in_threadpool(
     		lambda: UserModel.get_all_users(

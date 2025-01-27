@@ -25,8 +25,6 @@ class AuthRepository:
         tokens = await create_access_refresh_tokens(user_id=user.id)
         return tokens
     
-
-
 	# Register User;
     @classmethod
     async def register(
@@ -58,10 +56,8 @@ class AuthRepository:
                 hashed_password=hashed_password
             )
 		)
-        
         return user
 
-    
     #Refresh User tokens;
     @classmethod
     async def refresh(cls, refresh_token: str) -> str:
