@@ -14,9 +14,9 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "user3@gmail.com",
-    "password": "user3",
-    "username": "user3"
+	"email": "user11@gmail.com",
+    "password": "user11",
+    "username": "use1013"
 }
 
 ### Refresh Access/Refresh Tokens;
@@ -31,6 +31,16 @@ GET http://127.0.0.1:8000/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODAzNzY3MX0.rWPoNIfHt7Inmw9_yF6kHUJECyfAT0NbwOySzSjV9wA
 
+
+---PROJECTS---
+### Create Project;
+POST http://127.0.0.1:8000/projects
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA0MTc5OH0.zxNmzRt_4ABCCVfxdRvsPC8IZRiEE6RxaPiuIHcFVUg
+
+{
+	"name": "3dModels"
+}
 
 ---DEBUG---
 ### Get Redis Data;

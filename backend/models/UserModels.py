@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field, Session
 from typing import Optional, Annotated
 from datetime import date
 
-from services.UserServices import getUserByService, createUserService, getAllUsers
+from services import UserServicesStore
 
 
 class UserModel(SQLModel, table=True):
@@ -14,13 +14,14 @@ class UserModel(SQLModel, table=True):
     username: Annotated[str, (0, 50)] = Field(..., max_length=50, unique=True)
     name: Optional[str] = Field(default=None, max_length=50)
     surname: Optional[str] = Field(default=None, max_length=50)
+    is_active: Optional[bool] = Field(default=False)
     created_at: Optional[date] = Field(default_factory=date.today)
     updated_at: Optional[date] = Field(default=None)
 
 
     @classmethod
     def create_user(cls, session: Session, user_data, hashed_password):
-        return createUserService(
+        return UserServicesStore.createUserService(
             session=session,
             user_data=user_data,
             hashed_password=hashed_password
@@ -28,7 +29,7 @@ class UserModel(SQLModel, table=True):
 
     @classmethod
     def get_user_by(cls, session: Session, id=None, email=None, username=None):
-        return getUserByService(
+        return UserServicesStore.getUserByService(
             session, 
             id, 
             email, 
@@ -37,6 +38,6 @@ class UserModel(SQLModel, table=True):
     
     @classmethod
     def get_all_users(cls, session: Session, id=None, email=None, username=None):
-        return getAllUsers(
+        return UserServicesStore.getAllUsersService(
             session
         )

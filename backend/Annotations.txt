@@ -1,8 +1,12 @@
 Backend:
-	- Start Backend Server -> uvicorn main:app --reload;
-	- Start Backend Server + debug -> uvicorn main:app --reload --log-level debug;
+	- Start Backend Server (FastApi) -> uvicorn main:app --reload;
+	- Start Backend Server + debug (FastApi) -> uvicorn main:app --reload --log-level debug;
 
-	- Start Local Redis App -> redis-server --port 6380 --slaveof 127.0.0.1 6379;
+	- Start Local (Redis) -> redis-server --port 6380 --slaveof 127.0.0.1 6379;
+
+	- Make Migrations (Alembic) -> alembic revision --autogenerate -m "message";
+	- Upgrade Migrations (Alembic) -> alembic upgrade head;
+	- Downgrade Migrations (Alembic) -> alembic downgrade -1 (#revision);
 
 Frontend:
 	

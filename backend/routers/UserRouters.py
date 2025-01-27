@@ -1,16 +1,17 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
-from core.db import get_session 
 from typing import List, Optional
 
+from core.db import get_session 
+from core.tokens import oauth2_bearer
 from models.UserModels import UserModel
 from repository import UserRepository
-from core.tokens import oauth2_bearer
 
 
+# User Router; 
 user_router = APIRouter(
 	prefix="/users",
-	tags=["user"]
+	tags=["users"]
 )
 
 # Get User by Params;
