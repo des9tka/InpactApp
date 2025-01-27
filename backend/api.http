@@ -22,7 +22,7 @@ Content-Type: application/json
 ### Refresh Access/Refresh Tokens;
 POST http://127.0.0.1:8000/auth/refresh
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNDgyNjZ9.7I2P5vrQoPWmitND2KMwwSS-vWQyBAWIfjc7o3HDaWc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3Mzc5ODEzNzV9.S1dRp7SWGTO2a9bHOCiZ70WisTfY0pBPNX08RYWTQPE
 
 
 
@@ -30,4 +30,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Get all Users;
 GET http://127.0.0.1:8000/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczNzk4MDUxMn0.MJIzsoGvv0RGFy-quojEoJaR1Dusr6Pdc397oPrx-Lc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczNzk4MjgyOH0.MvMNNmqOf4aZJQVArHf9rQ6K7eZHzSTpN67jbBFTiZc

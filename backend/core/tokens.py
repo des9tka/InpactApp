@@ -7,7 +7,7 @@ from jose.exceptions import ExpiredSignatureError
 from enums.TokenEnums import TokenEnum, TOKEN_EXPIRATION
 from dotenv import load_dotenv
 
-from core.redis import store_user_token, is_token_blacklisted
+from core.redis.redis_services import store_user_token, is_token_blacklisted
 
 
 load_dotenv()
