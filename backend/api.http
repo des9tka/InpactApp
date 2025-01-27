@@ -1,4 +1,4 @@
---- AUTH ---
+# --- AUTH ---
 ### Log in with Email amd Password (required);
 POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
@@ -14,9 +14,9 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "user11@gmail.com",
-    "password": "user11",
-    "username": "use1013"
+	"email": "test@gmail.com",
+    "password": "test",
+    "username": "test"
 }
 
 ### Refresh Access/Refresh Tokens;
@@ -25,23 +25,23 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6InJlZnJlc2giLCJleHAiOjE3Mzc5OTA3MDl9.DgEJ6OkN_SDiUX-IKZ9l0Al204AHYMjAmn2x06KYj4U
 
 
----USERS---
+# ---USERS---
 ### Get all Users;
 GET http://127.0.0.1:8000/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODAzNzY3MX0.rWPoNIfHt7Inmw9_yF6kHUJECyfAT0NbwOySzSjV9wA
 
 
----PROJECTS---
+# ---PROJECTS---
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA0MTc5OH0.zxNmzRt_4ABCCVfxdRvsPC8IZRiEE6RxaPiuIHcFVUg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA0ODYwM30.1Nru4Kovkk6-q8CvHSO1eygNygnLDaOZFFEJXMTz8y4
 
 {
-	"name": "3dModels"
+    "name": "3dModels"
 }
 
----DEBUG---
+# ---DEBUG---
 ### Get Redis Data;
 GET http://127.0.0.1:8000/debug/get_redis_data

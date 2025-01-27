@@ -18,13 +18,9 @@ class ProjectRepository:
 		project_data
     ) -> ProjectModel:
 		user_id = await validate_token(token)
-		project_data["founder_id"] = user_id
+		project_data.founder_id = user_id
 
-		users = await run_in_threadpool(
-    		ProjectModel.create_project(
-				session=session,
-				project_data=project_data
-			)
+		return await ProjectModel.create_project(
+			session=session,
+			project_data=project_data
 		)
-
-		return users

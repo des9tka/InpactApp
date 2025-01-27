@@ -1,8 +1,12 @@
-from sqlmodel import SQLModel, Field, Session
-from typing import Optional, Annotated
+from sqlmodel import SQLModel, Field, Session, Relationship
+from typing import Optional, Annotated, List, TYPE_CHECKING
 from datetime import date
 
 from services import UserServicesStore
+from models.RelationsModels import UserProjectModel
+
+if TYPE_CHECKING:
+    from models import ProjectModel
 
 
 class UserModel(SQLModel, table=True):
@@ -18,6 +22,7 @@ class UserModel(SQLModel, table=True):
     created_at: Optional[date] = Field(default_factory=date.today)
     updated_at: Optional[date] = Field(default=None)
 
+    projects: List["ProjectModel"] = Relationship(back_populates="user", link_model=UserProjectModel)
 
     @classmethod
     def create_user(cls, session: Session, user_data, hashed_password):

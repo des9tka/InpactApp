@@ -1,11 +1,10 @@
-from sqlmodel import Session, select, or_
-from sqlalchemy.sql.expression import func
+from sqlmodel import Session
 
 
 class ProjectServicesStore:
-    # Create User;
+    # Create Project;
     @classmethod
-    async def createProjectService(cls, session: Session, project_data):
+    def createProjectService(cls, session: Session, project_data):
         from models import ProjectModel
         
         project = ProjectModel(

@@ -12,7 +12,7 @@ project_router = APIRouter(
 	tags=["projects"]
 )
 
-# Get User by Params;
+# Create Project;
 @project_router.post("/")
 async def create_project(
 	project_data: ProjectModel,
