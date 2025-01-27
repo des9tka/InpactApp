@@ -1,5 +1,5 @@
-from sqlmodel import Session, select
-from sqlalchemy import or_
+from sqlmodel import Session, select, or_
+from sqlalchemy.sql.expression import func
 
 
 # Create User;
@@ -26,12 +26,12 @@ def getUserByService(session: Session, id=None, email=None, username=None):
 
     query = select(UserModel).where(
         or_(
-            UserModel.id == id,
-            UserModel.email == email,
-            UserModel.username == username
+            UserModel.id == id if id else False,
+            func.lower(UserModel.email).like(f"%{email.lower()}%") if email else False,
+            func.lower(UserModel.username).like(f"%{username.lower()}%") if username else False
         )
     )
-    return session.exec(query).first()
+    return session.exec(query).all()
 	
 # Get All Users;
 def getAllUsers(session):

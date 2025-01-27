@@ -43,10 +43,10 @@ async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timed
     return token
 
 async def create_access_refresh_tokens(user_id: int):
-    access_expires_delta = timedelta(minutes=TOKEN_EXPIRATION[TokenEnum.ACCESS])
+    access_expires_delta = timedelta(hours=TOKEN_EXPIRATION[TokenEnum.ACCESS])
     access_token = await create_token(user_id, TokenEnum.ACCESS, access_expires_delta)
     
-    refresh_expires_delta = timedelta(minutes=TOKEN_EXPIRATION[TokenEnum.REFRESH])
+    refresh_expires_delta = timedelta(hours=TOKEN_EXPIRATION[TokenEnum.REFRESH])
     refresh_token = await create_token(user_id, TokenEnum.REFRESH, refresh_expires_delta)
     
     return {"access_token": access_token, "refresh_token": refresh_token}

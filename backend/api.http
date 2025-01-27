@@ -29,7 +29,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6I
 ### Get all Users;
 GET http://127.0.0.1:8000/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczNzk5MTQ3NH0.LuQg-AYzj_ZXixSqD0x2kFH4XyeMoxNEXN16eC3uJYM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODAzNzY3MX0.rWPoNIfHt7Inmw9_yF6kHUJECyfAT0NbwOySzSjV9wA
 
 
 ---DEBUG---

@@ -48,14 +48,12 @@ async def is_in_store(user_id: int, access_token: Optional[str] = None, refresh_
 		return None, None
      
 	if access_token:
-		print(redis.exists(access_key))
 		if redis.get(access_key) != access_token:
 			if double_check:
 				access_token = None
 			else: return None
 
 	if refresh_token:
-		print(redis.exists(refresh_key))
 		if redis.get(refresh_key) != refresh_token:
 			if double_check:
 				refresh_token = None

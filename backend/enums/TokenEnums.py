@@ -8,6 +8,6 @@ class TokenEnum(str, Enum):
 
 # Token expiration times
 TOKEN_EXPIRATION = {
-    TokenEnum.ACCESS: 1,  # hours 12
-    TokenEnum.REFRESH: 2  # hours 24
+    TokenEnum.ACCESS: 12,  # hours 
+    TokenEnum.REFRESH: 24  # hours 
 }
