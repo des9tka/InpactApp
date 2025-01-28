@@ -15,11 +15,11 @@ debug_router = APIRouter(
 	tags=["debug"]
 )
 
-@debug_router.get("/get_redis_data", tags=["redis_data"])
+@debug_router.get("/get_redis_data")
 async def get_redis_data():
 	return await get_all_info_from_redis()
 
-@debug_router.post("/delete_users/{user_id}", tags=["delete_users"])
+@debug_router.post("/delete_users/{user_id}")
 async def delete_users(
     user_id: int,
     session: Session = Depends(get_session),
@@ -47,3 +47,4 @@ async def delete_users(
         "detail": f"User with id {user_id} has been deleted.",
         "user_projects_deleted": user_projects_deleted
     }
+

@@ -47,3 +47,10 @@ class ImpactModel(SQLModel, table=True):
             impact_data=impact_data,            
             impact_id=impact_id
         )
+    
+    @classmethod
+    def delete_impact(cls, session: Session, impact_id: int):
+        return ImpactServiceStore.deleteImpactService(
+            session=session,
+            impact_id=impact_id
+        )

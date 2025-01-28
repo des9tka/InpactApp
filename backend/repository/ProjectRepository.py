@@ -84,3 +84,40 @@ class ProjectRepository:
 			raise HTTPException(status_code=404, detail="No users found for this project.")
 		
 		return users_in_project
+	
+	@classmethod
+	async def delete_project(
+		cls,
+		session,
+		token,
+		project_id
+	):
+		user_id = await validate_token(token=token)
+		project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
+		
+		if not project:
+			raise HTTPException(status_code=404, detail="Project not found.")
+		
+		if project.founder_id != user_id:
+			raise HTTPException(status_code=400, detail="You are not the founder of this project.")
+		
+		return ProjectModel.delete_project(session=session, project_id=project_id)
+	
+	@classmethod
+	async def update_project(
+		cls,
+		session,
+		token,
+		project_id,
+		project_data
+	):
+		user_id = await validate_token(token=token)
+		project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
+		
+		if not project:
+			raise HTTPException(status_code=404, detail="Project not found.")
+		
+		if project.founder_id != user_id:
+			raise HTTPException(status_code=400, detail="You are not the founder of this project.")
+		
+		return ProjectModel.update_project(session=session, project_id=project_id, project_data=project_data)

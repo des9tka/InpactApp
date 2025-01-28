@@ -6,7 +6,7 @@ from core.db import get_session
 from core.tokens import oauth2_bearer
 from models import ProjectModel, UserModel
 from repository import ProjectRepository
-
+from enums import UpdateProjectDataEnum
 
 # Project Router;
 project_router = APIRouter(
@@ -51,4 +51,30 @@ async def get_users_from_project(
 		session=session,
 		token=token,
 		project_id=project_id
+	)
+
+@project_router.delete("/delete/{project_id}")
+async def delete_project(
+	project_id: int, 
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+) -> None:
+	return await ProjectRepository.delete_project(
+		session=session,
+		token=token,
+		project_id=project_id
+	)
+
+@project_router.patch("/update/{project_id}")
+async def update_project(
+	project_data: UpdateProjectDataEnum,
+	project_id: int,
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+) -> ProjectModel:
+	return await ProjectRepository.update_project(
+		session=session,
+		token=token,
+		project_id=project_id,
+		project_data=project_data
 	)

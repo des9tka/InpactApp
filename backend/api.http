@@ -7,8 +7,8 @@ POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "test1@gmail.com",
-    "password": "test1"
+	"email": "test@gmail.com",
+    "password": "test"
 }
 
 ### Sign in with Email, Password, Username (required);
@@ -16,11 +16,11 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "test1@gmail.com",
-    "password": "test1",
-    "username": "test1",
-    "name": "test1",
-    "surname": "test1"
+	"email": "test2@gmail.com",
+    "password": "test2",
+    "username": "test2",
+    "name": "test2",
+    "surname": "test2"
 }
 
 ### Refresh Access/Refresh Tokens;
@@ -54,7 +54,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyMTg4OX0.2fFwj9PIsEIBFwWWVnXzA5YOQDYPgihhEgoUTAO154o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNTY5MH0.CtvGPx_WL44lgxcA7BAjLABB2nQHVsUCuIopfDTeOJY
 
 {
     "name": "Project"
@@ -70,12 +70,25 @@ GET http://127.0.0.1:8000/projects/1/get-users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjk5Nn0.9lFmq-iDwb341bLJ-qQcieRqbQJ-GVTZLDj3_b1mlsA
 
+### Delete Project;
+DELETE  http://127.0.0.1:8000/projects/delete/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNTE0MH0.zvnU7f-SSpKT8SBcVQiKfl58d0AzA1P5NcYsQveMniU
+
+### Update Project;
+PATCH http://127.0.0.1:8000/projects/update/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNTc2NH0.DkLYf-K91mECjJTYUTxYgAT4P0Ffvm_VnNS4ANPCvpM
+
+{
+    "name": "new name Project3"
+}
 
 # ---IMPACTS---
 ### Create Impact;
 POST http://127.0.0.1:8000/impacts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyMjAzM30.BhGV9jXg1-R2ExF3_3T3QvNg46p9UxoWqrDT3HnVebI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNDc4MX0.yIgNK7oEz2-adqdjoLM3xGI4VusHpX8208YMgAi--8M
 
 {
     "title": "Impact1",
@@ -95,6 +108,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6I
     "description": "New desc",
     "impactPercent": 50
 }
+
+###
+DELETE http://127.0.0.1:8000/impacts/delete/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNDg5NX0.AeKlWUMy-9se4pCGxG5eqOSCtY3qsQgHrxjV9LrqhIw
 
 
 # ---DEBUG---

@@ -2,6 +2,7 @@ from enum import Enum
 from pydantic import BaseModel
 from typing import Optional
 
+
 class ImpactTypeEnum(str, Enum):
     FEAT = "FEAT"
     FIX = "FIX" 

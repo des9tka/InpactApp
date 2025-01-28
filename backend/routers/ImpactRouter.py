@@ -35,3 +35,11 @@ async def update_project(
 	token: str = Depends(oauth2_bearer)
 ) -> ImpactModel:
 	return await ImpactRepository.update_impact(session=session, token=token, impact_data=impact_data, impact_id=impact_id)
+
+@impact_router.delete("/delete/{impact_id}")
+async def delete_project(
+	impact_id: int,
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+):
+	return await ImpactRepository.delete_impact(session=session, token=token, impact_id=impact_id)

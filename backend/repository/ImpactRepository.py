@@ -70,3 +70,30 @@ class ImpactRepository:
 			impact_data=impact_data,
 			impact_id=impact_id
 		)
+	
+	@classmethod
+	async def delete_impact(
+		cls,
+		session,
+		token,
+		impact_id
+	) -> ImpactModel:
+		user_id = await validate_token(token)
+		
+		impact_query = select(ImpactModel).where(
+			(ImpactModel.id == impact_id)
+		)
+		impact = session.exec(impact_query).first()
+
+		if not impact:
+			raise HTTPException(status_code=404, detail="Impact not found.")
+		
+		project_query = select(ProjectModel).where(
+			(ProjectModel.id == impact.project_id)
+		)
+		project = session.exec(project_query).first()
+		
+		if impact.user_id != user_id and project.founder_id != user_id:
+			raise HTTPException(status_code=400, detail="You are not the owner of this impact.")
+		
+		return ImpactModel.delete_impact(session=session, impact_id=impact_id)

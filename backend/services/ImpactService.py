@@ -79,3 +79,15 @@ class ImpactServiceStore:
                 )
 
         return impact
+    
+    @classmethod
+    def deleteImpactService(cls, session: Session, impact_id):
+        from models import ImpactModel
+         
+        impact = session.get(ImpactModel, impact_id)
+        if not impact:
+            raise HTTPException(status_code=404, detail="Impact not found")
+
+        session.delete(impact)
+        session.commit()
+        return {"detail": f"Impact with id {impact_id} has been deleted."}

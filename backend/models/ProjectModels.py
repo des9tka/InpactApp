@@ -32,3 +32,11 @@ class ProjectModel(SQLModel, table=True):
     @classmethod
     def get_project_by_id(cls, session: Session, project_id):
         return ProjectServicesStore.getProjectById(session=session, project_id=project_id)
+    
+    @classmethod
+    def delete_project(cls, session: Session, project_id):
+        return ProjectServicesStore.deleteProjectService(session=session, project_id=project_id)
+    
+    @classmethod
+    def update_project(cls, session: Session, project_id, project_data):
+        return ProjectServicesStore.updateProjectService(session=session, project_id=project_id, project_data=project_data)

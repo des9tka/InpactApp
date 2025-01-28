@@ -12,13 +12,13 @@ User Experience:
 -> Project Entity:
 	- create project (user_id); ✅
 	- add user to project; ✅
-	- delete project (founder); 
-	- edit project (founder); 
+	- delete project (founder); ✅
+	- edit project (founder); ✅
 	- get users from current project; ✅
 	- get impacts from current project; ✅
 
 -> Impact Entity:
 	- create impact (user_id, project_id); ✅
 	- edit impact (founder & current user); ✅
-	- delete impact (founder & current_user);
+	- delete impact (founder & current_user); ✅
 /// End Functionality ///

@@ -1,4 +1,5 @@
 from sqlmodel import Session, select, or_
+from datetime import date
 
 
 class ProjectServicesStore:
@@ -30,3 +31,26 @@ class ProjectServicesStore:
     
         return session.exec(query).first()
 
+    # Delete Project;
+    @classmethod
+    def deleteProjectService(cls, session: Session, project_id):
+        from models import ProjectModel
+
+        project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
+        session.delete(project)
+        session.commit()
+        return {"detail": f"Project with id {project_id} has been deleted."}
+    
+    # Update Project;
+    @classmethod
+    def updateProjectService(cls, session: Session, project_id, project_data):
+        from models import ProjectModel
+
+        project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
+
+        if project_data:
+            project.name = project_data.name
+            project.updated_at = date.today()
+            session.commit()
+            session.refresh(project)
+            return project

@@ -13,28 +13,21 @@ auth_router = APIRouter(
 	tags=["auth"]
 )
 
-@auth_router.post("/login", tags=["login"])
+@auth_router.post("/login")
 async def login(
 	session: Session = Depends(get_session),
 	login_data: LoginUserEnum = Body(...), 
 ):
 	return await AuthRepository.login(session=session, login_data=login_data)
 
-@auth_router.post("/register", tags=["register"])
+@auth_router.post("/register")
 async def register(
 	user_data: UserModel, 
 	session: Session = Depends(get_session)
 ) -> UserModel:
 	return await AuthRepository.register(session=session, user_data=user_data)
 
-@auth_router.post("/refresh", tags=["refresh"])
-async def refresh(
-	refresh_token: str = Depends(oauth2_bearer),
-):
-	return await AuthRepository.refresh(refresh_token=refresh_token)
-
-
-@auth_router.post("/redis_data", tags=["redis_data"])
+@auth_router.post("/refresh")
 async def refresh(
 	refresh_token: str = Depends(oauth2_bearer),
 ):
