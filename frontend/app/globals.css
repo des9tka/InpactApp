@@ -6,10 +6,9 @@ html,
 body {
 	margin: 0;
 	padding: 0;
-	background-color: rgb(60, 65, 68);
+	background-color: rgb(56, 57, 58);
 }
 
-.auth-box {
+/* .auth-box {
 	box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.3);
-}
-
+} */
