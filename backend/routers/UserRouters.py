@@ -6,7 +6,7 @@ from core.db import get_session
 from core.tokens import oauth2_bearer
 from models.UserModels import UserModel
 from repository import UserRepository
-
+from enums.UserEnums import UpdateUserDataEnum
 
 # User Router; 
 user_router = APIRouter(
@@ -30,3 +30,19 @@ async def get_user_by(
 		email=email,
 		username=username	
 	)
+
+@user_router.patch('/update')
+async def update_user(
+	user_data: UpdateUserDataEnum,
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+) -> UserModel:	
+	return await UserRepository.update_user(
+		session=session,
+		token=token,
+		user_data=user_data
+	)
+
+@user_router.get('/all')
+async def get_all_users(session: Session = Depends(get_session)) -> List[UserModel]:
+	return await UserRepository.get_all_users(session=session)

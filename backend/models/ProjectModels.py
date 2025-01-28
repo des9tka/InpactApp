@@ -19,6 +19,9 @@ class ProjectModel(SQLModel, table=True):
 
     users: List["UserModel"] = Relationship(back_populates="projects", link_model=UserProjectModel)
 
+    class Config:
+        from_attributes = True
+
     @classmethod
     def create_project(cls, session: Session, project_data):
         return ProjectServicesStore.createProjectService(

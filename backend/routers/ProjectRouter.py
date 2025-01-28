@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-from typing import Optional
+from typing import Optional, List
 
 from core.db import get_session 
 from core.tokens import oauth2_bearer
-from models import ProjectModel
+from models import ProjectModel, UserModel
 from repository import ProjectRepository
 
 
@@ -34,12 +34,21 @@ async def add_user_to_project(
 	project_id: Optional[str] = None,
 	user_id: Optional[str] = None
 ):
-	if not project_id or not user_id:
-		raise HTTPException(status_code=400, detail="Missing project_id or user_id.")
-	
 	return await ProjectRepository.add_user_to_project(
 		session=session,
 		token=token,
 		project_id=project_id,
 		user_id=user_id
+	)
+
+@project_router.get("/{project_id}/get-users")
+async def get_users_from_project(
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer),
+	project_id: Optional[str] = None
+) -> List[UserModel]:
+	return await ProjectRepository.get_users_from_project(
+		session=session,
+		token=token,
+		project_id=project_id
 	)

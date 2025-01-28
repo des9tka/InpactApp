@@ -43,13 +43,21 @@ class UserModel(SQLModel, table=True):
     ):
         return UserServicesStore.getUserByService(
             session, 
-            id, 
-            email, 
+            id,
+            email,
             username
         )
     
     @classmethod
-    def get_all_users(cls, session: Session, id=None, email=None, username=None):
+    def get_all_users(cls, session: Session):
         return UserServicesStore.getAllUsersService(
             session
+        )
+    
+    @classmethod
+    def update_user(cls, session: Session, user_id, user_data):
+        return UserServicesStore.updateUserService(
+            session=session,
+            user_data=user_data,
+            user_id=user_id
         )

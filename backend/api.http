@@ -4,50 +4,94 @@ POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "test1@gmail.com",
-    "password": "test1"
+	"email": "test2@gmail.com",
+    "password": "test2"
 }
-
 
 ### Sign in with Email, Password, Username (required);
 POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "test1@gmail.com",
-    "password": "test1",
-    "username": "test1"
+	"email": "test2@gmail.com",
+    "password": "test2",
+    "username": "test2",
+    "name": "test2",
+    "surname": "test2"
 }
 
 ### Refresh Access/Refresh Tokens;
 POST http://127.0.0.1:8000/auth/refresh
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNDE3NDZ9.wxqHFELFcR0pZSVivQGEymQCaB2aFUeiJx3tTsYVdTM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNTYyMjd9.wFsh1Cm8LkxcGEzPhjRNjs_r9qsT-pIs0aM4rK-0pXA
 
 
 # ---USERS---
-### Get all Users;
-GET http://127.0.0.1:8000/users?id=12321
+### Get Users By;
+GET http://127.0.0.1:8000/users?id=1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5ODU2NH0.5hw4r3TxFnsAmWq2OvkDYf2ZmjLiUrxGzaz9if3-DWk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExMzExM30.6lPsD9gh2BTbLcJDElIin5kgKR25yrf9HB9uyuxToGg
+
+### Update User;
+PATCH  http://127.0.0.1:8000/users/update
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExMzExM30.6lPsD9gh2BTbLcJDElIin5kgKR25yrf9HB9uyuxToGg
+
+{
+    "name": "New name user21",
+    "surname": "SURNAME",
+    "username": "test1"
+}
+
+### Get All Users;
+GET  http://127.0.0.1:8000/users/all
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEwNjc4OX0.PNcdxNoygU4mZ66BeuMdW9SyQse0za7HFEf5n6S0eyA
 
 
 # ---PROJECTS---
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5ODU2NH0.5hw4r3TxFnsAmWq2OvkDYf2ZmjLiUrxGzaz9if3-DWk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjEzNn0.qN51sb0UBPTbzC5Mh9_ks__Hi7zwHBdRLa0i8dz0fKg
 
 {
-    "name": "Test2"
+    "name": "TestProject"
 }
 
 ### Add User to Project;
-GET http://127.0.0.1:8000/projects/4/add-user/8
+GET http://127.0.0.1:8000/projects/1/add-user/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5MTg4OH0.XxF1cqJvRiUZHLDbpXTh92x_uNjtohpuwdgy_ODS7pM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjk1MH0.90GtBQdmate32Ucg303iplMz21EmRSyxa0I-f9Ggsyk
+
+### Get Users from Project;
+GET http://127.0.0.1:8000/projects/1/get-users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjk5Nn0.9lFmq-iDwb341bLJ-qQcieRqbQJ-GVTZLDj3_b1mlsA
+
+
+# ---IMPACTS---
+### Create Impact;
+POST http://127.0.0.1:8000/impacts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNzA4M30.QctZXCefGmXyDEcHsR7eDW9zhlhBgxJHdNpEApE2pTA
+
+{
+    "title": "Impact1",
+    "description": "Some task to done",
+    "type": "feat",
+    "impactPercent": 0,
+    "project_id": 1
+}
 
 
 # ---DEBUG---
 ### Get Redis Data;
 GET http://127.0.0.1:8000/debug/get_redis_data
+
+### Delete invalid users;
+POST http://127.0.0.1:8000/debug/delete_users/2
+
+{
+    "admin_key": "jnsf-g8q3-y423-hurb"
+}

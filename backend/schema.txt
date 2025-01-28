@@ -1,23 +1,22 @@
 /// Start Func ///
 User Experience:
 -> Auth:
-	- register user;
-	- login user;
-	- refresh user's tokens;
+	- register user; ✅
+	- login user; ✅
+	- refresh user's tokens; ✅
 
 -> User Entity:
-	- edit user;
-	- get user by @username / email@;
+	- edit user; ✅
+	- get user by @username / email@; ✅
 
 -> Project Entity:
-	- create project (founder_id: user_id);
-	- add user to project;
-	- get users from current project;
-	- get impacts from current project;
-	- edit impacts (founder_id)
+	- create project (founder_id: user_id); ✅
+	- add user to project; ✅
+	- get users from current project; ✅
+	- get impacts from current project; ✅
+	- edit impacts (user or founder);
 
 -> Impact Entity:
 	- create impacts (user_id);
 	- edit impacts (current user);
-
 /// End Func ///

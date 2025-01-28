@@ -38,4 +38,17 @@ class UserRepository:
 		
 		users = await run_in_threadpool(fetch_users)
 		return users
-	 	
+	
+	# Update User;
+	@classmethod
+	async def update_user(cls, session, user_data, token):
+		if not user_data:
+			raise HTTPException(status_code=400, detail="Missing user data to update.")
+		
+		user_id = await validate_token(token)
+		return UserModel.update_user(session=session, user_id=user_id, user_data=user_data)
+	
+	# Get all Users;
+	@classmethod
+	async def get_all_users(cls, session):
+		return UserModel.get_all_users(session=session)
