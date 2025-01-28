@@ -1,8 +1,8 @@
-"""chenged worker->user
+"""post changes reset
 
-Revision ID: 3631dd87c7c5
+Revision ID: 2dab4cedb743
 Revises: 
-Create Date: 2025-01-28 15:56:40.854921
+Create Date: 2025-01-28 17:36:56.871036
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = '3631dd87c7c5'
+revision: str = '2dab4cedb743'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

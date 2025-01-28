@@ -6,7 +6,7 @@ from core.db import get_session
 from core.tokens import oauth2_bearer
 from models.UserModels import UserModel
 from repository import UserRepository
-from enums.UserEnums import UpdateUserDataEnum
+from enums import UpdateUserDataEnum
 
 # User Router; 
 user_router = APIRouter(

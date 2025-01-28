@@ -1,11 +1,14 @@
+# READ.ME:
+# To use this file as endpoints fetcher, please, install REST extension (VSCode), or use as examples of endpoints in POSTMAN.
+
 # --- AUTH ---
 ### Log in with Email amd Password (required);
 POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "test2@gmail.com",
-    "password": "test2"
+	"email": "test1@gmail.com",
+    "password": "test1"
 }
 
 ### Sign in with Email, Password, Username (required);
@@ -13,11 +16,11 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "test2@gmail.com",
-    "password": "test2",
-    "username": "test2",
-    "name": "test2",
-    "surname": "test2"
+	"email": "test1@gmail.com",
+    "password": "test1",
+    "username": "test1",
+    "name": "test1",
+    "surname": "test1"
 }
 
 ### Refresh Access/Refresh Tokens;
@@ -35,12 +38,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 ### Update User;
 PATCH  http://127.0.0.1:8000/users/update
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExMzExM30.6lPsD9gh2BTbLcJDElIin5kgKR25yrf9HB9uyuxToGg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyMTg4OX0.2fFwj9PIsEIBFwWWVnXzA5YOQDYPgihhEgoUTAO154o
 
 {
-    "name": "New name user21",
-    "surname": "SURNAME",
-    "username": "test1"
+    "name": "New name"
 }
 
 ### Get All Users;
@@ -53,16 +54,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjEzNn0.qN51sb0UBPTbzC5Mh9_ks__Hi7zwHBdRLa0i8dz0fKg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyMTg4OX0.2fFwj9PIsEIBFwWWVnXzA5YOQDYPgihhEgoUTAO154o
 
 {
-    "name": "TestProject"
+    "name": "Project"
 }
 
 ### Add User to Project;
-GET http://127.0.0.1:8000/projects/1/add-user/3
+GET http://127.0.0.1:8000/projects/1/add-user/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjk1MH0.90GtBQdmate32Ucg303iplMz21EmRSyxa0I-f9Ggsyk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyMTg4OX0.2fFwj9PIsEIBFwWWVnXzA5YOQDYPgihhEgoUTAO154o
 
 ### Get Users from Project;
 GET http://127.0.0.1:8000/projects/1/get-users
@@ -74,14 +75,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Create Impact;
 POST http://127.0.0.1:8000/impacts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNzA4M30.QctZXCefGmXyDEcHsR7eDW9zhlhBgxJHdNpEApE2pTA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyMjAzM30.BhGV9jXg1-R2ExF3_3T3QvNg46p9UxoWqrDT3HnVebI
 
 {
     "title": "Impact1",
     "description": "Some task to done",
-    "type": "feat",
+    "type": "FEAT",
     "impactPercent": 0,
     "project_id": 1
+}
+
+### Update Impact;
+PATCH http://127.0.0.1:8000/impacts/update/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNjU2ODR9.AiFZBWdtnZvxwl02-A4M04Z8p4h6TeoNX3m2dBb05Ew
+
+{
+    "title": "NEEEEWWWW",
+    "description": "New desc",
+    "impactPercent": 50
 }
 
 

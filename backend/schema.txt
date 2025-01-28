@@ -1,4 +1,4 @@
-/// Start Func ///
+/// Start Functionality ///
 User Experience:
 -> Auth:
 	- register user; ✅
@@ -10,13 +10,15 @@ User Experience:
 	- get user by @username / email@; ✅
 
 -> Project Entity:
-	- create project (founder_id: user_id); ✅
+	- create project (user_id); ✅
 	- add user to project; ✅
+	- delete project (founder); 
+	- edit project (founder); 
 	- get users from current project; ✅
 	- get impacts from current project; ✅
-	- edit impacts (user or founder);
 
 -> Impact Entity:
-	- create impacts (user_id);
-	- edit impacts (current user);
-/// End Func ///
+	- create impact (user_id, project_id); ✅
+	- edit impact (founder & current user); ✅
+	- delete impact (founder & current_user);
+/// End Functionality ///

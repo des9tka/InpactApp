@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 class ImpactModel(SQLModel, table=True):
     __tablename__ = "impact"
     
-    # @field_validator('type')
-    # @classmethod
-    # def validate_type(cls, v):
-    #     return v.title() if v else v
+    @field_validator('type')
+    @classmethod
+    def validate_type(cls, v):
+        return v.upper() if v else v
 
     id: Optional[int] = Field(default=None, primary_key=True)
     title: Annotated[str, (0, 50)] = Field(..., max_length=50)
@@ -39,3 +39,11 @@ class ImpactModel(SQLModel, table=True):
             session=session,
             impact_data=impact_data,
     )
+
+    @classmethod
+    def update_impact(cls, session: Session, impact_data, impact_id: int):
+        return ImpactServiceStore.updateImpactService(
+            session=session,
+            impact_data=impact_data,            
+            impact_id=impact_id
+        )

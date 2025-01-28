@@ -5,6 +5,7 @@ from core.db import get_session
 from core.tokens import oauth2_bearer
 from models import ImpactModel
 from repository import ImpactRepository
+from enums import UpdateImpactDataEnum
 
 
 # Impact Router;
@@ -25,3 +26,12 @@ async def create_project(
 		token=token,
 		impact_data=impact_data,
 	)
+
+@impact_router.patch("/update/{impact_id}")
+async def update_project(
+	impact_data: UpdateImpactDataEnum,
+	impact_id: int,
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+) -> ImpactModel:
+	return await ImpactRepository.update_impact(session=session, token=token, impact_data=impact_data, impact_id=impact_id)
