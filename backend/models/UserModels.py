@@ -22,7 +22,7 @@ class UserModel(SQLModel, table=True):
     created_at: Optional[date] = Field(default_factory=date.today)
     updated_at: Optional[date] = Field(default=None)
 
-    projects: List["ProjectModel"] = Relationship(back_populates="user", link_model=UserProjectModel)
+    projects: List["ProjectModel"] = Relationship(back_populates="users", link_model=UserProjectModel)
 
     @classmethod
     def create_user(cls, session: Session, user_data, hashed_password):

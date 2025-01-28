@@ -17,11 +17,15 @@ class ProjectModel(SQLModel, table=True):
     created_at: Optional[date] = Field(default_factory=date.today)
     updated_at: Optional[date] = Field(default=None)
 
-    users: List["UserModel"] = Relationship(back_populates="project", link_model=UserProjectModel)
+    users: List["UserModel"] = Relationship(back_populates="projects", link_model=UserProjectModel)
 
     @classmethod
-    async def create_project(cls, session: Session, project_data):
+    def create_project(cls, session: Session, project_data):
         return ProjectServicesStore.createProjectService(
             session=session,
             project_data=project_data,
         )
+    
+    @classmethod
+    def get_project_by_id(cls, session: Session, project_id):
+        return ProjectServicesStore.getProjectById(session=session, project_id=project_id)

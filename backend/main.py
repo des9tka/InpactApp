@@ -7,5 +7,5 @@ app = FastAPI()
 
 app.include_router(router=auth_router)
 app.include_router(router=user_router)
-app.include_router(router=debug_router)
 app.include_router(router=project_router)
+app.include_router(router=debug_router)

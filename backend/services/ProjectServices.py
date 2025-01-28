@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import Session, select, or_
 
 
 class ProjectServicesStore:
@@ -16,4 +16,17 @@ class ProjectServicesStore:
         session.commit()
         session.refresh(project)
         return project
-		
+    
+    # Get Project By Id;
+    @classmethod 
+    def getProjectById(cls, session: Session, project_id):
+        from models import ProjectModel
+        
+        query = select(ProjectModel).where(
+            or_(
+                ProjectModel.id == project_id if project_id else False,
+            )
+        )
+    
+        return session.exec(query).first()
+

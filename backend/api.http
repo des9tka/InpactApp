@@ -4,8 +4,8 @@ POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "user5@gmail.com",
-    "password": "user5"
+	"email": "test1@gmail.com",
+    "password": "test1"
 }
 
 
@@ -14,9 +14,9 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "test@gmail.com",
-    "password": "test",
-    "username": "test"
+	"email": "test1@gmail.com",
+    "password": "test1",
+    "username": "test1"
 }
 
 ### Refresh Access/Refresh Tokens;
@@ -36,11 +36,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6I
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA0ODYwM30.1Nru4Kovkk6-q8CvHSO1eygNygnLDaOZFFEJXMTz8y4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5MTg4OH0.XxF1cqJvRiUZHLDbpXTh92x_uNjtohpuwdgy_ODS7pM
 
 {
-    "name": "3dModels"
+    "name": "Test"
 }
+
+### Add User to Project;
+GET http://127.0.0.1:8000/projects/4/add-user/8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5MTg4OH0.XxF1cqJvRiUZHLDbpXTh92x_uNjtohpuwdgy_ODS7pM
+
 
 # ---DEBUG---
 ### Get Redis Data;
