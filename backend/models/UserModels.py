@@ -24,6 +24,9 @@ class UserModel(SQLModel, table=True):
 
     projects: List["ProjectModel"] = Relationship(back_populates="users", link_model=UserProjectModel)
 
+    class Config:
+        from_attributes = True
+
     @classmethod
     def create_user(cls, session: Session, user_data, hashed_password):
         return UserServicesStore.createUserService(
@@ -33,7 +36,11 @@ class UserModel(SQLModel, table=True):
         )
 
     @classmethod
-    def get_user_by(cls, session: Session, id=None, email=None, username=None):
+    def get_user_by(cls, session: Session, 
+        id: Optional[int]=None, 
+        email:Optional[str]=None, 
+        username:Optional[str]=None
+    ):
         return UserServicesStore.getUserByService(
             session, 
             id, 

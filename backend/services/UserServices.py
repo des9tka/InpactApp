@@ -1,5 +1,6 @@
 from sqlmodel import Session, select, or_
 from sqlalchemy.sql.expression import func
+from typing import Optional
 
 
 class UserServicesStore:
@@ -20,9 +21,13 @@ class UserServicesStore:
         session.refresh(user)
         return user
 
-    @classmethod
     # Get User By Params;
-    def getUserByService(cls, session: Session, id=None, email=None, username=None):
+    @classmethod
+    def getUserByService(cls, session: Session, 
+        id: Optional[int]=None, 
+        email:Optional[str]=None, 
+        username:Optional[str]=None
+    ):
         from models import UserModel
 
         if not session: return
@@ -35,9 +40,9 @@ class UserServicesStore:
             )
         )
         return session.exec(query).first()
-        
-    @classmethod
+
     # Get All Users;
+    @classmethod
     def getAllUsersService(cls, session):
         from models import UserModel
         return session.exec(select(UserModel)).all()

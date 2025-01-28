@@ -1,37 +1,23 @@
-/// Start Desc ///
-	* Main Instance -> Project (
-		Id: int (after order num);
-		Name | str;
-		Created_At | date;
-		Updated_At | date;
-		Workers | [WorkerId];
-		Founder | WorkerId;
-		Inpacts | [Inpactinstance];
-	)
+/// Start Func ///
+User Experience:
+-> Auth:
+	- register user;
+	- login user;
+	- refresh user's tokens;
 
-	* Project Child Instance -> Inpact (
-		Id: int (after order num);
-		Worker | WorkerId;
-		Title | str;
-		Description | str;
-		Type | "feat"/"fix"/"refactor"/"docs"/"style"/"perf"/"test"/"revert"/"wip"/"build"/"merge";
-		Inpact | float;
-		Created_At | date;
-		Updated_At | date;
+-> User Entity:
+	- edit user;
+	- get user by @username / email@;
 
-	) 
+-> Project Entity:
+	- create project (founder_id: user_id);
+	- add user to project;
+	- get users from current project;
+	- get impacts from current project;
+	- edit impacts (founder_id)
 
-	* User Intsance -> Worker (
-		Id | int (after order num);
-		email | str;
-		name | str;
-		surname | str;
-		Created_At | date;
-		Updated_At | date;
-	)
-/// End Desc /// 
-------
-/// Start ToolsList ///
-	Frontend: NextJS, Redux, @Redux/toolkit, Formik;
-	Backend: FastApi, SQLModel;
-	Storage: SQLite;
+-> Impact Entity:
+	- create impacts (user_id);
+	- edit impacts (current user);
+
+/// End Func ///

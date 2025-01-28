@@ -9,7 +9,7 @@ from alembic import context
 
 from models.UserModels import UserModel
 from models.ProjectModels import ProjectModel
-from models.InpactModels import InpactModel
+from models.ImpactModels import ImpactModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

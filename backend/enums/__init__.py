@@ -1,4 +1,4 @@
 from .UserEnums import *
-from .InpactEnums import *
+from .ImpactEnums import *
 from .TokenEnums import *
 from .ProjectEnums import *

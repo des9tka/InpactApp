@@ -22,24 +22,24 @@ Content-Type: application/json
 ### Refresh Access/Refresh Tokens;
 POST http://127.0.0.1:8000/auth/refresh
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6InJlZnJlc2giLCJleHAiOjE3Mzc5OTA3MDl9.DgEJ6OkN_SDiUX-IKZ9l0Al204AHYMjAmn2x06KYj4U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNDE3NDZ9.wxqHFELFcR0pZSVivQGEymQCaB2aFUeiJx3tTsYVdTM
 
 
 # ---USERS---
 ### Get all Users;
-GET http://127.0.0.1:8000/users
+GET http://127.0.0.1:8000/users?id=12321
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODAzNzY3MX0.rWPoNIfHt7Inmw9_yF6kHUJECyfAT0NbwOySzSjV9wA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5ODU2NH0.5hw4r3TxFnsAmWq2OvkDYf2ZmjLiUrxGzaz9if3-DWk
 
 
 # ---PROJECTS---
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5MTg4OH0.XxF1cqJvRiUZHLDbpXTh92x_uNjtohpuwdgy_ODS7pM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODA5ODU2NH0.5hw4r3TxFnsAmWq2OvkDYf2ZmjLiUrxGzaz9if3-DWk
 
 {
-    "name": "Test"
+    "name": "Test2"
 }
 
 ### Add User to Project;
