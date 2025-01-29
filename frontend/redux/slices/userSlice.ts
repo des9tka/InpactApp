@@ -2,7 +2,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 import { authService } from "@/services/authService";
-import { authRegisterUserType, userType } from "@/types";
+import { cookieService } from "@/services/cookieService";
+import {
+	ApiResponseError,
+	authLoginUserType,
+	authRegisterUserType,
+	TokensType,
+	userType,
+} from "@/types";
 
 interface IInitialState {
 	user: userType | null;
@@ -21,11 +28,23 @@ const registerUser = createAsyncThunk<userType, authRegisterUserType>(
 	async (body, { rejectWithValue }) => {
 		try {
 			const { data } = await authService.authRegisterUser(body);
-			console.log(data);
 			return data;
 		} catch (err) {
-			const typedError = err as AxiosError;
-			return rejectWithValue(typedError.response?.data);
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
+const loginUser = createAsyncThunk<TokensType, authLoginUserType>(
+	"noteSlice/loginUser",
+	async (body, { rejectWithValue }) => {
+		try {
+			const { data } = await authService.authLoginUser(body);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
 		}
 	}
 );
@@ -45,9 +64,22 @@ const userSlice = createSlice({
 				state.loading = false;
 				state.user = action.payload;
 			})
-			.addCase(registerUser.rejected, state => {
+			.addCase(registerUser.rejected, (state, action) => {
 				state.loading = false;
+				state.errors = action.payload as string;
+			})
+
+			.addCase(loginUser.pending, state => {
+				state.loading = true;
 				state.errors = null;
+			})
+			.addCase(loginUser.fulfilled, (state, action) => {
+				state.loading = false;
+				cookieService.setCookieAccessRefreshTokens(action.payload);
+			})
+			.addCase(loginUser.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -56,6 +88,6 @@ const {
 	actions: {},
 } = userSlice;
 
-const userActions = { registerUser };
+const userActions = { registerUser, loginUser };
 
 export { userActions, userReducer };

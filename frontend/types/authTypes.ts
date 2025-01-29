@@ -16,6 +16,10 @@ type TokensType = {
 	refresh_token: string;
 };
 
+type ApiResponseError = {
+	detail: string;
+};
+
 // type AccessTokenType = {
 // 	access_token: string;
 // };
@@ -25,6 +29,7 @@ type TokensType = {
 // };
 
 export type {
+	ApiResponseError,
 	// AccessTokenType,
 	authLoginUserType,
 	authRegisterUserType,

@@ -1,19 +1,36 @@
 "use client";
 import { useFormik } from "formik";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { useAppDispatch, userActions } from "@/redux";
+import { Notification } from "@/components";
+import { useAppDispatch, useAppSelector, userActions } from "@/redux";
 import { authRegisterUserType } from "@/types";
 import { authRegisterValidationSchema } from "@/validators";
 
 function RegisterForm({
 	isExtra,
 	setIsExtra,
+	setIsLogin,
 }: {
 	isExtra: boolean;
 	setIsExtra: Function;
+	setIsLogin: Function;
 }) {
-	
+	const {
+		errors: sliceErrors,
+		loading,
+		user,
+	} = useAppSelector(state => state.userReducer);
 	const dispatch = useAppDispatch();
+
+	const [showNotification, setShowNotification] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (user && !loading && !sliceErrors) {
+			setShowNotification(true);
+		}
+	}, [user]);
 
 	const { values, handleBlur, errors, touched, handleChange, handleSubmit } =
 		useFormik({
@@ -26,13 +43,23 @@ function RegisterForm({
 			},
 			validationSchema: authRegisterValidationSchema,
 			onSubmit: (data: authRegisterUserType) => {
-				console.log("submitted!");
 				dispatch(userActions.registerUser(data));
 			},
 		});
 
 	return (
 		<div>
+			{showNotification && (
+				<Notification
+					message="Success Register!"
+					type="success"
+					duration={3}
+					isVisible={showNotification}
+					setIsVisible={setShowNotification}
+					endUpFunc={() => setIsLogin(true)}
+				/>
+			)}
+
 			<form onSubmit={handleSubmit} method="POST" className="space-y-2">
 				<div>
 					<label
@@ -188,11 +215,22 @@ function RegisterForm({
 				<div>
 					<button
 						type="submit"
-						className="flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						className={`flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+							loading ? "cursor-progress" : ""
+						}`}
+						disabled={loading}
 					>
 						Sign up
+						{loading && (
+							<span className="ml-2 animate-spin">
+								<Loader2 />
+							</span>
+						)}
 					</button>
 				</div>
+				{sliceErrors && (
+					<p className="text-red-500 text-center">{sliceErrors}</p>
+				)}
 			</form>
 		</div>
 	);

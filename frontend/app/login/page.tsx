@@ -57,7 +57,11 @@ function LoginPage() {
 										Create an account
 									</h2>
 
-									<RegisterForm isExtra={isExtra} setIsExtra={setIsExtra} />
+									<RegisterForm
+										isExtra={isExtra}
+										setIsExtra={setIsExtra}
+										setIsLogin={setIsLogin}
+									/>
 
 									<p className="text-center text-sm text-gray-600 mt-4">
 										Already a member?

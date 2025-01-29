@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { TokensType } from "@/types";
 import { cookieService } from "./cookieService";
 
+
 export const axiosService = axios.create({
 	baseURL,
 });

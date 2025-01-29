@@ -1,5 +1,3 @@
-export const baseURL = "localhost:8000";
-
 export const userUrls = {
 	getUserBy: (id?: number, email?: string, username?: string) =>
 		`/users?${

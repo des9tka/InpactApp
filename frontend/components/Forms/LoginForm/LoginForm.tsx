@@ -1,10 +1,35 @@
 "use client";
-import { ForgotPasswordModal } from "@/components";
+import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { ForgotPasswordModal } from "@/components";
+import { useAppDispatch, useAppSelector, userActions } from "@/redux";
+import { authLoginUserType } from "@/types";
+import { authLoginValidationSchema } from "@/validators";
+import { Loader2 } from "lucide-react";
 
 function LoginForm() {
+	const { errors: sliceErrors, loading } = useAppSelector(
+		state => state.userReducer
+	);
+	const dispatch = useAppDispatch();
+
 	const [isForgot, setIsForgot] = useState<boolean>(false);
+
+	useEffect(() => {}, []);
+
+	const { values, handleBlur, errors, touched, handleChange, handleSubmit } =
+		useFormik({
+			initialValues: {
+				email: "",
+				password: "",
+			},
+			validationSchema: authLoginValidationSchema,
+			onSubmit: (data: authLoginUserType) => {
+				dispatch(userActions.loginUser(data)).then(() => {});
+			},
+		});
 
 	return (
 		<div className="relative">
@@ -12,7 +37,7 @@ function LoginForm() {
 				{isForgot && <ForgotPasswordModal setIsForgot={setIsForgot} />}
 			</AnimatePresence>
 
-			<form action="#" method="POST" className="space-y-2">
+			<form onSubmit={handleSubmit} method="POST" className="space-y-2">
 				<div>
 					<label
 						htmlFor="email"
@@ -22,10 +47,20 @@ function LoginForm() {
 					</label>
 					<div className="mt-2">
 						<input
+							id="email"
+							type="text"
+							value={values.email}
+							onChange={handleChange}
+							onBlur={handleBlur}
 							autoComplete="email"
 							className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 						/>
 					</div>
+					{touched.email && errors.email && (
+						<div className="text-sm text-red-500 text-center capitalize">
+							{errors.email}
+						</div>
+					)}
 				</div>
 
 				<div>
@@ -48,23 +83,40 @@ function LoginForm() {
 					<div className="mt-2">
 						<input
 							id="password"
-							name="password"
-							type="password"
-							required
+							type="text"
+							value={values.password}
+							onChange={handleChange}
+							onBlur={handleBlur}
 							autoComplete="current-password"
 							className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 						/>
 					</div>
+					{touched.password && errors.password && (
+						<div className="text-sm text-red-500 text-center capitalize">
+							{errors.password}
+						</div>
+					)}
 				</div>
 
 				<div>
 					<button
 						type="submit"
-						className="flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						className={`flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+							loading ? "cursor-progress" : ""
+						}`}
+						disabled={loading}
 					>
 						Sign in
+						{loading && (
+							<span className="ml-2 animate-spin">
+								<Loader2 />
+							</span>
+						)}
 					</button>
 				</div>
+				{sliceErrors && (
+					<p className="text-red-500 text-center">{sliceErrors}</p>
+				)}
 			</form>
 		</div>
 	);
