@@ -12,7 +12,7 @@ const authService = {
 		axiosService.post(authUrls.registerUser(), body),
 
 	authLoginUser: (body: authLoginUserType): AxiosRes<TokensType> =>
-		axiosService.patch(authUrls.loginUser(), body),
+		axiosService.post(authUrls.loginUser(), body),
 
 	authRefreshTokens: (): AxiosRes<TokensType> =>
 		axiosService.post(authUrls.refreshTokens()),
