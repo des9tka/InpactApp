@@ -99,7 +99,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 				Cell: ({ row }) => (
 					<button
 						onClick={() => handleEditClick(row.index)}
-						className="px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+						className="px-4 py-2 text-sm bg-sky-500 text-white rounded hover:bg-sky-600 disabled:opacity-50"
 						disabled={loading || editingRow !== null}
 					>
 						Edit
@@ -153,7 +153,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 	return (
 		<div className="overflow-x-auto w-full rounded-lg border border-gray-300">
 			<table {...getTableProps()} className="w-full border-collapse">
-				<thead className="bg-gray-500">
+				<thead className="bg-gray-800">
 					{headerGroups.map(headerGroup => (
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{headerGroup.headers.map(column => (
@@ -171,7 +171,10 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 					{rows.map((row, rowIndex) => {
 						prepareRow(row);
 						return (
-							<tr {...row.getRowProps()} className="bg-white hover:bg-gray-50">
+							<tr
+								{...row.getRowProps()}
+								className="bg-gray-700 hover:bg-gray-800"
+							>
 								{row.cells.map(cell => {
 									if (cell.column.id === "actions") {
 										return (
@@ -181,7 +184,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 														<button
 															onClick={handleSave}
 															disabled={loading}
-															className="w-full px-3 py-1 text-sm bg-sky-500 text-white rounded hover:bg-sky-600 disabled:opacity-50"
+															className="w-full px-3 py-1 text-sm bg-sky-500 rounded hover:bg-sky-600 disabled:opacity-50"
 														>
 															{loading ? "Saving..." : "Save"}
 														</button>
@@ -206,7 +209,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 									return (
 										<td
 											{...cell.getCellProps()}
-											className="p-4 text-sm text-gray-900"
+											className="p-4 text-sm text-gray-100"
 										>
 											{editingRow === rowIndex ? (
 												cell.column.id === "description" ? (

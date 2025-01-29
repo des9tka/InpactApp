@@ -1,4 +1,8 @@
 "use client";
+import { useFormik } from "formik";
+
+import { authRegisterUserType } from "@/types";
+import { authRegisterValidationSchema } from "@/validators";
 
 function RegisterForm({
 	isExtra,
@@ -7,9 +11,23 @@ function RegisterForm({
 	isExtra: boolean;
 	setIsExtra: Function;
 }) {
+	const { values, handleBlur, errors, handleChange, handleSubmit } = useFormik({
+		initialValues: {
+			email: "",
+			username: "",
+			password: "",
+			name: "",
+			surname: "",
+		},
+		validationSchema: authRegisterValidationSchema,
+		onSubmit: (data: authRegisterUserType) => {
+			console.log(data);
+		},
+	});
+
 	return (
 		<div>
-			<form action="#" method="POST" className="space-y-2">
+			<form onSubmit={handleSubmit} method="POST" className="space-y-2">
 				<div>
 					<label
 						htmlFor="email"
@@ -20,9 +38,10 @@ function RegisterForm({
 					<div className="mt-2">
 						<input
 							id="email"
-							name="email"
-							type="email"
-							required
+							type="text"
+							value={values.email}
+							onChange={handleChange}
+							onBlur={handleBlur}
 							autoComplete="email"
 							className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 						/>
@@ -39,9 +58,10 @@ function RegisterForm({
 					<div className="mt-2">
 						<input
 							id="username"
-							name="username"
 							type="text"
-							required
+							value={values.username}
+							onChange={handleChange}
+							onBlur={handleBlur}
 							autoComplete="username"
 							className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 						/>
@@ -62,9 +82,11 @@ function RegisterForm({
 						</label>
 						<div className="mt-2">
 							<input
-								id="firstName"
-								name="firstName"
+								id="name"
 								type="text"
+								value={values.name}
+								onChange={handleChange}
+								onBlur={handleBlur}
 								className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 							/>
 						</div>
@@ -78,9 +100,11 @@ function RegisterForm({
 						</label>
 						<div className="mt-2">
 							<input
-								id="lastName"
-								name="lastName"
+								id="surname"
 								type="text"
+								value={values.surname}
+								onChange={handleChange}
+								onBlur={handleBlur}
 								className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 							/>
 						</div>
@@ -120,9 +144,10 @@ function RegisterForm({
 					<div className="mt-2">
 						<input
 							id="password"
-							name="password"
-							type="password"
-							required
+							type="text"
+							value={values.password}
+							onChange={handleChange}
+							onBlur={handleBlur}
 							autoComplete="current-password"
 							className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 						/>

@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field, Session, Relationship
-from typing import Optional, Annotated, List, TYPE_CHECKING
+from typing import Optional, List, TYPE_CHECKING
 from datetime import date
 
 from services import UserServicesStore
@@ -13,11 +13,11 @@ class UserModel(SQLModel, table=True):
     __tablename__ = "user"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    email: Annotated[str, (0, 100)] = Field(..., unique=True)
-    password: Annotated[str, (0, 100)] = Field(..., exclude=True)
-    username: Annotated[str, (0, 50)] = Field(..., max_length=50, unique=True)
-    name: Optional[str] = Field(default=None, max_length=50)
-    surname: Optional[str] = Field(default=None, max_length=50)
+    email: str = Field(..., min_length=2, unique=True)
+    password: str = Field(..., min_length=2, max_length=100, exclude=True)
+    username: str = Field(..., min_length=2, max_length=50, unique=True)
+    name: Optional[str] = Field(default=None, min_length=2, max_length=50)
+    surname: Optional[str] = Field(default=None, min_length=2, max_length=50)
     is_active: Optional[bool] = Field(default=False)
     created_at: Optional[date] = Field(default_factory=date.today)
     updated_at: Optional[date] = Field(default=None)
