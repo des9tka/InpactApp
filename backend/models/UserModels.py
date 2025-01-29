@@ -14,7 +14,7 @@ class UserModel(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(..., min_length=2, unique=True)
-    password: str = Field(..., min_length=2, max_length=100, exclude=True)
+    password: str = Field(..., min_length=4, max_length=25, exclude=True)
     username: str = Field(..., min_length=2, max_length=50, unique=True)
     name: Optional[str] = Field(default=None, min_length=2, max_length=50)
     surname: Optional[str] = Field(default=None, min_length=2, max_length=50)
