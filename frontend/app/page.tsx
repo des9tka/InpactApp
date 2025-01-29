@@ -1,3 +1,5 @@
 export default function Home() {
-	return <div>init</div>;
+	return <div>
+		
+	</div>;
 }
