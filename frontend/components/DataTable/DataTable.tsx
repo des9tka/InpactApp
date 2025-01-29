@@ -12,7 +12,7 @@ interface RowData {
 
 interface DataTableProps {
 	data: RowData[];
-	onSave: (updatedData: RowData[]) => void;
+	onSave: Function;
 }
 
 const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
@@ -29,6 +29,26 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 			{
 				Header: "Description",
 				accessor: "description",
+				Cell: ({ value }) => {
+					const [isHovered, setIsHovered] = React.useState(false);
+
+					return (
+						<div
+							className="absolute"
+							onMouseEnter={() => setIsHovered(true)}
+							onMouseLeave={() => setIsHovered(false)}
+						>
+							<span className="block max-w-[75px] md:max-w-[125px] lg:max-w-[150px] truncate">
+								{value}
+							</span>
+							{isHovered && (
+								<div className="absolute left-1/2 -translate-x-1/3 top-full w-max max-w-xs bg-gray-700 text-white text-sm p-2 rounded shadow-lg z-50">
+									{value}
+								</div>
+							)}
+						</div>
+					);
+				},
 			},
 			{
 				Header: "Type",
@@ -38,7 +58,15 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 						className={`px-2 py-1 rounded text-xs font-medium
             ${value === "FEAT" ? "bg-blue-100 text-blue-800" : ""}
             ${value === "WIP" ? "bg-yellow-100 text-yellow-800" : ""}
-            ${value === "FIX" ? "bg-red-100 text-red-800" : ""}
+            ${value === "FIX" ? "bg-red-100 text-green-800" : ""}
+			${value === "REF" ? "bg-red-100 text-sky-800" : ""}
+			${value === "DOCS" ? "bg-red-100 text-emerald-800" : ""}
+			${value === "STYLE" ? "bg-red-100 text-gray-800" : ""}
+			${value === "PERF" ? "bg-red-100 text-teal-800" : ""}
+			${value === "TEST" ? "bg-red-100 text-lime-800" : ""}
+			${value === "REVERT" ? "bg-red-100 text-red-800" : ""}
+			${value === "BUILD" ? "bg-red-100 text-amber-800" : ""}
+			${value === "MERGE" ? "bg-red-100 text-violet-800" : ""}
           `}
 					>
 						{value}
@@ -105,7 +133,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 	};
 
 	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement>,
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 		field: keyof RowData
 	): void => {
 		if (editedData) {
@@ -123,15 +151,15 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 		});
 
 	return (
-		<div className="overflow-x-auto rounded-lg border border-gray-200">
+		<div className="overflow-x-auto w-full rounded-lg border border-gray-300">
 			<table {...getTableProps()} className="w-full border-collapse">
-				<thead className="bg-gray-100">
+				<thead className="bg-gray-500">
 					{headerGroups.map(headerGroup => (
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{headerGroup.headers.map(column => (
 								<th
 									{...column.getHeaderProps()}
-									className="p-4 text-left text-sm font-medium text-gray-700"
+									className="p-4 text-left text-sm font-medium text-slate-100"
 								>
 									{column.render("Header")}
 								</th>
@@ -149,11 +177,11 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 										return (
 											<td {...cell.getCellProps()} className="p-4">
 												{editingRow === rowIndex ? (
-													<div className="space-x-2">
+													<div className="flex flex-col items-center space-y-2 p-2">
 														<button
 															onClick={handleSave}
 															disabled={loading}
-															className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
+															className="w-full px-3 py-1 text-sm bg-sky-500 text-white rounded hover:bg-sky-600 disabled:opacity-50"
 														>
 															{loading ? "Saving..." : "Save"}
 														</button>
@@ -163,7 +191,7 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 																setEditedData(null);
 															}}
 															disabled={loading}
-															className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+															className="w-full px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
 														>
 															Cancel
 														</button>
@@ -181,27 +209,46 @@ const DataTable: React.FC<DataTableProps> = ({ data, onSave }) => {
 											className="p-4 text-sm text-gray-900"
 										>
 											{editingRow === rowIndex ? (
-												<input
-													type={
-														cell.column.id === "impactPercent"
-															? "number"
-															: "text"
-													}
-													className="w-full p-2 border rounded text-gray-900"
-													value={
-														editedData
-															? String(
-																	editedData[cell.column.id as keyof RowData]
-															  )
-															: ""
-													}
-													onChange={e =>
-														handleChange(e, cell.column.id as keyof RowData)
-													}
-													disabled={loading}
-												/>
-											) : (
+												cell.column.id === "description" ? (
+													<textarea
+														className="w-full p-2 border rounded text-gray-900 resize-y max-h-40 overflow-auto"
+														value={
+															editedData
+																? String(
+																		editedData[cell.column.id as keyof RowData]
+																  )
+																: ""
+														}
+														onChange={e =>
+															handleChange(e, cell.column.id as keyof RowData)
+														}
+														disabled={loading}
+													/>
+												) : (
+													<input
+														type={
+															cell.column.id === "impactPercent"
+																? "number"
+																: "text"
+														}
+														className="w-full p-2 border rounded text-gray-900"
+														value={
+															editedData
+																? String(
+																		editedData[cell.column.id as keyof RowData]
+																  )
+																: ""
+														}
+														onChange={e =>
+															handleChange(e, cell.column.id as keyof RowData)
+														}
+														disabled={loading}
+													/>
+												)
+											) : cell.render ? (
 												cell.render("Cell")
+											) : (
+												<span>{cell.value ?? ""}</span>
 											)}
 										</td>
 									);
