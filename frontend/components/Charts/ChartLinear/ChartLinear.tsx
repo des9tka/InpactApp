@@ -97,7 +97,7 @@ function ChartLinear() {
 	}, []);
 
 	return (
-		<div className="w-full p-4 bg-gray-800 rounded-lg flex-col justify-center items-center">
+		<div className="w-[85vw] p-4 bg-gray-800 rounded-lg flex-col justify-center items-center">
 			<h2 className="text-center text-lg font-bold text-white">Linear Chart</h2>
 			<div className="w-full h-full">
 				<Line ref={chartRef} data={data} options={options} />

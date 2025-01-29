@@ -13,7 +13,6 @@ import { Bar } from "react-chartjs-2";
 ChartJS.register(CategoryScale, BarElement, Title, Tooltip, Legend);
 
 const ChartBar = () => {
-	// Correct typing for chartRef to be compatible with react-chartjs-2
 	const chartRef = useRef<ChartJS<"bar"> | null>(null);
 
 	const barData = {
@@ -61,7 +60,7 @@ const ChartBar = () => {
 		plugins: {
 			legend: {
 				display: true,
-				position: "top" as const, // Fixing type mismatch
+				position: "top" as const,
 			},
 		},
 	};
@@ -69,7 +68,7 @@ const ChartBar = () => {
 	useEffect(() => {
 		const handleResize = () => {
 			if (chartRef && chartRef.current) {
-				chartRef.current.update(); // Update chart if reference exists
+				chartRef.current.update();
 			}
 		};
 
@@ -80,7 +79,7 @@ const ChartBar = () => {
 	}, []);
 
 	return (
-		<div className="w-full p-4 bg-gray-800 rounded-lg flex-col justify-center items-center">
+		<div className="w-[85vw] p-4 bg-gray-800 rounded-lg flex-col justify-center items-center">
 			<h2 className="text-center text-lg font-bold text-white">Bar Chart</h2>
 			<div className="w-full h-full">
 				<Bar ref={chartRef} data={barData} options={barOptions} />
