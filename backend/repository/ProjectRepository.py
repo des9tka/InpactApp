@@ -20,6 +20,16 @@ class ProjectRepository:
 			session=session,
 			project_data=project_data
 		)
+
+	@classmethod
+	async def get_project_by_id(
+		cls,
+		session,
+		token,
+		project_id
+	):
+		await validate_token(token)
+		return ProjectModel.get_project_by_id(session=session, project_id=project_id)
 	
 	@classmethod
 	async def add_user_to_project(
@@ -61,6 +71,38 @@ class ProjectRepository:
 		session.commit()    
 		session.refresh(user_project)
 		return {"detail": "User added to project."}
+
+	@classmethod
+	async def delete_user_from_project(
+		cls,
+		session,
+		token,
+		project_id,
+		projectUser_id
+	):
+		user_id = await validate_token(token=token)
+		project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
+		
+		if not project:
+			raise HTTPException("Project not found.", status_code=404)
+		
+		if project.founder_id != user_id:
+			raise HTTPException("You are not the founder of this project.", status_code=400)
+
+		if user_id == projectUser_id:
+			raise HTTPException("You cannot remove yourself from the project.", status_code=400)
+		
+		user_project = session.query(UserProjectModel).filter(
+			UserProjectModel.user_id == projectUser_id,
+			UserProjectModel.project_id == project_id
+		).first()
+
+		if not user_project:
+			raise HTTPException("User is not part of the project.", status_code=404)
+		
+		session.delete(user_project)
+		session.commit()
+		return {f"User {projectUser_id} removed from project."}
 	
 	@classmethod
 	async def get_users_from_project(
@@ -74,14 +116,14 @@ class ProjectRepository:
 		user_project = UserProjectModel(user_id=user_id, project_id=project_id)
 
 		if not user_project:
-			raise HTTPException(status_code=404, detail="Project or user was not found.")
+			raise HTTPException("Project or user was not found.", status_code=404)
 		
 		users_in_project = session.query(UserModel).join(
 			UserProjectModel, UserProjectModel.user_id == UserModel.id
 		).filter(UserProjectModel.project_id == project_id).all()
 
 		if not users_in_project:
-			raise HTTPException(status_code=404, detail="No users found for this project.")
+			raise HTTPException("No users found for this project.", status_code=404)
 		
 		return users_in_project
 	

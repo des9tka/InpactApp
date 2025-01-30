@@ -27,6 +27,18 @@ async def create_project(
 		project_data=project_data,
 	)
 
+@project_router.get("/{project_id}")
+async def get_project_by_id(
+	project_id: str,
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+) -> ProjectModel:
+	return await ProjectRepository.get_project_by_id(
+		session=session,
+		token=token,
+		project_id=project_id
+)
+
 @project_router.get('/{project_id}/add-user/{user_id}')
 async def add_user_to_project(
 	session: Session = Depends(get_session),
@@ -39,6 +51,21 @@ async def add_user_to_project(
 		token=token,
 		project_id=project_id,
 		user_id=user_id
+	)
+
+
+@project_router.delete('/{project_id}/delete-user/{projectUser_id}')
+async def delete_user_from_project(
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer),
+	project_id: Optional[str] = None,
+	projectUser_id: Optional[str] = None
+):
+	return await ProjectRepository.delete_user_from_project(
+		session=session,
+		token=token,
+		project_id=project_id,
+		projectUser_id=projectUser_id
 	)
 
 @project_router.get("/{project_id}/get-users")

@@ -4,7 +4,8 @@ from passlib.hash import bcrypt
 from starlette.concurrency import run_in_threadpool
 
 from models.UserModels import UserModel
-from core.tokens import create_access_refresh_tokens, refresh_access_token, validate_token
+from core.tokens import create_access_refresh_tokens, refresh_access_token, validate_token, create_activate_token, create_recovery_token
+from services import send_activate_email
 
 
 class AuthRepository:
@@ -26,8 +27,6 @@ class AuthRepository:
         return tokens
         return True
     
-
-
 	# Register User;
     @classmethod
     async def register(
@@ -59,10 +58,10 @@ class AuthRepository:
                 hashed_password=hashed_password
             )
 		)
-        
+
+        await send_activate_email(user_id=user.id, user_email=user.email)
         return user
 
-    
     #Refresh User tokens;
     @classmethod
     async def refresh(cls, refresh_token: str) -> str:

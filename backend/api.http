@@ -53,19 +53,32 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 
 
 # ---PROJECTS---
+
+### Activate User Token / Recovery Password Token
+
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNTY5MH0.CtvGPx_WL44lgxcA7BAjLABB2nQHVsUCuIopfDTeOJY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI5MzI3Nn0.iXoo8c5quJt-MEsHwxQoHLH0kxQfoQnQ-qcxqPCqV-w
 
 {
     "name": "Project"
 }
 
+### Get Project by Id;
+GET http://127.0.0.1:8000/projects/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI4OTIxNH0.5bCr6g21TSadxhVbzILh8_Qesog58tLMorw1Ab49Em0
+
 ### Add User to Project;
 GET http://127.0.0.1:8000/projects/1/add-user/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyMTg4OX0.2fFwj9PIsEIBFwWWVnXzA5YOQDYPgihhEgoUTAO154o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI5MzI3Nn0.iXoo8c5quJt-MEsHwxQoHLH0kxQfoQnQ-qcxqPCqV-w
+
+### Delete User from project 
+DELETE http://127.0.0.1:8000/projects/1/delete-user/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI5MzI3Nn0.iXoo8c5quJt-MEsHwxQoHLH0kxQfoQnQ-qcxqPCqV-w
 
 ### Get Users from Project;
 GET http://127.0.0.1:8000/projects/1/get-users

@@ -1,5 +1,6 @@
 from sqlmodel import Session, select, or_
 from datetime import date
+from fastapi import HTTPException
 
 
 class ProjectServicesStore:
@@ -22,6 +23,9 @@ class ProjectServicesStore:
     @classmethod 
     def getProjectById(cls, session: Session, project_id):
         from models import ProjectModel
+
+        if not session:
+            raise HTTPException("No session provided.", status_code=400 )
         
         query = select(ProjectModel).where(
             or_(
@@ -39,7 +43,7 @@ class ProjectServicesStore:
         project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
         session.delete(project)
         session.commit()
-        return {"detail": f"Project with id {project_id} has been deleted."}
+        return {f"Project with id {project_id} has been deleted."}
     
     # Update Project;
     @classmethod

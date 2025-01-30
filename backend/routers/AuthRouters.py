@@ -39,3 +39,10 @@ async def refresh(
 	session: Session = Depends(get_session)
 ):
 	return await AuthRepository.get_info(access_token=access_token, session=session)
+
+@auth_router.get("/activate/{activate_token}")
+async def activate(
+	activate_token: str = Depends(oauth2_bearer),
+	session: Session = Depends(get_session)
+):
+	return await AuthRepository.activate_user(activate_token=activate_token, session=session)

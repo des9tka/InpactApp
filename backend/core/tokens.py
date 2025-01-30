@@ -17,7 +17,7 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 # Create a single token (by Provided type);
 async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timedelta):
-    if token_type not in [TokenEnum.ACCESS, TokenEnum.REFRESH]:
+    if token_type not in [TokenEnum.ACCESS, TokenEnum.REFRESH, TokenEnum.ACTIVATE, TokenEnum.RECOVERY]:
         raise HTTPException(detail="Invalid token type.", status_code=400)
     
     encode = {"id": user_id, "type": token_type}
@@ -33,11 +33,25 @@ async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timed
             access_expiration=int(expires_delta.total_seconds())
         )
 
-    else: 
+    elif token_type == TokenEnum.REFRESH: 
         await store_user_token(
             user_id=user_id, 
             refresh_token=token, 
             refresh_expiration=int(expires_delta.total_seconds())
+        )
+
+    elif token_type == TokenEnum.ACTIVATE: 
+        await store_user_token(
+            user_id=user_id, 
+            activate_token=token, 
+            activate_expiration=int(expires_delta.total_seconds())
+        )
+
+    elif token_type == TokenEnum.RECOVERY: 
+        await store_user_token(
+            user_id=user_id, 
+            recovery_token=token, 
+            recovery_expiration=int(expires_delta.total_seconds())
         )
 
     return token
@@ -72,6 +86,12 @@ async def validate_token(token: str = Depends(oauth2_bearer)) -> int:
     elif token_type == TokenEnum.REFRESH:
         if not await is_in_store(user_id=user_id, refresh_token=token):
             raise HTTPException(detail="Token is blacklisted.", status_code=401)
+    elif token_type == TokenEnum.ACTIVATE:
+        if not await is_in_store(user_id=user_id, activate_token=token):
+            raise HTTPException(detail="Token is blacklisted.", status_code=401)
+    elif token_type == TokenEnum.RECOVERY:
+        if not await is_in_store(user_id=user_id, recovery_token=token):
+            raise HTTPException(detail="Token is blacklisted.", status_code=401)
     else:
         raise HTTPException(detail="Invalid token type.", status_code=400)
     
@@ -81,3 +101,11 @@ async def validate_token(token: str = Depends(oauth2_bearer)) -> int:
 async def refresh_access_token(refresh_token: str = Depends(oauth2_bearer)):
     user_id = await validate_token(refresh_token)
     return await create_access_refresh_tokens(user_id)
+
+async def create_activate_token(user_id: int):
+    access_expires_delta = timedelta(hours=TOKEN_EXPIRATION[TokenEnum.ACTIVATE])
+    return await create_token(user_id, TokenEnum.ACTIVATE, access_expires_delta) 
+
+async def create_recovery_token(user_id: int):
+    access_expires_delta = timedelta(minutes=TOKEN_EXPIRATION[TokenEnum.RECOVERY])
+    return await create_token(user_id, TokenEnum.RECOVERY, access_expires_delta) 
