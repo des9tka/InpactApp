@@ -35,7 +35,12 @@ function LoginForm() {
 			validationSchema: authLoginValidationSchema,
 			onSubmit: (data: authLoginUserType) => {
 				dispatch(userActions.loginUser(data)).then(() =>
-					router.push("/dashboard")
+					dispatch(userActions.setUpUserInfo())
+						.then(() => router.push("/dashboard"))
+						.catch(e => {
+							cookieService.deleteCookieAccessRefreshTokens();
+							router.push("/login?expired=true");
+						})
 				);
 			},
 		});

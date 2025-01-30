@@ -82,7 +82,11 @@ const updateUserData = createAsyncThunk<userType, userUpdateBodyType>(
 const userSlice = createSlice({
 	name: "userSlice",
 	initialState,
-	reducers: {},
+	reducers: {
+		setError(state, action) {
+			state.errors = action.payload;
+		},
+	},
 	extraReducers: builder =>
 		builder
 			// Register User;
@@ -121,6 +125,7 @@ const userSlice = createSlice({
 			.addCase(setUpUserInfo.fulfilled, (state, action) => {
 				state.loading = false;
 				state.user = action.payload;
+				console.log(action.payload);
 			})
 			.addCase(setUpUserInfo.rejected, (state, action) => {
 				state.loading = false;
@@ -138,15 +143,21 @@ const userSlice = createSlice({
 			})
 			.addCase(updateUserData.rejected, (state, action) => {
 				state.loading = false;
-				window.location.href = "/login";
+				state.errors = action.payload as string;
 			}),
 });
 
 const {
 	reducer: userReducer,
-	actions: {},
+	actions: { setError },
 } = userSlice;
 
-const userActions = { registerUser, loginUser, setUpUserInfo, updateUserData };
+const userActions = {
+	registerUser,
+	loginUser,
+	setUpUserInfo,
+	updateUserData,
+	setError,
+};
 
 export { userActions, userReducer };

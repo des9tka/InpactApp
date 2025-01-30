@@ -1,8 +1,10 @@
 "use client";
-import { useFormik } from "formik";
-import { useEffect, useState } from "react";
-
 import { useAppDispatch, useAppSelector, userActions } from "@/redux";
+import { useFormik } from "formik";
+import { DoorOpenIcon, PenIcon, SaveIcon } from "lucide-react";
+import React, { useEffect, useState } from "react";
+
+import { cookieService } from "@/services/cookieService";
 import { userUpdateBodyType } from "@/types";
 import { userUpdateValidator } from "@/validators";
 import { Notification, UserGuestIcon } from "../UI";
@@ -10,23 +12,14 @@ import { Notification, UserGuestIcon } from "../UI";
 function UserProfile() {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
-	const [mounted, setMounted] = useState<boolean>(false);
+	const [showNotification, setShowNotification] = useState<boolean>(false);
 
 	const {
 		user,
-		loading,
 		errors: sliceErrors,
+		loading,
 	} = useAppSelector(state => state.userReducer);
 	const dispatch = useAppDispatch();
-
-	const [showNotification, setShowNotification] = useState<boolean>(false);
-
-	useEffect(() => {
-		console.log("profile");
-		if (user && !loading && !sliceErrors && isOpen) {
-			setShowNotification(true);
-		}
-	}, [user]);
 
 	const {
 		values,
@@ -44,9 +37,23 @@ function UserProfile() {
 		},
 		validationSchema: userUpdateValidator,
 		onSubmit: (data: userUpdateBodyType) => {
-			dispatch(userActions.updateUserData(data));
+			if (
+				user?.username !== data.username ||
+				user?.name !== data.name ||
+				user?.surname !== data.surname
+			) {
+				dispatch(userActions.updateUserData(data));
+			}
 		},
 	});
+
+	useEffect(() => {
+		if (user) {
+			setFieldValue("username", user.username || "");
+			setFieldValue("name", user.name || "");
+			setFieldValue("surname", user.surname || "");
+		}
+	}, [user, setFieldValue]);
 
 	const handleEditToggle = (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -66,18 +73,21 @@ function UserProfile() {
 
 	return (
 		<div className="absolute top-4 right-4 z-30">
-			{showNotification && (
-				<Notification
-					message="Profile updated successfully!"
-					type="success"
-					duration={3}
-					isVisible={showNotification}
-					setIsVisible={setShowNotification}
-				/>
-			)}
-
 			<div className="relative">
-				<UserGuestIcon onClick={() => setIsOpen(!isOpen)} />
+				<UserGuestIcon
+					onClick={() =>
+						window.location.pathname !== "/login" && setIsOpen(!isOpen)
+					}
+				/>
+				{showNotification && (
+					<Notification
+						message="Profile updated successfully!"
+						type="success"
+						duration={3}
+						isVisible={showNotification}
+						setIsVisible={setShowNotification}
+					/>
+				)}
 				<div
 					className={`${
 						isOpen ? "block" : "hidden"
@@ -95,7 +105,7 @@ function UserProfile() {
 								onChange={handleChange}
 								onBlur={handleBlur}
 								disabled={!isEdit}
-								className="w-full px-3 py-2 border rounded-md bg-gray-500 disabled:bg-gray-700"
+								className="w-full px-3 py-2 border rounded-md bg-gray-700 disabled:bg-gray-500"
 								placeholder="Your Username"
 							/>
 							{touched.username && errors.username && (
@@ -111,7 +121,7 @@ function UserProfile() {
 								onChange={handleChange}
 								onBlur={handleBlur}
 								disabled={!isEdit}
-								className="w-full px-3 py-2 border rounded-md bg-gray-500 disabled:bg-gray-700"
+								className="w-full px-3 py-2 border rounded-md bg-gray-700 disabled:bg-gray-500"
 								placeholder="Your Name"
 							/>
 							{touched.name && errors.name && (
@@ -127,7 +137,7 @@ function UserProfile() {
 								onChange={handleChange}
 								onBlur={handleBlur}
 								disabled={!isEdit}
-								className="w-full px-3 py-2 border rounded-md bg-gray-500 disabled:bg-gray-700"
+								className="w-full px-3 py-2 border rounded-md bg-gray-700 disabled:bg-gray-500"
 								placeholder="Your Surname"
 							/>
 							{touched.surname && errors.surname && (
@@ -135,21 +145,51 @@ function UserProfile() {
 							)}
 						</div>
 
+						{sliceErrors && (
+							<div className="text-red-500 text-sm text-center">
+								{sliceErrors}
+							</div>
+						)}
+
 						<div className="flex justify-evenly">
 							<button
 								type="button"
 								onClick={handleEditToggle}
-								className="px-4 py-2 bg-blue-600 text-white rounded-md"
+								className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 disabled:cursor-progress"
+								disabled={loading}
 							>
-								{isEdit ? "Save" : "Edit"}
+								{isEdit ? (
+									<span className="flex gap-x-2 items-center py-[2px]">
+										Save <SaveIcon />
+									</span>
+								) : (
+									<span className="flex gap-x-2 items-center py-[2px]">
+										Edit <PenIcon size={16} />
+									</span>
+								)}
 							</button>
-							{isEdit && (
+
+							{isEdit ? (
 								<button
 									type="button"
 									onClick={handleCancelEdit}
-									className="px-4 py-2 bg-gray-500 text-white rounded-md"
+									className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-700"
+									disabled={loading}
 								>
 									Cancel
+								</button>
+							) : (
+								<button
+									type="button"
+									onClick={() => {
+										cookieService.deleteCookieAccessRefreshTokens();
+										window.location.href = "/login";
+										setIsOpen(false);
+									}}
+									className="px-4 bg-red-500 text-white rounded-md flex gap-x-2 hover:bg-red-700 items-center"
+									disabled={loading}
+								>
+									Exit <DoorOpenIcon />
 								</button>
 							)}
 						</div>

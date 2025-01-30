@@ -1,2 +1,3 @@
-export * from "./userTypes"
-export * from "./authTypes"
+export * from "./authTypes";
+export * from "./projectTypes";
+export * from "./userTypes";
