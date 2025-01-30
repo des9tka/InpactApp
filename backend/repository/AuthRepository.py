@@ -75,3 +75,31 @@ class AuthRepository:
         user_id = await validate_token(token=access_token)
         user = UserModel.get_user_by(session=session, id=user_id)
         return user
+
+    # Activate User by Token;
+    @classmethod
+    def activate_user(cls, session: Session, token: str) -> bool:
+        user_id = validate_token(token=token)
+        user = UserModel.get_user_by(session=session, id=user_id)
+        user.is_active = True
+        session.commit()
+        return True
+
+    # Request Recovery Password by Email;
+    @classmethod
+    async def request_recovery_password(cls, session: Session, email: str) -> bool:
+        user = UserModel.get_user_by(session=session, email=email)
+        if not user:
+            raise HTTPException(status_code=404, detail="Invalid email.")
+        
+        await send_recovery_email(user_id=user.id, user_email=user.email, background_tasks=background_tasks)
+        return True
+
+    # Recovery Password by Token;
+    @classmethod
+    def recovery_password(cls, session: Session, token: str, password) -> bool:
+        user_id = validate_token(token=token)
+        user = UserModel.get_user_by(session=session, id=user_id)
+        user.password = bcrypt.hash(password)
+        session.commit()
+        return True

@@ -28,6 +28,13 @@ POST http://127.0.0.1:8000/auth/refresh
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNTYyMjd9.wFsh1Cm8LkxcGEzPhjRNjs_r9qsT-pIs0aM4rK-0pXA
 
+### Request Recovery Password Email;
+POST http://127.0.0.1:8000/auth/recovery_request
+Content-Type: application/json
+
+{
+    "email": "deyume9@gmail.com"
+}
 
 # ---USERS---
 ### Get Users By;
@@ -53,9 +60,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 
 
 # ---PROJECTS---
-
-### Activate User Token / Recovery Password Token
-
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
