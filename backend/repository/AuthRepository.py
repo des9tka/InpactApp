@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from fastapi import HTTPException
+from fastapi import HTTPException, BackgroundTasks
 from passlib.hash import bcrypt
 from starlette.concurrency import run_in_threadpool
 
@@ -32,7 +32,8 @@ class AuthRepository:
     async def register(
         cls,
         session: Session,
-        user_data: UserModel
+        user_data: UserModel,
+        background_tasks: BackgroundTasks 
     ) -> UserModel:
         
         required_fields = {
@@ -59,7 +60,7 @@ class AuthRepository:
             )
 		)
 
-        await send_activate_email(user_id=user.id, user_email=user.email)
+        await send_activate_email(user_id=user.id, user_email=user.email, background_tasks=background_tasks)
         return user
 
     #Refresh User tokens;

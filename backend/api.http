@@ -16,11 +16,11 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "test2@gmail.com",
-    "password": "test2",
-    "username": "test2",
-    "name": "test2",
-    "surname": "test2"
+	"email": "deyume9@gmail.com",
+    "password": "deyume9",
+    "username": "deyume9",
+    "name": "deyume9",
+    "surname": "deyume9"
 }
 
 ### Refresh Access/Refresh Tokens;
@@ -135,7 +135,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6I
 GET http://127.0.0.1:8000/debug/get_redis_data
 
 ### Delete invalid users;
-POST http://127.0.0.1:8000/debug/delete_users/2
+POST http://127.0.0.1:8000/debug/delete_users/1
 
 {
     "admin_key": "jnsf-g8q3-y423-hurb"

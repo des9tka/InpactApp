@@ -5,6 +5,8 @@ from fastapi import FastAPI, BackgroundTasks, HTTPException, Depends
 from dotenv import load_dotenv
 from pathlib import Path
 
+from core.tokens import create_activate_token
+
 load_dotenv()
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.example.com")
@@ -15,6 +17,7 @@ SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "your_password")
 
 async def send_email_html_file(recipient: str, subject: str, html_file_path: str, activate_link: str):
     html_path = Path(html_file_path)
+
     if not html_path.is_file():
         raise HTTPException(status_code=404, detail="HTML template not found")
 
@@ -41,19 +44,20 @@ async def send_email_html_file(recipient: str, subject: str, html_file_path: str
         start_tls=True
     )
 
-
 async def send_email_endpoint(
     recipient: str, 
     subject: str, 
     html_file_path: str, 
     activate_link: str, 
-    background_tasks: BackgroundTasks = Depends()
+    background_tasks: BackgroundTasks
 ):
 	background_tasks.add_task(send_email_html_file, recipient, subject, html_file_path, activate_link)
 	return {"Email was sended by aio."}
 
-
-async def send_activate_email(user_email: str, user_id: int, background_tasks: BackgroundTasks = Depends()):
+async def send_activate_email(user_email: str, user_id: int, background_tasks: BackgroundTasks):
 	activate_token = await create_activate_token(user_id=user_id)
 	activate_link = os.getenv("WEB_HOST") + "/activate/" + activate_token
-	await send_email_endpoint(recipient=user_email, subject="Activate account", html_file_path="/backend/utils/HtmlTemplates/activate_email.html", activate_link=activate_link)
+
+	html_file_path = Path.cwd() / "templates" / "activate_email.html"
+
+	await send_email_endpoint(recipient=user_email, subject="Activate account", html_file_path=html_file_path, activate_link=activate_link, background_tasks=background_tasks)
