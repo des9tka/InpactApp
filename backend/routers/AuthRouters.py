@@ -32,3 +32,10 @@ async def refresh(
 	refresh_token: str = Depends(oauth2_bearer),
 ):
 	return await AuthRepository.refresh(refresh_token=refresh_token)
+
+@auth_router.get("/get-info")
+async def refresh(
+	access_token: str = Depends(oauth2_bearer),
+	session: Session = Depends(get_session)
+):
+	return await AuthRepository.get_info(access_token=access_token, session=session)

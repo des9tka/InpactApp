@@ -3,12 +3,14 @@ import { AxiosError } from "axios";
 
 import { authService } from "@/services/authService";
 import { cookieService } from "@/services/cookieService";
+import { userService } from "@/services/userService";
 import {
 	ApiResponseError,
 	authLoginUserType,
 	authRegisterUserType,
 	TokensType,
 	userType,
+	userUpdateBodyType,
 } from "@/types";
 
 interface IInitialState {
@@ -49,13 +51,41 @@ const loginUser = createAsyncThunk<TokensType, authLoginUserType>(
 	}
 );
 
+const setUpUserInfo = createAsyncThunk<userType, void>(
+	"noteSlice/setUpUserInfo",
+	async (_, { rejectWithValue }) => {
+		try {
+			const { data } = await authService.authGetUserInfo();
+			await new Promise(resolve => setTimeout(resolve, 1000)); // Artificial delay for Loader Appear;
+
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
+const updateUserData = createAsyncThunk<userType, userUpdateBodyType>(
+	"noteSlice/updateUserData",
+	async (body, { rejectWithValue }) => {
+		try {
+			const { data } = await userService.updateUser(body);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const userSlice = createSlice({
 	name: "userSlice",
 	initialState,
 	reducers: {},
 	extraReducers: builder =>
 		builder
-
+			// Register User;
 			.addCase(registerUser.pending, state => {
 				state.loading = true;
 				state.errors = null;
@@ -69,6 +99,7 @@ const userSlice = createSlice({
 				state.errors = action.payload as string;
 			})
 
+			// Login User;
 			.addCase(loginUser.pending, state => {
 				state.loading = true;
 				state.errors = null;
@@ -80,6 +111,34 @@ const userSlice = createSlice({
 			.addCase(loginUser.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Get User Info (Pre);
+			.addCase(setUpUserInfo.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(setUpUserInfo.fulfilled, (state, action) => {
+				state.loading = false;
+				state.user = action.payload;
+			})
+			.addCase(setUpUserInfo.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
+			})
+
+			// Update User Info;
+			.addCase(updateUserData.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(updateUserData.fulfilled, (state, action) => {
+				state.loading = false;
+				state.user = action.payload;
+			})
+			.addCase(updateUserData.rejected, (state, action) => {
+				state.loading = false;
+				window.location.href = "/login";
 			}),
 });
 
@@ -88,6 +147,6 @@ const {
 	actions: {},
 } = userSlice;
 
-const userActions = { registerUser, loginUser };
+const userActions = { registerUser, loginUser, setUpUserInfo, updateUserData };
 
 export { userActions, userReducer };

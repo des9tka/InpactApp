@@ -1,8 +1,8 @@
-function UserGuest({ ...props }) {
+function UserGuestIcon({ ...props }) {
 	return (
 		<div
 			{...props}
-			className={`relative border-2 rounded-[50%] py-2 px-4 h-[50px] w-[50px] overflow-hidden cursor-pointer ${
+			className={`relative border-2 border-sky-300 rounded-[50%] py-2 px-4 h-[50px] w-[50px] overflow-hidden cursor-pointer ${
 				props.className || ""
 			}`}
 		>
@@ -11,7 +11,7 @@ function UserGuest({ ...props }) {
 				absolute 
 				w-[35px] 
 				h-[35px] 
-				border-2 border-white 
+				border-2 border-sky-300 
 				rounded-[75%] 
 				border-b-0
 				border-r-0
@@ -29,7 +29,7 @@ function UserGuest({ ...props }) {
 				absolute
 				w-[25px] 
 				h-[25px] 
-				border border-white 
+				border border-sky-300 
 				rounded-[50%] 
 				top-2
 				left-1/2
@@ -42,4 +42,4 @@ function UserGuest({ ...props }) {
 	);
 }
 
-export { UserGuest };
+export { UserGuestIcon };

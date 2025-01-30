@@ -3,7 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { ChartBar, ChartLinear, RadioChartNav, UserGuest } from "@/components";
+import { ChartBar, ChartLinear, RadioChartNav } from "@/components";
 
 function DashboardPage() {
 	const [chart, setChart] = useState<"linear" | "bar">("linear");
@@ -11,7 +11,6 @@ function DashboardPage() {
 
 	return (
 		<div className="flex flex-col justify-center items-center min-h-screen py-2">
-			<UserGuest />
 			<RadioChartNav chart={chart} setChart={setChart} />
 
 			<div className="w-[95vw] flex justify-center mt-2">

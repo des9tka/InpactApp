@@ -4,7 +4,7 @@ from passlib.hash import bcrypt
 from starlette.concurrency import run_in_threadpool
 
 from models.UserModels import UserModel
-from core.tokens import create_access_refresh_tokens, refresh_access_token
+from core.tokens import create_access_refresh_tokens, refresh_access_token, validate_token
 
 
 class AuthRepository:
@@ -68,3 +68,10 @@ class AuthRepository:
     async def refresh(cls, refresh_token: str) -> str:
         tokens = await refresh_access_token(refresh_token=refresh_token)
         return tokens
+
+     #Get Self Info by Token;
+    @classmethod
+    async def get_info(cls, access_token: str, session: Session) -> str:
+        user_id = await validate_token(token=access_token)
+        user = UserModel.get_user_by(session=session, id=user_id)
+        return user

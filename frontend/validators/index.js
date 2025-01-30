@@ -1,4 +1,2 @@
-export {
-	authLoginValidationSchema,
-	authRegisterValidationSchema,
-} from "./authValidator";
+export * from "./authValidator";
+export * from "./userValidators";

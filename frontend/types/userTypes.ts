@@ -11,9 +11,9 @@ type userType = {
 };
 
 type userUpdateBodyType = {
-	name?: string;
-	surname?: string;
-	username?: string;
+	username?: string | null;
+	name?: string | null;
+	surname?: string | null;
 };
 
 export type { userType, userUpdateBodyType };

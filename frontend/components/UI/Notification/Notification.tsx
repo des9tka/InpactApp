@@ -1,8 +1,9 @@
+"use client";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function Notification({
-	message = "Уведомление",
+	message = "Message",
 	type = "success",
 	duration = 5,
 	isVisible,

@@ -1,5 +1,8 @@
+const baseUrl = "/auth";
+
 export const authUrls = {
-	registerUser: () => "/auth/register",
-	loginUser: () => "/auth/login",
-	refreshTokens: () => "/auth/refresh"
+	registerUser: () => baseUrl + "/register",
+	loginUser: () => baseUrl + "/login",
+	refreshTokens: () => baseUrl + "/refresh",
+	getUserInfo: () => baseUrl + "/get-info",
 };
