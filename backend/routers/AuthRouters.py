@@ -8,7 +8,6 @@ from enums.UserEnums import LoginUserEnum
 from core.tokens import oauth2_bearer
 from enums import RegisterUserEnum, RecoveryPasswordEnum
 
-
 auth_router = APIRouter(
 	prefix="/auth",
 	tags=["auth"]
@@ -42,6 +41,7 @@ async def refresh(
 ):
 	return await AuthRepository.get_info(access_token=access_token, session=session)
 
+
 @auth_router.get("/activate/{activate_token}")
 async def activate(
 	activate_token: str = Depends(oauth2_bearer),
@@ -51,14 +51,22 @@ async def activate(
 
 @auth_router.post("/recovery_request")
 async def recovery_request(
-	email: RecoveryPasswordEnum,
-	session: Session = Depends(get_session)
+	background_tasks: BackgroundTasks,
+    email_data: RecoveryPasswordEnum,
+    session: Session = Depends(get_session)
 ):
-	return await AuthRepository.request_recovery_password(email=email, session=session)
+    return await AuthRepository.request_recovery_password(
+		email=email_data.email, 
+		session=session, 
+		background_tasks=background_tasks
+	)
 
 @auth_router.get("/recovery/{recovery_token}")
 async def recovery(
 	recovery_token: str = Depends(oauth2_bearer),
 	session: Session = Depends(get_session)
 ):
-	return await AuthRepository.recovery_password(recovery_token=recovery_token, session=session)
+	return await AuthRepository.recovery_password(
+		recovery_token=recovery_token, 
+		session=session
+	)

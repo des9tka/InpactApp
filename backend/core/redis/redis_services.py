@@ -89,6 +89,8 @@ async def is_in_store(
 		if redis.get(recovery_key) != recovery_token:
 			return None
 	else: return None
+	
+	return True
 
 @redis_retry
 async def remove_tokens(

@@ -4,8 +4,8 @@ from passlib.hash import bcrypt
 from starlette.concurrency import run_in_threadpool
 
 from models.UserModels import UserModel
-from core.tokens import create_access_refresh_tokens, refresh_access_token, validate_token, create_activate_token, create_recovery_token
-from services import send_activate_email
+from core.tokens import create_access_refresh_tokens, refresh_access_token, validate_token, create_activate_token, create_recovery_token, check_for_request
+from services import send_activate_email, send_recovery_email
 
 
 class AuthRepository:
@@ -87,12 +87,26 @@ class AuthRepository:
 
     # Request Recovery Password by Email;
     @classmethod
-    async def request_recovery_password(cls, session: Session, email: str) -> bool:
+    async def request_recovery_password(cls, session: Session, email: str, background_tasks: BackgroundTasks) -> bool:
         user = UserModel.get_user_by(session=session, email=email)
+
         if not user:
             raise HTTPException(status_code=404, detail="Invalid email.")
+
+        if not await check_for_request(user_id=user.id, token_type="recovery"):
+            raise HTTPException(
+                status_code=429,
+                detail="Too many requests. Please try again later."
+            )
         
-        await send_recovery_email(user_id=user.id, user_email=user.email, background_tasks=background_tasks)
+        await send_recovery_email(
+            user_id=user.id,
+            user_email=user.email,
+            background_tasks=background_tasks
+        )
+
+        print(await check_for_request(user_id=user.id, token_type="recovery"))
+
         return True
 
     # Recovery Password by Token;

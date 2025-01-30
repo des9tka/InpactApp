@@ -15,7 +15,13 @@ SMTP_USER = os.getenv("SMTP_USER", "your_email@example.com")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "your_password")
 
 
-async def send_email_html_file(recipient: str, subject: str, html_file_path: str, activate_link: str | None = None, recovery_token: str | None = None):
+async def send_email_html_file(
+        recipient: str, 
+        subject: str, 
+        html_file_path: str, 
+        activate_link: str | None = None, 
+        recovery_token: str | None = None
+    ):
     html_path = Path(html_file_path)
 
     if not html_path.is_file():
@@ -56,10 +62,11 @@ async def send_email_endpoint(
     recipient: str, 
     subject: str, 
     html_file_path: str, 
-    activate_link: str, 
-    background_tasks: BackgroundTasks
+    background_tasks: BackgroundTasks,
+    activate_link: str | None = None, 
+    recovery_token: str | None = None,
 ):
-	background_tasks.add_task(send_email_html_file, recipient, subject, html_file_path, activate_link)
+	background_tasks.add_task(send_email_html_file, recipient, subject, html_file_path, activate_link, recovery_token)
 	return {"Email was sended by aio."}
 
 async def send_activate_email(user_email: str, user_id: int, background_tasks: BackgroundTasks):
@@ -71,7 +78,14 @@ async def send_activate_email(user_email: str, user_id: int, background_tasks: B
 	await send_email_endpoint(recipient=user_email, subject="Activate account", html_file_path=html_file_path, activate_link=activate_link, background_tasks=background_tasks)
 
 async def send_recovery_email(user_email: str, user_id: int, background_tasks: BackgroundTasks):
-    recovery_token = await create_recovery_token(user_id=user.id)
+    recovery_token = await create_recovery_token(user_id=user_id)
        
     html_file_path = Path.cwd() / "templates" / "recovery_email.html"
-    await send_email_endpoint(recipient=user_email, subject="Recovery password code", html_file_path=html_file_path,  recovery_token=recovery_token, background_tasks=background_tasks)
+    await send_email_endpoint(
+        recipient=user_email, 
+        subject="Recovery password code", 
+        html_file_path=html_file_path,  
+        recovery_token=recovery_token, 
+        background_tasks=background_tasks
+    )
+
