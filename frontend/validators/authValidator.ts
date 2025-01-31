@@ -54,4 +54,26 @@ const authLoginValidationSchema = yup.object().shape({
 		.required("Password required."),
 });
 
-export { authLoginValidationSchema, authRegisterValidationSchema };
+const recoveryPasswordValidationSchema = yup.object().shape({
+	email: yup
+		.string()
+		.min(2)
+		.max(100)
+		.email("Invalid email.")
+		.required("Email required."),
+
+	password: yup
+		.string()
+		.min(2)
+		.max(100)
+		.matches(passwordRegExp, {
+			message:
+				"Password must include 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
+		}),
+
+	code: yup
+		.string()
+});
+
+
+export { authLoginValidationSchema, authRegisterValidationSchema, recoveryPasswordValidationSchema };

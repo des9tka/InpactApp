@@ -24,6 +24,15 @@ type ApiResponse = {
 	detail: string;
 }
 
+type RecoveryRequestType = {
+	email: string
+}
+
+type RecoveryType = {
+	recovery_token: string
+	password: string
+}
+
 // type AccessTokenType = {
 // 	access_token: string;
 // };
@@ -39,5 +48,7 @@ export type {
 	authRegisterUserType,
 	// RefreshTokenType,
 	TokensType,
-	ApiResponse
+	ApiResponse,
+	RecoveryRequestType,
+	RecoveryType
 };

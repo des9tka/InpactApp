@@ -1,6 +1,41 @@
+"use client";
+import { useAppDispatch, useAppSelector, userActions } from "@/redux";
+import { RecoveryRequestType, RecoveryType } from "@/types"
+import { recoveryPasswordValidationSchema } from "@/validators";
+import { useFormik } from "formik";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
+	const [isSendedCode, setIsSendedCode] = useState<boolean>(false);
+
+	const dispatch = useAppDispatch();
+	const { errors: sliceErrors } = useAppSelector(state => state.userReducer);
+
+	const sendRecoveryCode = () => {
+		setIsSendedCode(true);
+		dispatch(userActions.recoveryPasswordRequest());
+	};
+
+	const sendPasswordWithCode = () => {
+		dispatch(userActions.recoveryPassword());
+	};
+
+	const { values, handleBlur, errors, touched, handleChange, handleSubmit } =
+		useFormik({
+			initialValues: {
+				email: "",
+				password: "",
+			},
+			validationSchema: recoveryPasswordValidationSchema,
+			onSubmit: (data: RecoveryRequestType | RecoveryType) => {
+				dispatch(userActions.loginUser(data)).then(() => {
+					if (!sliceErrors && cookieService.getCookieAccessRefreshTokens())
+						router.push("/dashboard");
+				});
+			},
+		});
+
 	return (
 		<div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
 			<motion.div
@@ -27,6 +62,7 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 								<input
 									id="email"
 									name="email"
+									type="email"
 									autoComplete="email"
 									className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-sky-600"
 								/>
@@ -36,7 +72,6 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 						<div className="flex items-center justify-evenly gap-4">
 							<button
 								onClick={e => e.preventDefault()}
-								type="submit"
 								className="flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-500 focus-visible:outline-2 focus-visible:outline-indigo-600"
 							>
 								Send Code

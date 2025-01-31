@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector, userActions } from "@/redux";
 import { useFormik } from "formik";
 import { DoorOpenIcon, PenIcon, SaveIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { cookieService } from "@/services/cookieService";
 import { userUpdateBodyType } from "@/types";
@@ -20,6 +21,7 @@ function UserProfile() {
 		loading,
 	} = useAppSelector(state => state.userReducer);
 	const dispatch = useAppDispatch();
+	const pathname = usePathname();
 
 	const {
 		values,
@@ -74,12 +76,7 @@ function UserProfile() {
 	return (
 		<div
 			className={`absolute top-4 right-4 z-30 
-		${
-			window.location.pathname == "/dashboard" ||
-			window.location.pathname == "/data"
-				? "block"
-				: "hidden"
-		}`}
+			${pathname === "/dashboard" || pathname === "/data" ? "block" : "hidden"}`}
 		>
 			<div className="relative">
 				<UserGuestIcon onClick={() => setIsOpen(!isOpen)} />
