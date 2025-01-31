@@ -86,6 +86,7 @@ async def is_in_store(
 
 	elif recovery_token:
 		recovery_key = keys(user_id=user_id, recovery=True)
+		print(redis.get(recovery_key))
 		if redis.get(recovery_key) != recovery_token:
 			return None
 	else: return None
@@ -100,6 +101,8 @@ async def remove_tokens(
 	activate_token: Optional[str] = None, 
 	recovery_token: Optional[str] = None
 ):
+	redis = RedisConnection.get_instance()
+
 	access_key = keys(user_id=user_id, access=True)
 	refresh_key = keys(user_id=user_id, refresh=True)
 	activate_key = keys(user_id=user_id, activate=True)
@@ -114,6 +117,23 @@ async def remove_tokens(
 	elif recovery_token:
 		redis.delete(recovery_key)
 
+@redis_retry
+async def get_token_by_user_id(user_id: int, token_type: str):
+	redis = RedisConnection.get_instance()
+
+	if token_type == "access":
+		access_key = keys(user_id=user_id, access=True)
+		return redis.get(access_key)
+	elif token_type == "refresh":
+		refresh_key = keys(user_id=user_id, refresh=True)
+		return redis.get(refresh_key)
+	elif token_type == "activate":
+		activate_key = keys(user_id=user_id,activate=True)
+		return redis.get(activate_key)
+	elif token_type == "recovery":
+		recovery_key = keys(user_id=user_id, recovery=True)
+		return redis.get(recovery_key)
+	else: return None
 
 # Dev Get all Info from Redis (for debug);
 @redis_retry

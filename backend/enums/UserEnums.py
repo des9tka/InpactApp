@@ -1,5 +1,8 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, root_validator, validator
+from fastapi import HTTPException, status
+from typing import Optional, ClassVar
+import re
+
 
 class LoginUserEnum(BaseModel):
 	email: str
@@ -12,8 +15,20 @@ class RegisterUserEnum(BaseModel):
 	name: Optional[str]
 	surname: Optional[str]
 
-class RecoveryPasswordEnum(BaseModel):
+class RecoveryPasswordRequestEnum(BaseModel):
 	email: str
+
+class RecoveryDataEnum(BaseModel):
+    recovery_token: str
+    password: str
+
+    PASSWORD_REGEX: ClassVar[str] = '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{4,20}$'
+
+    @validator('password')
+    def validate_password(cls, value):
+        if value and not re.match(cls.PASSWORD_REGEX, value):
+            raise ValueError("Password does not meet the required criteria.")
+        return value
 
 class UpdateUserDataEnum(BaseModel):
 	name: Optional[str] = None

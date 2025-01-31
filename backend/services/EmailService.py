@@ -69,16 +69,14 @@ async def send_email_endpoint(
 	background_tasks.add_task(send_email_html_file, recipient, subject, html_file_path, activate_link, recovery_token)
 	return {"Email was sended by aio."}
 
-async def send_activate_email(user_email: str, user_id: int, background_tasks: BackgroundTasks):
-	activate_token = await create_activate_token(user_id=user_id)
+async def send_activate_email(user_email: str, activate_token: str, background_tasks: BackgroundTasks):
 	activate_link = os.getenv("WEB_HOST") + "/activate/" + activate_token
 
 	html_file_path = Path.cwd() / "templates" / "activate_email.html"
 
 	await send_email_endpoint(recipient=user_email, subject="Activate account", html_file_path=html_file_path, activate_link=activate_link, background_tasks=background_tasks)
 
-async def send_recovery_email(user_email: str, user_id: int, background_tasks: BackgroundTasks):
-    recovery_token = await create_recovery_token(user_id=user_id)
+async def send_recovery_email(user_email: str, background_tasks: BackgroundTasks, recovery_token: str):
        
     html_file_path = Path.cwd() / "templates" / "recovery_email.html"
     await send_email_endpoint(

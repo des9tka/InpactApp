@@ -7,7 +7,7 @@ from jose.exceptions import ExpiredSignatureError
 from enums.TokenEnums import TokenEnum, TOKEN_EXPIRATION
 from dotenv import load_dotenv
 
-from core.redis.redis_services import store_user_token, is_in_store
+from core.redis.redis_services import store_user_token, is_in_store, get_token_by_user_id
 
 
 load_dotenv()
@@ -108,10 +108,14 @@ async def create_recovery_token(user_id: int):
     access_expires_delta = timedelta(minutes=TOKEN_EXPIRATION[TokenEnum.RECOVERY])
     return await create_token(user_id, TokenEnum.RECOVERY, access_expires_delta) 
 
-async def check_for_request(user_id: int, token_type: str):
+async def is_allowed_request(user_id: int, token_type: str):
     if token_type == "activate":
-        return not await is_in_store(user_id=user_id, activate_token=True)
+        token = await get_token_by_user_id(user_id=user_id, token_type="activate")
+        return not await is_in_store(user_id=user_id, activate_token=token)
     elif token_type == "recovery":
-        return not await is_in_store(user_id=user_id, recovery_token=True)
+        token = await get_token_by_user_id(user_id=user_id, token_type="recovery")
+        print(token)
+        return not await is_in_store(user_id=user_id, recovery_token=token)
     else:
         raise HTTPException(detail="Invalid token type.", status_code=400)
+
