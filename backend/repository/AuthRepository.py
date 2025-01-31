@@ -1,6 +1,6 @@
 from sqlmodel import Session
 from fastapi import HTTPException, BackgroundTasks
-from passlib.hash import bcrypt
+import bcrypt
 from starlette.concurrency import run_in_threadpool
 
 from models.UserModels import UserModel
@@ -20,14 +20,14 @@ class AuthRepository:
             )
 		)
         
-        if not user or not bcrypt.verify(login_data.password, user.password):
+        if not user or not bcrypt.checkpw(login_data.password.encode('utf-8'), user.password.encode('utf-8')):
             raise HTTPException(status_code=400, detail="Invalid email or password.")
 
         if not user.is_active:
             if not await is_allowed_request(user_id=user.id, token_type="activate"):
                 raise HTTPException(
                    status_code=429,
-                   detail="Activation code already sent to your email."
+                   detail="Activation link already sent to your email."
                 )
             
             activate_token = await create_activate_token(user_id=user.id)
@@ -61,8 +61,7 @@ class AuthRepository:
                 detail=f"Missing required fields: {', '.join(missing_fields)}"
             )
         
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
+        hashed_password = bcrypt.hashpw(user_data.password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
 
         user = await run_in_threadpool(
     		lambda: UserModel.create_user(
@@ -94,9 +93,12 @@ class AuthRepository:
     async def activate_user(cls, session: Session, activate_token: str) -> bool:
         user_id = await validate_token(token=activate_token)
         user = UserModel.get_user_by(session=session, id=user_id)
+        if user.is_active:
+            raise HTTPException(status_code=400, detail="You already activated your account")
+            
         user.is_active = True
         session.commit()
-        return {"detail": "You successfully activated your account."}
+        return {"detail": "You successfully activated your account"}
 
     # Request Recovery Password by Email;
     @classmethod
@@ -104,12 +106,12 @@ class AuthRepository:
         user = UserModel.get_user_by(session=session, email=email)
 
         if not user:
-            raise HTTPException(status_code=404, detail="Invalid email.")
+            raise HTTPException(status_code=404, detail="Invalid email")
 
         if not await is_allowed_request(user_id=user.id, token_type="recovery"):
             raise HTTPException(
                 status_code=429,
-                detail="Recovery code already sent to your email."
+                detail="Recovery code already sent to your email"
             )
 
         recovery_token = await create_recovery_token(user_id=user.id)
@@ -120,17 +122,17 @@ class AuthRepository:
             recovery_token=recovery_token
         )
 
-        return {"detail": "Recovery code sent to your email."}
+        return {"detail": "Recovery code sent to your email"}
 
-        # Recovery Password by Token;
-       
+    # Recovery Password by Token;
     @classmethod
     async def recovery_password(cls, session: Session, password: str, recovery_token: str) -> bool:
         user_id = await validate_token(token=recovery_token)
         user = UserModel.get_user_by(session=session, id=user_id)
 
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        hashed_password = bcrypt.hashpw(user_data.password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
+
 
         user.password = hashed_password
         session.commit()
-        return {"detail": "You successfully changed your password."}
+        return {"detail": "You successfully changed your password"}

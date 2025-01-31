@@ -51,7 +51,7 @@ function RegisterForm({
 		<div>
 			{showNotification && (
 				<Notification
-					message="Success Register!"
+					message="Success Register! Please, activate your account in email link."
 					type="success"
 					duration={3}
 					isVisible={showNotification}

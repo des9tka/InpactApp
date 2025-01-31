@@ -5,4 +5,5 @@ export const authUrls = {
 	loginUser: () => baseUrl + "/login",
 	refreshTokens: () => baseUrl + "/refresh",
 	getUserInfo: () => baseUrl + "/get-info",
+	activateUser: (token: string) => baseUrl + `/activate/${token}`,
 };

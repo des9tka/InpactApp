@@ -72,13 +72,17 @@ function UserProfile() {
 	};
 
 	return (
-		<div className="absolute top-4 right-4 z-30">
+		<div
+			className={`absolute top-4 right-4 z-30 
+		${
+			window.location.pathname == "/dashboard" ||
+			window.location.pathname == "/data"
+				? "block"
+				: "hidden"
+		}`}
+		>
 			<div className="relative">
-				<UserGuestIcon
-					onClick={() =>
-						window.location.pathname !== "/login" && setIsOpen(!isOpen)
-					}
-				/>
+				<UserGuestIcon onClick={() => setIsOpen(!isOpen)} />
 				{showNotification && (
 					<Notification
 						message="Profile updated successfully!"

@@ -40,20 +40,20 @@ class ProjectRepository:
 		user_id
 	):
 		if not project_id or not user_id:
-			raise HTTPException(status_code=400, detail="Missing project or user ids.")
+			raise HTTPException(status_code=400, detail="Missing project or user ids")
 		
 		founder_id = await validate_token(token=token)
 		user = UserModel.get_user_by(session=session, id=user_id)
 		
 		if not user:
-			raise HTTPException(status_code=404, detail="User not found.")
+			raise HTTPException(status_code=404, detail="User not found")
 
 		project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
 		if not project:
-			raise HTTPException(status_code=404, detail="Project not found.")
+			raise HTTPException(status_code=404, detail="Project not found")
 		
 		if project.founder_id != founder_id:
-			raise HTTPException(status_code=400, detail="You are not the founder of this project.")
+			raise HTTPException(status_code=400, detail="You are not the founder of this project")
 		
 		# Проверяем, существует ли уже связь между user_id и project_id
 		existing_user_project = session.query(UserProjectModel).filter(
@@ -84,13 +84,13 @@ class ProjectRepository:
 		project = ProjectModel.get_project_by_id(session=session, project_id=project_id)
 		
 		if not project:
-			raise HTTPException("Project not found.", status_code=404)
+			raise HTTPException(detail="Project not found.", status_code=404)
 		
 		if project.founder_id != user_id:
-			raise HTTPException("You are not the founder of this project.", status_code=400)
+			raise HTTPException(detail="You are not the founder of this project.", status_code=400)
 
 		if user_id == projectUser_id:
-			raise HTTPException("You cannot remove yourself from the project.", status_code=400)
+			raise HTTPException(detail="You cannot remove yourself from the project.", status_code=400)
 		
 		user_project = session.query(UserProjectModel).filter(
 			UserProjectModel.user_id == projectUser_id,
@@ -98,11 +98,11 @@ class ProjectRepository:
 		).first()
 
 		if not user_project:
-			raise HTTPException("User is not part of the project.", status_code=404)
+			raise HTTPException(detail="User is not part of the project.", status_code=404)
 		
 		session.delete(user_project)
 		session.commit()
-		return {f"User {projectUser_id} removed from project."}
+		return {"detail": f"User {projectUser_id} removed from project."}
 	
 	@classmethod
 	async def get_users_from_project(
@@ -116,14 +116,14 @@ class ProjectRepository:
 		user_project = UserProjectModel(user_id=user_id, project_id=project_id)
 
 		if not user_project:
-			raise HTTPException("Project or user was not found.", status_code=404)
+			raise HTTPException(detail="Project or user was not found.", status_code=404)
 		
 		users_in_project = session.query(UserModel).join(
 			UserProjectModel, UserProjectModel.user_id == UserModel.id
 		).filter(UserProjectModel.project_id == project_id).all()
 
 		if not users_in_project:
-			raise HTTPException("No users found for this project.", status_code=404)
+			raise HTTPException(detail="No users found for this project.", status_code=404)
 		
 		return users_in_project
 	

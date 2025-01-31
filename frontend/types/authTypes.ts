@@ -20,6 +20,10 @@ type ApiResponseError = {
 	detail: string;
 };
 
+type ApiResponse = {
+	detail: string;
+}
+
 // type AccessTokenType = {
 // 	access_token: string;
 // };
@@ -35,4 +39,5 @@ export type {
 	authRegisterUserType,
 	// RefreshTokenType,
 	TokensType,
+	ApiResponse
 };

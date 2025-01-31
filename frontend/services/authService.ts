@@ -4,6 +4,7 @@ import {
 	authRegisterUserType,
 	TokensType,
 	userType,
+	ApiResponse
 } from "@/types";
 import { AxiosRes, axiosService } from "./axiosService";
 
@@ -19,6 +20,9 @@ const authService = {
 
 	authGetUserInfo: (): AxiosRes<userType> =>
 		axiosService.get(authUrls.getUserInfo()),
+
+	authActivateUser: (token: string): AxiosRes<ApiResponse> =>
+		axiosService.get(authUrls.activateUser(token)),
 };
 
 export { authService };

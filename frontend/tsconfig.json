@@ -29,6 +29,6 @@
 		".next/types/**/*.ts",
 		"components/index.js",
 		"components/UI/UserGuestIcon/UserGuestIcon.tsx"
-	],
+, "app/activate/[activate_token]"	],
 	"exclude": ["node_modules"]
 }

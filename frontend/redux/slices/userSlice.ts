@@ -5,6 +5,7 @@ import { authService } from "@/services/authService";
 import { cookieService } from "@/services/cookieService";
 import { userService } from "@/services/userService";
 import {
+	ApiResponse,
 	ApiResponseError,
 	authLoginUserType,
 	authRegisterUserType,
@@ -17,12 +18,14 @@ interface IInitialState {
 	user: userType | null;
 	loading: boolean;
 	errors: string | null;
+	extra: string | null;
 }
 
 const initialState: IInitialState = {
 	user: null,
 	loading: false,
 	errors: null,
+	extra: null,
 };
 
 const registerUser = createAsyncThunk<userType, authRegisterUserType>(
@@ -71,6 +74,19 @@ const updateUserData = createAsyncThunk<userType, userUpdateBodyType>(
 	async (body, { rejectWithValue }) => {
 		try {
 			const { data } = await userService.updateUser(body);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
+const activateUser = createAsyncThunk<ApiResponse, string>(
+	"noteSlice/activateUser",
+	async (token, { rejectWithValue }) => {
+		try {
+			const { data } = await authService.authActivateUser(token);
 			return data;
 		} catch (err) {
 			const typedError = err as AxiosError<ApiResponseError>;
@@ -144,6 +160,20 @@ const userSlice = createSlice({
 			.addCase(updateUserData.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Activate User;
+			.addCase(activateUser.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(activateUser.fulfilled, (state, action) => {
+				state.loading = false;
+				state.extra = action.payload.detail;
+			})
+			.addCase(activateUser.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -158,6 +188,7 @@ const userActions = {
 	setUpUserInfo,
 	updateUserData,
 	setError,
+	activateUser
 };
 
 export { userActions, userReducer };

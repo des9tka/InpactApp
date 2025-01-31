@@ -128,7 +128,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6I
     "type": "FEAT",
     "impactPercent": 0,
     "project_id": 1
-}
+}  
 
 ### Update Impact;
 PATCH http://127.0.0.1:8000/impacts/update/1

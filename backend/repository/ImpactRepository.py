@@ -25,7 +25,7 @@ class ImpactRepository:
 		result = session.exec(query).first()
 
 		if not result:
-			raise HTTPException(status_code=404, detail="User or project not found.")
+			raise HTTPException(status_code=404, detail="User or project not found")
 		
 		impact_data.user_id = user_id
 		impact_data.impactPercent = 0.0	
@@ -56,10 +56,10 @@ class ImpactRepository:
 		project = session.exec(founder_query).first()
 
 		if not impact:
-			raise HTTPException(status_code=404, detail="Impact not found.")
+			raise HTTPException(status_code=404, detail="Impact not found")
 		
 		if impact.user_id != user_id and project.founder_id != user_id:
-			raise HTTPException(status_code=400, detail="You are not the owner of this impact.")
+			raise HTTPException(status_code=400, detail="You are not the owner of this impact")
 		
 		if impact_data.impactPercent:
 			if impact_data.impactPercent > 0 and impact.user_id == user_id:
@@ -86,7 +86,7 @@ class ImpactRepository:
 		impact = session.exec(impact_query).first()
 
 		if not impact:
-			raise HTTPException(status_code=404, detail="Impact not found.")
+			raise HTTPException(status_code=404, detail="Impact not found")
 		
 		project_query = select(ProjectModel).where(
 			(ProjectModel.id == impact.project_id)
@@ -94,6 +94,6 @@ class ImpactRepository:
 		project = session.exec(project_query).first()
 		
 		if impact.user_id != user_id and project.founder_id != user_id:
-			raise HTTPException(status_code=400, detail="You are not the owner of this impact.")
+			raise HTTPException(status_code=400, detail="You are not the owner of this impact")
 		
 		return ImpactModel.delete_impact(session=session, impact_id=impact_id)

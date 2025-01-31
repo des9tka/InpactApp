@@ -2,7 +2,7 @@
 import { useFormik } from "formik";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ForgotPasswordModal } from "@/components";
 import { useAppDispatch, useAppSelector, userActions } from "@/redux";
@@ -12,19 +12,13 @@ import { authLoginValidationSchema } from "@/validators";
 import { useRouter } from "next/navigation";
 
 function LoginForm() {
-	const {
-		errors: sliceErrors,
-		loading,
-		user,
-	} = useAppSelector(state => state.userReducer);
+	const { errors: sliceErrors, loading } = useAppSelector(
+		state => state.userReducer
+	);
 	const dispatch = useAppDispatch();
 
 	const [isForgot, setIsForgot] = useState<boolean>(false);
 	const router = useRouter();
-
-	useEffect(() => {
-		if (cookieService.getCookieAccessRefreshTokens()) router.push("/dashboard");
-	}, []);
 
 	const { values, handleBlur, errors, touched, handleChange, handleSubmit } =
 		useFormik({
@@ -34,14 +28,10 @@ function LoginForm() {
 			},
 			validationSchema: authLoginValidationSchema,
 			onSubmit: (data: authLoginUserType) => {
-				dispatch(userActions.loginUser(data)).then(() =>
-					dispatch(userActions.setUpUserInfo())
-						.then(() => router.push("/dashboard"))
-						.catch(e => {
-							cookieService.deleteCookieAccessRefreshTokens();
-							router.push("/login?expired=true");
-						})
-				);
+				dispatch(userActions.loginUser(data)).then(() => {
+					if (!sliceErrors && cookieService.getCookieAccessRefreshTokens())
+						router.push("/dashboard");
+				});
 			},
 		});
 
@@ -51,7 +41,14 @@ function LoginForm() {
 				{isForgot && <ForgotPasswordModal setIsForgot={setIsForgot} />}
 			</AnimatePresence>
 
-			<form onSubmit={handleSubmit} method="POST" className="space-y-2">
+			<form
+				onSubmit={e => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+				method="POST"
+				className="space-y-2"
+			>
 				<div>
 					<label
 						htmlFor="email"

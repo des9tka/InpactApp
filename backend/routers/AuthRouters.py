@@ -16,7 +16,7 @@ auth_router = APIRouter(
 )
 
 @auth_router.post("/login")
-@limiter.limit("1/minute", per_method=True)
+@limiter.limit("10/minute", per_method=True)
 async def login(
 	request: Request,
 	background_tasks: BackgroundTasks,
@@ -52,7 +52,6 @@ async def refresh(
     return await AuthRepository.get_info(access_token=access_token, session=session)
 
 @auth_router.get("/activate/{activate_token}")
-@limiter.limit("4/day", per_method=True)
 async def activate(
 	request: Request,
     activate_token: str,
