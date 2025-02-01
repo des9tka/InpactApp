@@ -64,7 +64,7 @@ async def store_user_token(
 		redis.set(recovery_key, recovery_token, ex=recovery_expiration)
 
 	if invite_token and invite_expiration and project_id:
-		invite_key = keys(user_id=user_id, invite=True) + ":" + project_id
+		invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
 		redis.delete(invite_key)
 		redis.set(invite_key, invite_token, ex=invite_expiration)
 
@@ -100,8 +100,8 @@ async def is_in_store(
 		if redis.get(recovery_key) != recovery_token:
 			return None
 
-	elif invite_token:
-		invite_key = keys(user_id=user_id, invite=True) + ":" + project_id
+	elif invite_token and project_id:
+		invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
 		if redis.get(invite_key) != invite_token:
 			return None
 	else: return None
@@ -133,7 +133,7 @@ async def remove_tokens(
 		recovery_key = keys(user_id=user_id, recovery=True)
 		redis.delete(recovery_key)
 	elif invite_token:
-		invite_key = keys(user_id=user_id, invite=True) + ":" + project_id
+		invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
 		redis.delete(invite_key)
 	else: return None
 	return True
@@ -155,7 +155,7 @@ async def get_token_by_user_id(user_id: int, token_type: str, project_id: Option
 		recovery_key = keys(user_id=user_id, recovery=True)
 		return redis.get(recovery_key)
 	elif token_type == "invite":
-		recovery_key = keys(user_id=user_id, invite=True) + ":" + project_id
+		recovery_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
 		return redis.get(recovery_key)
 	else: return None
 

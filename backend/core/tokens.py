@@ -20,11 +20,11 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/login")
 async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timedelta, project_id: int = None):
     if token_type not in [TokenEnum.ACCESS, TokenEnum.REFRESH, TokenEnum.ACTIVATE, TokenEnum.RECOVERY, TokenEnum.INVITE]:
         raise HTTPException(detail="Invalid token type.", status_code=400)
-    
+
     encode = {"id": user_id, "type": token_type, "project_id": project_id}
     expires = datetime.now(timezone.utc) + expires_delta
     encode.update({"exp": expires})
-    
+
     token = jwt.encode(encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM"))
 
     if token_type == TokenEnum.ACCESS:
@@ -74,11 +74,14 @@ async def create_access_refresh_tokens(user_id: int):
     
     return {"access_token": access_token, "refresh_token": refresh_token}
 
-async def get_user_by_token(token: str = Depends(oauth2_bearer)):
+async def get_user_by_token(token: str = Depends(oauth2_bearer), project_id: Optional[bool] = None):
     try:
         payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
+        print("payload: " + str(payload))
         token_type = payload.get("type")
         user_id = payload.get("id")
+        if project_id:
+            return user_id, project_id, token_type
         return token_type, user_id
     
     except ExpiredSignatureError:
@@ -86,7 +89,7 @@ async def get_user_by_token(token: str = Depends(oauth2_bearer)):
     except JWTError:
         raise HTTPException(detail="Invalid token.", status_code=401)
 
-async def validate_token(token: str = Depends(oauth2_bearer)) -> int:
+async def validate_token(token: str = Depends(oauth2_bearer), project_id: Optional[int] = None) -> int:
     token_type, user_id = await get_user_by_token(token)
 
     if token_type == TokenEnum.ACCESS:
@@ -100,6 +103,9 @@ async def validate_token(token: str = Depends(oauth2_bearer)) -> int:
             raise HTTPException(detail="Token is blacklisted.", status_code=401)
     elif token_type == TokenEnum.RECOVERY:
         if not await is_in_store(user_id=user_id, recovery_token=token):
+            raise HTTPException(detail="Token is blacklisted.", status_code=401)
+    elif token_type == TokenEnum.INVITE:
+        if not await is_in_store(user_id=user_id, invite_token=token, project_id=project_id):
             raise HTTPException(detail="Token is blacklisted.", status_code=401)
     else:
         raise HTTPException(detail="Invalid token type.", status_code=400)
@@ -118,7 +124,7 @@ async def create_recovery_token(user_id: int):
     return await create_token(user_id, TokenEnum.RECOVERY, access_expires_delta) 
 
 async def create_invite_token(user_id: int, project_id: int):
-    access_expires_delta = timedelta(minutes=TOKEN_EXPIRATION[TokenEnum.INVITE])
+    access_expires_delta = timedelta(hours=TOKEN_EXPIRATION[TokenEnum.INVITE])
     return await create_token(user_id, TokenEnum.INVITE, access_expires_delta, project_id) 
 
 async def is_allowed_request(user_id: int, token_type: str, project_id: Optional[int] = None):

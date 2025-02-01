@@ -90,10 +90,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Add User to Project;
 GET http://127.0.0.1:8000/projects/1/add-user/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ1MjUzM30._vydE5eZEwGYLOpj0j526CUWoPLYE5GfF4bMeYz9w6c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ1ODgwOH0.UVGSmdc8GeL1C4JGBqTy2dMRpIe3HI-2ZeLmiPkoXCY
 
-###
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6IjEiLCJleHAiOjE3Mzg0MDYzMDd9._FBr15rU3mBkk1VW5TZouabE087RL4h2xCDZ0vHJkG0
+### Join to project by token;
+GET http://127.0.0.1:8000/projects/join-team
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6MSwiZXhwIjoxNzM4NDIyODE4fQ.p491H4V4EQdOrApdctHl3F7W3b2FI-0Zmwt5npkNbSk
 
 ### Delete User from project 
 DELETE http://127.0.0.1:8000/projects/1/delete-user/2

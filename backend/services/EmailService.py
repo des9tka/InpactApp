@@ -57,8 +57,8 @@ async def send_email_html_file(
         elif recovery_token:
             msg.set_content(f"Recovery your password: {recovery_token}. If you didn't register, ignore this email.")
 
-        elif invite_project_link:
-            msg.set_content(f"You have been invited to to project <{inviter_project}>, link: {invite_project_link}. If you suggested to receive invite link, ignore this email.")
+        elif invite_link:
+            msg.set_content(f"You have been invited to to project <{inviter_project}>, link: {invite_link}. If you suggested to receive invite link, ignore this email.")
 
         msg.add_alternative(html_body, subtype="html")
 
@@ -104,9 +104,7 @@ async def send_recovery_email(user_email: str, background_tasks: BackgroundTasks
         background_tasks=background_tasks
     )
 
-async def send_invite_project_link(user_email: str, inviter_project: str, invite_project_token: str, background_tasks: BackgroundTasks):
-
-       
+async def send_invite_project_link(user_email: str, inviter_project: str, invite_project_token: str, background_tasks: BackgroundTasks):       
     html_file_path = Path.cwd() / "templates" / "invite_project_email.html"
     invite_link = os.getenv("WEB_HOST") + "/invite/" + invite_project_token
 

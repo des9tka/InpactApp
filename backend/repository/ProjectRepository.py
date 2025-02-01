@@ -1,10 +1,13 @@
+import os
 from fastapi import HTTPException
 from sqlmodel import select
+from dotenv import load_dotenv
 
-from core.tokens import validate_token, create_invite_token, is_allowed_request
+from core.tokens import validate_token, create_invite_token, is_allowed_request, get_user_by_token
 from models import UserProjectModel, ProjectModel, UserModel
 from services import send_invite_project_link
 
+load_dotenv()
 
 class ProjectRepository:
 	# Create Project;
@@ -93,17 +96,30 @@ class ProjectRepository:
                 detail=f"Invite link already sent to {user.email}"
             )
 
-		invite_project_token = await create_invite_token(project_id=project_id, user_id=user_id)
+		invite_project_token = await create_invite_token(project_id=project.id, user_id=user_id)
 
-		await send_invite_project_link(invite_project_token=invite_project_token, background_tasks=background_tasks, inviter_project=project.name, user_email=user.email)
+		await send_invite_project_link(
+			invite_project_token=invite_project_token, 
+			background_tasks=background_tasks, 
+			inviter_project=project.name, 
+			user_email=user.email
+		)
+
 		return {"detail": f"Invite link was sended to {user.email}."}
 
-		# user_project = UserProjectModel(user_id=user_id, project_id=project_id)
+	@classmethod
+	def join_team(cls, session, invite_token):
+		user_id, project_id, token_type = get_user_by_token(token=invite_token, project_id=True)
 
-		# session.add(user_project)
-		# session.commit()    
-		# session.refresh(user_project)
-		# return {"detail": "User added to project."}
+		if token_type != "invite":
+			raise HTTPException(detail="Invalid token type.", status_code=400)
+
+		user_project = UserProjectModel(user_id=user_id, project_id=project_id)
+
+		session.add(user_project)
+		session.commit()    
+		session.refresh(user_project)
+		return {"detail": "User added to project."}
 
 	@classmethod
 	async def delete_user_from_project(
