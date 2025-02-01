@@ -120,24 +120,22 @@ async def remove_tokens(
 ):
 	redis = RedisConnection.get_instance()
 
-	access_key = keys(user_id=user_id, access=True)
-	refresh_key = keys(user_id=user_id, refresh=True)
-	activate_key = keys(user_id=user_id, activate=True)
-	recovery_key = keys(user_id=user_id, recovery=True)
-	invite_key = keys(user_id=user_id, invite=True) + ":" + project_id
-
 	if access_token:
+		access_key = keys(user_id=user_id, access=True)
 		redis.delete(access_key)
 	elif refresh_token:
+		refresh_key = keys(user_id=user_id, refresh=True)
 		redis.delete(refresh_key)
 	elif activate_token:
+		activate_key = keys(user_id=user_id, activate=True)
 		redis.delete(activate_key)
 	elif recovery_token:
+		recovery_key = keys(user_id=user_id, recovery=True)
 		redis.delete(recovery_key)
 	elif invite_token:
+		invite_key = keys(user_id=user_id, invite=True) + ":" + project_id
 		redis.delete(invite_key)
 	else: return None
-
 	return True
 
 @redis_retry
@@ -172,6 +170,7 @@ async def get_all_info_from_redis():
 		state.append(f"Key: {key}, Value: {value}")
 	return state
 
+# Dev Clear Redis (for debug);
 @redis_retry
 async def clear_redis():
     redis = RedisConnection.get_instance()

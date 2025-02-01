@@ -19,9 +19,10 @@ debug_router = APIRouter(
 async def get_redis_data():
 	return await get_all_info_from_redis()
 
-@debug_router.delete("/delete-all-redis")
-async def delete_all():
-    clear_redis()
+@debug_router.get("/delete_all_redis")
+async def delete_all_redis():
+    await clear_redis()
+    return {"detail": "Redis has been cleared."}
 
 @debug_router.post("/delete_users/{user_id}")
 async def delete_users(
@@ -51,4 +52,3 @@ async def delete_users(
         "detail": f"User with id {user_id} has been deleted.",
         "user_projects_deleted": user_projects_deleted
     }
-

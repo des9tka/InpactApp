@@ -95,10 +95,8 @@ class ProjectRepository:
 
 		invite_project_token = await create_invite_token(project_id=project_id, user_id=user_id)
 
-		return invite_project_token
-
-		# await send_invite_project_link(invite_project_token=invite_project_token, background_tasks=background_tasks, inviter_project=project.name, user_email=user.email)
-		# return {"detail": f"invite link was sended to {user.email}."}
+		await send_invite_project_link(invite_project_token=invite_project_token, background_tasks=background_tasks, inviter_project=project.name, user_email=user.email)
+		return {"detail": f"Invite link was sended to {user.email}."}
 
 		# user_project = UserProjectModel(user_id=user_id, project_id=project_id)
 

@@ -7,8 +7,8 @@ POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "deyume9@gmail.com",
-    "password": "deyume9"
+	"email": "des9tka2005@ukr.net",
+    "password": "des9tka2005"
 }
 
 ### Sign in with Email, Password, Username (required);
@@ -76,7 +76,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODQ0MDA5Mn0.R0GagfLjBpE66ivO2cPxOobfRzKR8hdbQqeg2D3RyjY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ1MTU4NX0.gpSxk_AiMmKVbutXKW6-cUMv5gz9a6KPGd5sY3FaAXs
 
 {
     "name": "Project"
@@ -90,7 +90,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Add User to Project;
 GET http://127.0.0.1:8000/projects/1/add-user/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODQ0MDA5Mn0.R0GagfLjBpE66ivO2cPxOobfRzKR8hdbQqeg2D3RyjY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ1MjUzM30._vydE5eZEwGYLOpj0j526CUWoPLYE5GfF4bMeYz9w6c
 
 ###
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6IjEiLCJleHAiOjE3Mzg0MDYzMDd9._FBr15rU3mBkk1VW5TZouabE087RL4h2xCDZ0vHJkG0
@@ -155,10 +155,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6I
 GET http://127.0.0.1:8000/debug/get_redis_data
 
 ###
-DELETE http://127.0.0.1:8000/debug/delete-all-redis
+GET http://127.0.0.1:8000/debug/delete_all_redis
 
 ### Delete invalid users;
-POST http://127.0.0.1:8000/debug/delete_users/2
+POST http://127.0.0.1:8000/debug/delete_users/1
 
 {
     "admin_key": "jnsf-g8q3-y423-hurb"

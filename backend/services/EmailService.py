@@ -9,11 +9,10 @@ from core.tokens import create_activate_token, create_recovery_token
 
 load_dotenv()
 
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.example.com")
+SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-SMTP_USER = os.getenv("SMTP_USER", "your_email@example.com")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "your_password")
-
+SMTP_USER = os.getenv("SMTP_USER")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
 async def send_email_html_file(
         recipient: str, 
@@ -24,51 +23,55 @@ async def send_email_html_file(
         invite_link: str | None = None,
         inviter_project: str | None = None
     ):
-    html_path = Path(html_file_path)
+    try:
 
-    if not html_path.is_file():
-        raise HTTPException(status_code=404, detail="HTML template not found")
+        html_path = Path(html_file_path)
 
-    with open(html_path, "r", encoding="utf-8") as file:
-        html_body = file.read()
+        if not html_path.is_file():
+            raise HTTPException(status_code=404, detail="HTML template not found")
 
-    if activate_link:
-        html_body = html_body.replace("{{activate_link}}", activate_link)
+        with open(html_path, "r", encoding="utf-8") as file:
+            html_body = file.read()
 
-    elif recovery_token:
-        html_body = html_body.replace("{{recovery_token}}", recovery_token)
+        if activate_link:
+            html_body = html_body.replace("{{activate_link}}", activate_link)
 
-    elif invite_link and inviter_project:
-        html_body = html_body.replace("{{inviter_project}}", inviter_project)
-        html_body = html_body.replace("{{invite_link}}", invite_link)
+        elif recovery_token:
+            html_body = html_body.replace("{{recovery_token}}", recovery_token)
 
-    else:
-        raise HTTPException(status_code=404, detail="HTML Attribute not found")
+        elif invite_link and inviter_project:
+            html_body = html_body.replace("{{inviter_project}}", inviter_project)
+            html_body = html_body.replace("{{invite_link}}", invite_link)
 
-    msg = EmailMessage()
-    msg["From"] = SMTP_USER
-    msg["To"] = recipient
-    msg["Subject"] = subject
+        else:
+            raise HTTPException(status_code=404, detail="HTML Attribute not found")
 
-    if activate_link:
-        msg.set_content(f"Activate your account: {activate_link}. If you didn't register, ignore this email.")
+        msg = EmailMessage()
+        msg["From"] = SMTP_USER
+        msg["To"] = recipient
+        msg["Subject"] = subject
 
-    elif recovery_token:
-        msg.set_content(f"Recovery your password: {recovery_token}. If you didn't register, ignore this email.")
+        if activate_link:
+            msg.set_content(f"Activate your account: {activate_link}. If you didn't register, ignore this email.")
 
-    elif invite_project_link:
-        msg.set_content(f"You have been invited to to project, link: {invite_project_link}. If you suggested to receive invite link, ignore this email.")
+        elif recovery_token:
+            msg.set_content(f"Recovery your password: {recovery_token}. If you didn't register, ignore this email.")
 
-    msg.add_alternative(html_body, subtype="html")
+        elif invite_project_link:
+            msg.set_content(f"You have been invited to to project <{inviter_project}>, link: {invite_project_link}. If you suggested to receive invite link, ignore this email.")
 
-    await aiosmtplib.send(
-        msg,
-        hostname=SMTP_SERVER,
-        port=SMTP_PORT,
-        username=SMTP_USER,
-        password=SMTP_PASSWORD,
-        start_tls=True
-    )
+        msg.add_alternative(html_body, subtype="html")
+
+        await aiosmtplib.send(
+            msg,
+            hostname=SMTP_SERVER,
+            port=SMTP_PORT,
+            username=SMTP_USER,
+            password=SMTP_PASSWORD,
+            start_tls=True
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
 
 async def send_email_endpoint(
     recipient: str, 
@@ -77,8 +80,10 @@ async def send_email_endpoint(
     background_tasks: BackgroundTasks,
     activate_link: str | None = None, 
     recovery_token: str | None = None,
+    invite_link: str | None = None,
+    inviter_project: str | None = None
 ):
-	background_tasks.add_task(send_email_html_file, recipient, subject, html_file_path, activate_link, recovery_token)
+	background_tasks.add_task(send_email_html_file, recipient, subject, html_file_path, activate_link, recovery_token, invite_link, inviter_project)
 	return {"Email was sended by aio."}
 
 async def send_activate_email(user_email: str, activate_token: str, background_tasks: BackgroundTasks):
@@ -100,6 +105,7 @@ async def send_recovery_email(user_email: str, background_tasks: BackgroundTasks
     )
 
 async def send_invite_project_link(user_email: str, inviter_project: str, invite_project_token: str, background_tasks: BackgroundTasks):
+
        
     html_file_path = Path.cwd() / "templates" / "invite_project_email.html"
     invite_link = os.getenv("WEB_HOST") + "/invite/" + invite_project_token
