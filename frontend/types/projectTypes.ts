@@ -9,3 +9,8 @@ type projectType = {
 type createProjectType = {
 	name: string;
 }
+
+export type {
+	projectType,
+	createProjectType
+}

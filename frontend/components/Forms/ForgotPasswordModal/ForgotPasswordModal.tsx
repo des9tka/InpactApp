@@ -33,7 +33,6 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 		data.password = data.password.trim();
 
 		await dispatch(userActions.recoveryPassword(data)).unwrap();
-		setIsForgot(false);
 	};
 
 	const formik = useFormik({
@@ -74,7 +73,7 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 					<form onSubmit={formik.handleSubmit} className="space-y-4">
 						{!isSendedCode ? (
 							<div>
-								<div className="flex justify-between">
+								<div className="flex justify-between mb-1">
 									<label className="block text-sm font-medium text-gray-300">
 										Email address
 									</label>

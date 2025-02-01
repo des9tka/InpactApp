@@ -45,8 +45,8 @@ POST http://127.0.0.1:8000/auth/recovery
 Content-Type: application/json
 
 {
-    "password": "Web2@",
-    "recovery_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6InJlY292ZXJ5IiwiZXhwIjoxNzM4Mzg5NjEyfQ.dALw5J63gSB2CNdJyepYIuwiDin5Y5MqD5EgmmzcUQ4"
+    "password": "Web1@",
+    "recovery_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6InJlY292ZXJ5IiwiZXhwIjoxNzM4Mzk3NDM1fQ.NuDVuoy8i65hUtQAAlhL9DYBXlyMk-uxly94qnZc-Mw"
 }
 
 # ---USERS---
@@ -76,7 +76,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI5MzI3Nn0.iXoo8c5quJt-MEsHwxQoHLH0kxQfoQnQ-qcxqPCqV-w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODQ0MDA5Mn0.R0GagfLjBpE66ivO2cPxOobfRzKR8hdbQqeg2D3RyjY
 
 {
     "name": "Project"
@@ -90,12 +90,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Add User to Project;
 GET http://127.0.0.1:8000/projects/1/add-user/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI5MzI3Nn0.iXoo8c5quJt-MEsHwxQoHLH0kxQfoQnQ-qcxqPCqV-w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODQ0MDA5Mn0.R0GagfLjBpE66ivO2cPxOobfRzKR8hdbQqeg2D3RyjY
+
+###
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6IjEiLCJleHAiOjE3Mzg0MDYzMDd9._FBr15rU3mBkk1VW5TZouabE087RL4h2xCDZ0vHJkG0
 
 ### Delete User from project 
 DELETE http://127.0.0.1:8000/projects/1/delete-user/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI5MzI3Nn0.iXoo8c5quJt-MEsHwxQoHLH0kxQfoQnQ-qcxqPCqV-w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODQ0MDA5Mn0.R0GagfLjBpE66ivO2cPxOobfRzKR8hdbQqeg2D3RyjY
 
 ### Get Users from Project;
 GET http://127.0.0.1:8000/projects/1/get-users
@@ -103,9 +106,9 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjk5Nn0.9lFmq-iDwb341bLJ-qQcieRqbQJ-GVTZLDj3_b1mlsA
 
 ### Delete Project;
-DELETE  http://127.0.0.1:8000/projects/delete/1
+DELETE http://127.0.0.1:8000/projects/delete/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNTE0MH0.zvnU7f-SSpKT8SBcVQiKfl58d0AzA1P5NcYsQveMniU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODQ0MDA5Mn0.R0GagfLjBpE66ivO2cPxOobfRzKR8hdbQqeg2D3RyjY
 
 ### Update Project;
 PATCH http://127.0.0.1:8000/projects/update/1
@@ -151,8 +154,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6I
 ### Get Redis Data;
 GET http://127.0.0.1:8000/debug/get_redis_data
 
+###
+DELETE http://127.0.0.1:8000/debug/delete-all-redis
+
 ### Delete invalid users;
-POST http://127.0.0.1:8000/debug/delete_users/1
+POST http://127.0.0.1:8000/debug/delete_users/2
 
 {
     "admin_key": "jnsf-g8q3-y423-hurb"

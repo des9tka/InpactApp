@@ -6,6 +6,7 @@ from jose import jwt, JWTError
 from jose.exceptions import ExpiredSignatureError
 from enums.TokenEnums import TokenEnum, TOKEN_EXPIRATION
 from dotenv import load_dotenv
+from typing import Optional
 
 from core.redis.redis_services import store_user_token, is_in_store, get_token_by_user_id
 
@@ -16,11 +17,11 @@ load_dotenv()
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 # Create a single token (by Provided type);
-async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timedelta):
-    if token_type not in [TokenEnum.ACCESS, TokenEnum.REFRESH, TokenEnum.ACTIVATE, TokenEnum.RECOVERY]:
+async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timedelta, project_id: int = None):
+    if token_type not in [TokenEnum.ACCESS, TokenEnum.REFRESH, TokenEnum.ACTIVATE, TokenEnum.RECOVERY, TokenEnum.INVITE]:
         raise HTTPException(detail="Invalid token type.", status_code=400)
     
-    encode = {"id": user_id, "type": token_type}
+    encode = {"id": user_id, "type": token_type, "project_id": project_id}
     expires = datetime.now(timezone.utc) + expires_delta
     encode.update({"exp": expires})
     
@@ -52,6 +53,14 @@ async def create_token(user_id: int, token_type: TokenEnum, expires_delta: timed
             user_id=user_id, 
             recovery_token=token, 
             recovery_expiration=int(expires_delta.total_seconds())
+        )
+
+    elif token_type == TokenEnum.INVITE: 
+        await store_user_token(
+            user_id=user_id, 
+            invite_token=token, 
+            invite_expiration=int(expires_delta.total_seconds()),
+            project_id=project_id
         )
 
     return token
@@ -108,14 +117,20 @@ async def create_recovery_token(user_id: int):
     access_expires_delta = timedelta(minutes=TOKEN_EXPIRATION[TokenEnum.RECOVERY])
     return await create_token(user_id, TokenEnum.RECOVERY, access_expires_delta) 
 
-async def is_allowed_request(user_id: int, token_type: str):
+async def create_invite_token(user_id: int, project_id: int):
+    access_expires_delta = timedelta(minutes=TOKEN_EXPIRATION[TokenEnum.INVITE])
+    return await create_token(user_id, TokenEnum.INVITE, access_expires_delta, project_id) 
+
+async def is_allowed_request(user_id: int, token_type: str, project_id: Optional[int] = None):
     if token_type == "activate":
         token = await get_token_by_user_id(user_id=user_id, token_type="activate")
         return not await is_in_store(user_id=user_id, activate_token=token)
     elif token_type == "recovery":
         token = await get_token_by_user_id(user_id=user_id, token_type="recovery")
-        print(token)
         return not await is_in_store(user_id=user_id, recovery_token=token)
+    elif token_type == "invite":
+        token = await get_token_by_user_id(user_id=user_id, token_type="invite", project_id=project_id)
+        return not await is_in_store(user_id=user_id, invite_token=token, project_id=project_id)
     else:
         raise HTTPException(detail="Invalid token type.", status_code=400)
 

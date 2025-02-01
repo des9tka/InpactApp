@@ -7,11 +7,13 @@ class TokenEnum(str, Enum):
     REFRESH = "refresh"
     ACTIVATE = "activate"
     RECOVERY = "recovery"
+    INVITE = "invite"
 
 # Token expiration times;
 TOKEN_EXPIRATION = {
     TokenEnum.ACCESS: 12,  # hours 
-    TokenEnum.REFRESH: 24, # hours 
-    TokenEnum.ACTIVATE: 12, # hours 
-    TokenEnum.RECOVERY: 10 # minutes
+    TokenEnum.REFRESH: 24, # hours
+    TokenEnum.ACTIVATE: 12, # hours
+    TokenEnum.RECOVERY: 10, # minutes
+    TokenEnum.INVITE: 24 # hours
 }

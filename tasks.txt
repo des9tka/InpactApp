@@ -1,11 +1,11 @@
-auth -> forgot password modal animate issue
 data -> description field issues
-dashboard -> userProfile issue
-
 refresh -> refresh token issue (interceptor)
+front -> rewrite data table
+back -> write all validation for back
 
-back -> limiter + tokens end
-
-rewrite table for front
-
-write validation for back
+FRONT: 
+	DASHBOARD:
+		- Create Project Button +
+		- List MyProjects/InvitedProjects
+		- Pagination for Projects Section
+		  

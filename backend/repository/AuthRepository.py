@@ -5,6 +5,7 @@ from starlette.concurrency import run_in_threadpool
 
 from models.UserModels import UserModel
 from core.tokens import create_access_refresh_tokens, refresh_access_token, validate_token, create_activate_token, create_recovery_token, is_allowed_request
+from core.redis.redis_services import remove_tokens
 from services import send_activate_email, send_recovery_email
 
 
@@ -98,6 +99,7 @@ class AuthRepository:
             
         user.is_active = True
         session.commit()
+        await remove_tokens(activate_token=True, user_id=user.id)
         return {"detail": "You successfully activated your account"}
 
     # Request Recovery Password by Email;

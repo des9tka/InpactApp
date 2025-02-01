@@ -20,7 +20,9 @@ async def send_email_html_file(
         subject: str, 
         html_file_path: str, 
         activate_link: str | None = None, 
-        recovery_token: str | None = None
+        recovery_token: str | None = None,
+        invite_link: str | None = None,
+        inviter_project: str | None = None
     ):
     html_path = Path(html_file_path)
 
@@ -36,6 +38,13 @@ async def send_email_html_file(
     elif recovery_token:
         html_body = html_body.replace("{{recovery_token}}", recovery_token)
 
+    elif invite_link and inviter_project:
+        html_body = html_body.replace("{{inviter_project}}", inviter_project)
+        html_body = html_body.replace("{{invite_link}}", invite_link)
+
+    else:
+        raise HTTPException(status_code=404, detail="HTML Attribute not found")
+
     msg = EmailMessage()
     msg["From"] = SMTP_USER
     msg["To"] = recipient
@@ -46,6 +55,9 @@ async def send_email_html_file(
 
     elif recovery_token:
         msg.set_content(f"Recovery your password: {recovery_token}. If you didn't register, ignore this email.")
+
+    elif invite_project_link:
+        msg.set_content(f"You have been invited to to project, link: {invite_project_link}. If you suggested to receive invite link, ignore this email.")
 
     msg.add_alternative(html_body, subtype="html")
 
@@ -87,3 +99,16 @@ async def send_recovery_email(user_email: str, background_tasks: BackgroundTasks
         background_tasks=background_tasks
     )
 
+async def send_invite_project_link(user_email: str, inviter_project: str, invite_project_token: str, background_tasks: BackgroundTasks):
+       
+    html_file_path = Path.cwd() / "templates" / "invite_project_email.html"
+    invite_link = os.getenv("WEB_HOST") + "/invite/" + invite_project_token
+
+    await send_email_endpoint(
+        recipient=user_email, 
+        subject="Invite to project", 
+        html_file_path=html_file_path,  
+        invite_link=invite_link, 
+        inviter_project=inviter_project,
+        background_tasks=background_tasks
+    )

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlmodel import Session
 from typing import Optional, List
 
@@ -41,6 +41,7 @@ async def get_project_by_id(
 
 @project_router.get('/{project_id}/add-user/{user_id}')
 async def add_user_to_project(
+	background_tasks: BackgroundTasks,
 	session: Session = Depends(get_session),
 	token: str = Depends(oauth2_bearer),
 	project_id: Optional[str] = None,
@@ -50,7 +51,18 @@ async def add_user_to_project(
 		session=session,
 		token=token,
 		project_id=project_id,
-		user_id=user_id
+		user_id=user_id,
+		background_tasks=background_tasks
+	)
+
+@project_router.patch('/join-team')
+async def join_team(
+	session: Session = Depends(get_session),
+	invite_token: str = Depends(oauth2_bearer),
+):
+	return await ProjectRepository.join_team(
+		session=session,
+		invite_token=invite_token
 	)
 
 

@@ -4,7 +4,7 @@ from sqlmodel import Session
 from dotenv import load_dotenv
 
 from core.db import get_session 
-from core.redis.redis_services import get_all_info_from_redis
+from core.redis.redis_services import get_all_info_from_redis, clear_redis
 from models import UserModel, UserProjectModel
 from enums import AdminKeyEnum
 
@@ -18,6 +18,10 @@ debug_router = APIRouter(
 @debug_router.get("/get_redis_data")
 async def get_redis_data():
 	return await get_all_info_from_redis()
+
+@debug_router.delete("/delete-all-redis")
+async def delete_all():
+    clear_redis()
 
 @debug_router.post("/delete_users/{user_id}")
 async def delete_users(

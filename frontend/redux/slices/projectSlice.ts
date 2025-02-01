@@ -1,76 +1,35 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-import { authService } from "@/services/authService";
 import { cookieService } from "@/services/cookieService";
-import { userService } from "@/services/userService";
 import {
+	ApiResponse,
 	ApiResponseError,
-	authLoginUserType,
-	authRegisterUserType,
-	TokensType,
-	userType,
-	userUpdateBodyType,
+	projectType,
+	RecoveryType,
 } from "@/types";
 
 interface IInitialState {
-	user: userType | null;
+	my_project: projectType | null;
+	projects: number[] | null;
 	loading: boolean;
 	errors: string | null;
+	extra: string | null;
 }
 
 const initialState: IInitialState = {
-	user: null,
+	my_project: null,
+	projects: null,
 	loading: false,
 	errors: null,
+	extra: null,
 };
 
-const registerUser = createAsyncThunk<userType, authRegisterUserType>(
-	"noteSlice/setUserId",
-	async (body, { rejectWithValue }) => {
+const getUserProject = createAsyncThunk<ApiResponse, RecoveryType>(
+	"userSlice/recoveryPassword",
+	async (recoveryBody, { rejectWithValue }) => {
 		try {
-			const { data } = await authService.authRegisterUser(body);
-			return data;
-		} catch (err) {
-			const typedError = err as AxiosError<ApiResponseError>;
-			return rejectWithValue(typedError.response?.data?.detail);
-		}
-	}
-);
-
-const loginUser = createAsyncThunk<TokensType, authLoginUserType>(
-	"noteSlice/loginUser",
-	async (body, { rejectWithValue }) => {
-		try {
-			const { data } = await authService.authLoginUser(body);
-			return data;
-		} catch (err) {
-			const typedError = err as AxiosError<ApiResponseError>;
-			return rejectWithValue(typedError.response?.data?.detail);
-		}
-	}
-);
-
-const setUpUserInfo = createAsyncThunk<userType, void>(
-	"noteSlice/setUpUserInfo",
-	async (_, { rejectWithValue }) => {
-		try {
-			const { data } = await authService.authGetUserInfo();
-			await new Promise(resolve => setTimeout(resolve, 1000)); // Artificial delay for Loader Appear;
-
-			return data;
-		} catch (err) {
-			const typedError = err as AxiosError<ApiResponseError>;
-			return rejectWithValue(typedError.response?.data?.detail);
-		}
-	}
-);
-
-const updateUserData = createAsyncThunk<userType, userUpdateBodyType>(
-	"noteSlice/updateUserData",
-	async (body, { rejectWithValue }) => {
-		try {
-			const { data } = await userService.updateUser(body);
+			const { data } = await authService.authRecoveryPassword(recoveryBody);
 			return data;
 		} catch (err) {
 			const typedError = err as AxiosError<ApiResponseError>;
@@ -144,6 +103,48 @@ const userSlice = createSlice({
 			.addCase(updateUserData.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Activate User;
+			.addCase(activateUser.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(activateUser.fulfilled, (state, action) => {
+				state.loading = false;
+				state.extra = action.payload.detail;
+			})
+			.addCase(activateUser.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
+			})
+
+			// Request for Recovery Password;
+			.addCase(requestRecoveryPassword.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(requestRecoveryPassword.fulfilled, (state, action) => {
+				state.loading = false;
+				state.extra = action.payload.detail;
+			})
+			.addCase(requestRecoveryPassword.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
+			})
+
+			// Recovery Password;
+			.addCase(recoveryPassword.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(recoveryPassword.fulfilled, (state, action) => {
+				state.loading = false;
+				state.extra = action.payload.detail;
+			})
+			.addCase(recoveryPassword.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -158,6 +159,9 @@ const userActions = {
 	setUpUserInfo,
 	updateUserData,
 	setError,
+	activateUser,
+	requestRecoveryPassword,
+	recoveryPassword,
 };
 
 export { userActions, userReducer };
