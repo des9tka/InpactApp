@@ -13,5 +13,5 @@ TOKEN_EXPIRATION = {
     TokenEnum.ACCESS: 12,  # hours 
     TokenEnum.REFRESH: 24, # hours 
     TokenEnum.ACTIVATE: 12, # hours 
-    TokenEnum.RECOVERY: 1 # minutes
+    TokenEnum.RECOVERY: 10 # minutes
 }

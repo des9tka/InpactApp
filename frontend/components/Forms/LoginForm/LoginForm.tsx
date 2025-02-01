@@ -125,7 +125,7 @@ function LoginForm() {
 						)}
 					</button>
 				</div>
-				{sliceErrors && (
+				{sliceErrors && !isForgot && (
 					<p className="text-red-500 text-center">{sliceErrors}</p>
 				)}
 			</form>

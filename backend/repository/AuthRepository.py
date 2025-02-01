@@ -122,7 +122,7 @@ class AuthRepository:
             recovery_token=recovery_token
         )
 
-        return {"detail": "Recovery code sent to your email"}
+        return {"detail": "Recovery code sent to your email. It will be active 10 minutes"}
 
     # Recovery Password by Token;
     @classmethod
@@ -130,8 +130,7 @@ class AuthRepository:
         user_id = await validate_token(token=recovery_token)
         user = UserModel.get_user_by(session=session, id=user_id)
 
-        hashed_password = bcrypt.hashpw(user_data.password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
-
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
 
         user.password = hashed_password
         session.commit()

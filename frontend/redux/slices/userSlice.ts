@@ -9,6 +9,8 @@ import {
 	ApiResponseError,
 	authLoginUserType,
 	authRegisterUserType,
+	RecoveryRequestType,
+	RecoveryType,
 	TokensType,
 	userType,
 	userUpdateBodyType,
@@ -29,7 +31,7 @@ const initialState: IInitialState = {
 };
 
 const registerUser = createAsyncThunk<userType, authRegisterUserType>(
-	"noteSlice/setUserId",
+	"userSlice/setUserId",
 	async (body, { rejectWithValue }) => {
 		try {
 			const { data } = await authService.authRegisterUser(body);
@@ -42,7 +44,7 @@ const registerUser = createAsyncThunk<userType, authRegisterUserType>(
 );
 
 const loginUser = createAsyncThunk<TokensType, authLoginUserType>(
-	"noteSlice/loginUser",
+	"userSlice/loginUser",
 	async (body, { rejectWithValue }) => {
 		try {
 			const { data } = await authService.authLoginUser(body);
@@ -55,7 +57,7 @@ const loginUser = createAsyncThunk<TokensType, authLoginUserType>(
 );
 
 const setUpUserInfo = createAsyncThunk<userType, void>(
-	"noteSlice/setUpUserInfo",
+	"userSlice/setUpUserInfo",
 	async (_, { rejectWithValue }) => {
 		try {
 			const { data } = await authService.authGetUserInfo();
@@ -70,7 +72,7 @@ const setUpUserInfo = createAsyncThunk<userType, void>(
 );
 
 const updateUserData = createAsyncThunk<userType, userUpdateBodyType>(
-	"noteSlice/updateUserData",
+	"userSlice/updateUserData",
 	async (body, { rejectWithValue }) => {
 		try {
 			const { data } = await userService.updateUser(body);
@@ -83,10 +85,41 @@ const updateUserData = createAsyncThunk<userType, userUpdateBodyType>(
 );
 
 const activateUser = createAsyncThunk<ApiResponse, string>(
-	"noteSlice/activateUser",
+	"userSlice/activateUser",
 	async (token, { rejectWithValue }) => {
 		try {
 			const { data } = await authService.authActivateUser(token);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
+const requestRecoveryPassword = createAsyncThunk<
+	ApiResponse,
+	RecoveryRequestType
+>(
+	"userSlice/requestRecoveryPassword",
+	async (recoveryRequestBody, { rejectWithValue }) => {
+		try {
+			const { data } = await authService.authRequestRecoveryPassword(
+				recoveryRequestBody
+			);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
+const recoveryPassword = createAsyncThunk<ApiResponse, RecoveryType>(
+	"userSlice/recoveryPassword",
+	async (recoveryBody, { rejectWithValue }) => {
+		try {
+			const { data } = await authService.authRecoveryPassword(recoveryBody);
 			return data;
 		} catch (err) {
 			const typedError = err as AxiosError<ApiResponseError>;
@@ -174,6 +207,34 @@ const userSlice = createSlice({
 			.addCase(activateUser.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Request for Recovery Password;
+			.addCase(requestRecoveryPassword.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(requestRecoveryPassword.fulfilled, (state, action) => {
+				state.loading = false;
+				state.extra = action.payload.detail;
+			})
+			.addCase(requestRecoveryPassword.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
+			})
+
+			// Recovery Password;
+			.addCase(recoveryPassword.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(recoveryPassword.fulfilled, (state, action) => {
+				state.loading = false;
+				state.extra = action.payload.detail;
+			})
+			.addCase(recoveryPassword.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -188,7 +249,9 @@ const userActions = {
 	setUpUserInfo,
 	updateUserData,
 	setError,
-	activateUser
+	activateUser,
+	requestRecoveryPassword,
+	recoveryPassword
 };
 
 export { userActions, userReducer };

@@ -8,7 +8,7 @@ Content-Type: application/json
 
 {
 	"email": "deyume9@gmail.com",
-    "password": "Web2@"
+    "password": "deyume9"
 }
 
 ### Sign in with Email, Password, Username (required);
@@ -46,7 +46,7 @@ Content-Type: application/json
 
 {
     "password": "Web2@",
-    "recovery_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6InJlY292ZXJ5IiwiZXhwIjoxNzM4MzI1NjQxfQ.EyaadjzHilFtcp6M3Wh01ESYhe7viG_p0tNGCzEikfg"
+    "recovery_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6InJlY292ZXJ5IiwiZXhwIjoxNzM4Mzg5NjEyfQ.dALw5J63gSB2CNdJyepYIuwiDin5Y5MqD5EgmmzcUQ4"
 }
 
 # ---USERS---

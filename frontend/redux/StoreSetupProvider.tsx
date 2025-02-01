@@ -1,11 +1,12 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import { Loader } from "@/components";
 import { cookieService } from "@/services/cookieService";
 import { useAppDispatch, useAppSelector } from "./appDispatchHook";
 import { userActions } from "./slices";
+import path from "path"
 
 const StoreSetupProvider = ({ children }: { children: React.ReactNode }) => {
 	const dispatch = useAppDispatch();
@@ -13,11 +14,13 @@ const StoreSetupProvider = ({ children }: { children: React.ReactNode }) => {
 	const [mounted, setMounted] = useState(false);
 	const router = useRouter();
 
+	const pathname = usePathname()
+
 	useEffect(() => {
 		if (
 			!user &&
-			(window.location.pathname == "/dashboard" ||
-				window.location.pathname == "/data")
+			(pathname == "/dashboard" ||
+				pathname == "/data")
 		) {
 			dispatch(userActions.setUpUserInfo())
 				.then(() => setMounted(true))
@@ -26,7 +29,7 @@ const StoreSetupProvider = ({ children }: { children: React.ReactNode }) => {
 					router.push("/login?expired=true");
 				});
 		} else setMounted(true);
-	}, []);
+	}, [pathname]);
 
 	if (!mounted)
 		return (

@@ -16,7 +16,7 @@ auth_router = APIRouter(
 )
 
 @auth_router.post("/login")
-@limiter.limit("10/minute", per_method=True)
+@limiter.limit("6/minute", per_method=True)
 async def login(
 	request: Request,
 	background_tasks: BackgroundTasks,
@@ -60,7 +60,7 @@ async def activate(
     return await AuthRepository.activate_user(activate_token=activate_token, session=session)
 
 @auth_router.post("/recovery_request")
-@limiter.limit("2/day", per_method=True)
+@limiter.limit("4/day", per_method=True)
 async def recovery_request(
 	request: Request,
     background_tasks: BackgroundTasks,
@@ -74,7 +74,7 @@ async def recovery_request(
     )
 
 @auth_router.post("/recovery")
-@limiter.limit("2/day", per_method=True)
+@limiter.limit("4/day", per_method=True)
 async def recovery(
     request: Request,
     recovery_data: RecoveryDataEnum,

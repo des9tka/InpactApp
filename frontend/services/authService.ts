@@ -4,7 +4,9 @@ import {
 	authRegisterUserType,
 	TokensType,
 	userType,
-	ApiResponse
+	ApiResponse,
+	RecoveryRequestType,
+	RecoveryType
 } from "@/types";
 import { AxiosRes, axiosService } from "./axiosService";
 
@@ -23,6 +25,12 @@ const authService = {
 
 	authActivateUser: (token: string): AxiosRes<ApiResponse> =>
 		axiosService.get(authUrls.activateUser(token)),
+
+	authRecoveryPassword: (recoveryBody: RecoveryType): AxiosRes<ApiResponse> =>
+		axiosService.post(authUrls.recoveryPassword(), recoveryBody),
+
+	authRequestRecoveryPassword: (requestRecoveryBody: RecoveryRequestType): AxiosRes<ApiResponse> =>
+		axiosService.post(authUrls.requestRecoveryPassword(), requestRecoveryBody),
 };
 
 export { authService };

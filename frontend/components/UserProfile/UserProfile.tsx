@@ -14,6 +14,7 @@ function UserProfile() {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
 	const [showNotification, setShowNotification] = useState<boolean>(false);
+	const pathname = usePathname();
 
 	const {
 		user,
@@ -21,7 +22,6 @@ function UserProfile() {
 		loading,
 	} = useAppSelector(state => state.userReducer);
 	const dispatch = useAppDispatch();
-	const pathname = usePathname();
 
 	const {
 		values,
