@@ -43,6 +43,13 @@ class ProjectRepository:
 		return project
 
 	@classmethod
+	async def get_user_projects(cls, session, token): 
+		user_id = await validate_token(token)
+		query = select(ProjectModel).where(ProjectModel.founder_id == user_id)
+		projects = session.exec(query).all()
+		return projects
+
+	@classmethod
 	async def get_project_by_id(
 		cls,
 		session,
@@ -108,8 +115,8 @@ class ProjectRepository:
 		return {"detail": f"Invite link was sended to {user.email}."}
 
 	@classmethod
-	def join_team(cls, session, invite_token):
-		user_id, project_id, token_type = get_user_by_token(token=invite_token, project_id=True)
+	async def join_team(cls, session, invite_token):
+		user_id, project_id, token_type = await get_user_by_token(token=invite_token, project_id=True)
 
 		if token_type != "invite":
 			raise HTTPException(detail="Invalid token type.", status_code=400)

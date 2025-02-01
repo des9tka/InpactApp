@@ -27,17 +27,27 @@ async def create_project(
 		project_data=project_data,
 	)
 
-@project_router.get("/{project_id}")
-async def get_project_by_id(
-	project_id: str,
+@project_router.get('/')
+async def get_user_projects(
 	session: Session = Depends(get_session),
 	token: str = Depends(oauth2_bearer)
-) -> ProjectModel:
-	return await ProjectRepository.get_project_by_id(
+):
+	return await ProjectRepository.get_user_projects(
 		session=session,
-		token=token,
-		project_id=project_id
+		token=token
 )
+
+
+@project_router.get('/join-team')
+async def join_team(
+	session: Session = Depends(get_session),
+	invite_token: str = Depends(oauth2_bearer),
+):
+	return await ProjectRepository.join_team(
+		session=session,
+		invite_token=invite_token
+	)
+
 
 @project_router.get('/{project_id}/add-user/{user_id}')
 async def add_user_to_project(
@@ -53,16 +63,6 @@ async def add_user_to_project(
 		project_id=project_id,
 		user_id=user_id,
 		background_tasks=background_tasks
-	)
-
-@project_router.patch('/join-team')
-async def join_team(
-	session: Session = Depends(get_session),
-	invite_token: str = Depends(oauth2_bearer),
-):
-	return await ProjectRepository.join_team(
-		session=session,
-		invite_token=invite_token
 	)
 
 
@@ -117,3 +117,15 @@ async def update_project(
 		project_id=project_id,
 		project_data=project_data
 	)
+
+@project_router.get("/{project_id}")
+async def get_project_by_id(
+	project_id: str,
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+) -> ProjectModel:
+	return await ProjectRepository.get_project_by_id(
+		session=session,
+		token=token,
+		project_id=project_id
+)

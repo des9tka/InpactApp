@@ -2,10 +2,14 @@ import { AxiosRes, axiosService } from "./axiosService";
 
 import { projectUrls } from "@/config";
 import { createProjectType, projectType } from "@/types";
+import { get } from "http"
 
 const projectService = {
 	creteProject: (body: createProjectType): AxiosRes<projectType> =>
 		axiosService.post(projectUrls.createProject(), body),
+
+	getUserProjects: (): AxiosRes<projectType[]> =>
+		axiosService.get(projectUrls.getUserProjects()),
 
 	getProjectById: (id: number): AxiosRes<projectType> =>
 		axiosService.get(projectUrls.getProjectById(id)),

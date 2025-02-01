@@ -8,7 +8,7 @@ Content-Type: application/json
 
 {
 	"email": "des9tka2005@ukr.net",
-    "password": "des9tka2005"
+    "password": "Web1@"
 }
 
 ### Sign in with Email, Password, Username (required);
@@ -87,15 +87,20 @@ GET http://127.0.0.1:8000/projects/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODI4OTIxNH0.5bCr6g21TSadxhVbzILh8_Qesog58tLMorw1Ab49Em0
 
+### Get User Projects;
+GET http://127.0.0.1:8000/projects
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ2OTU2OH0.TrXMFUva7t-dC2MYN3E6f3tnky4D_0lLQCX_K1bG4dg
+
 ### Add User to Project;
 GET http://127.0.0.1:8000/projects/1/add-user/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ1ODgwOH0.UVGSmdc8GeL1C4JGBqTy2dMRpIe3HI-2ZeLmiPkoXCY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ2NDExMX0.SWxORFd7i0LcawGwjKMEL5MlNpcaFmKgJURyuSVIJR8
 
 ### Join to project by token;
 GET http://127.0.0.1:8000/projects/join-team
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6MSwiZXhwIjoxNzM4NDIyODE4fQ.p491H4V4EQdOrApdctHl3F7W3b2FI-0Zmwt5npkNbSk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6MSwiZXhwIjoxNzM4NDI4MTIzfQ.kjCXCCqXXl8Yj_C0ZROZeAvd2NFughwz48EI2BZLFug
 
 ### Delete User from project 
 DELETE http://127.0.0.1:8000/projects/1/delete-user/2

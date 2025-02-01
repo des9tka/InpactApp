@@ -3,6 +3,8 @@ export const projectUrls = {
 
 	getProjectById: (project_id: number) => `/projects/${project_id}`,
 
+	getUserProjects: () => "/projects",
+
 	addUserToProject: (project_id: number, user_id: number) =>
 		`projects/${project_id}/add-user/${user_id}`,
 
