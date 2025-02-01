@@ -1,4 +1,5 @@
 "use client";
+import { impactType } from "@/types";
 import {
 	BarElement,
 	CategoryScale,
@@ -12,42 +13,15 @@ import { Bar } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, BarElement, Title, Tooltip, Legend);
 
-const ChartBar = () => {
+const ChartBar = ({ impacts }: { impacts: impactType[] }) => {
 	const chartRef = useRef<ChartJS<"bar"> | null>(null);
 
 	const barData = {
-		labels: [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-		],
+		labels: impacts.map(impact => impact.created_at),
 		datasets: [
 			{
 				label: "Impacts",
-				data: [
-					15, 43, 32, 9, 25, 15, 43, 32, 9, 25, 15, 43, 32, 9, 25, 15, 43, 32,
-					9, 25, 15, 43, 32, 9, 25, 15, 43, 32, 9, 25,
-				],
+				data: impacts.map(impact => impact.impactPercent),
 				backgroundColor: "rgba(54, 162, 235, 0.5)",
 				borderColor: "rgb(54, 162, 235)",
 				borderWidth: 0.5,

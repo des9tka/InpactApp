@@ -33,6 +33,19 @@ const getUserProjects = createAsyncThunk<projectType[], void>(
 	}
 );
 
+const getInvitedProjects = createAsyncThunk<projectType[], void>(
+	"projectSlice/getInvitedProjects",
+	async (_, { rejectWithValue }) => {
+		try {
+			const { data } = await projectService.getInvitedProjects();
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const projectSlice = createSlice({
 	name: "projectSlice",
 	initialState,
@@ -58,6 +71,20 @@ const projectSlice = createSlice({
 			.addCase(getUserProjects.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Get Invited User Projects;
+			.addCase(getInvitedProjects.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(getInvitedProjects.fulfilled, (state, action) => {
+				state.loading = false;
+				state.my_projects = action.payload;
+			})
+			.addCase(getInvitedProjects.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -68,6 +95,9 @@ const {
 
 const projectActions = {
 	getUserProjects,
+	setError,
+	setLoading,
+	getInvitedProjects,
 };
 
 export { projectActions, projectReducer };

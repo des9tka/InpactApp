@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
+from typing import List
 
 from core.db import get_session 
 from core.tokens import oauth2_bearer
@@ -25,6 +26,18 @@ async def create_project(
 		session=session,
 		token=token,
 		impact_data=impact_data,
+	)
+
+@impact_router.get("/for-project/{project_id}")
+async def get_impacts_by_project_id(
+	project_id: int,
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+) -> List[ImpactModel]:
+	return await ImpactRepository.get_impacts_by_project_id(
+		session=session,
+		token=token,
+		project_id=project_id
 	)
 
 @impact_router.patch("/update/{impact_id}")

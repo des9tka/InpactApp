@@ -2,6 +2,7 @@ import os
 from fastapi import HTTPException
 from sqlmodel import select
 from dotenv import load_dotenv
+from sqlalchemy import and_
 
 from core.tokens import validate_token, create_invite_token, is_allowed_request, get_user_by_token
 from models import UserProjectModel, ProjectModel, UserModel
@@ -47,6 +48,25 @@ class ProjectRepository:
 		user_id = await validate_token(token)
 		query = select(ProjectModel).where(ProjectModel.founder_id == user_id)
 		projects = session.exec(query).all()
+		return projects
+
+	@classmethod
+	async def get_invited_projects(
+		cls,
+		session,
+		token
+	):
+		user_id = await validate_token(token)
+
+		query = select(ProjectModel).join(UserProjectModel).where(
+    		and_(
+        		UserProjectModel.user_id == user_id,
+        		ProjectModel.founder_id != user_id  
+    		)
+		)
+
+		projects = session.exec(query).all()
+		
 		return projects
 
 	@classmethod

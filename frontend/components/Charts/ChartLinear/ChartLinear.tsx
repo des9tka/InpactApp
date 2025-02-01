@@ -1,5 +1,6 @@
 "use client";
 
+import { impactType } from "@/types";
 import {
 	CategoryScale,
 	Chart as ChartJS,
@@ -23,54 +24,21 @@ ChartJS.register(
 	Legend
 );
 
-function ChartLinear() {
+function ChartLinear({ impacts }: { impacts: impactType[] }) {
 	const chartRef = useRef<ChartJS<"line"> | null>(null);
 
 	const data = {
-		labels: [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-		],
+		labels: impacts.map(impact => impact.created_at),
 		datasets: [
 			{
 				label: "Impacts",
-				data: [
-					15, 43, 32, 9, 25, 15, 43, 32, 9, 25, 15, 43, 32, 9, 25, 15, 43, 32,
-					9, 25, 15, 43, 32, 9, 25, 15, 43, 32, 9, 25,
-				],
+				data: impacts.map(impact => impact.impactPercent),
 				backgroundColor: "rgba(54, 162, 235, 0.5)",
 				borderColor: "rgb(54, 162, 235)",
-				borderWidth: 0.5,
+				borderWidth: 3,
+				pointRadius: 6,
+				pointBackgroundColor: "rgb(54, 162, 235)",
 				fill: true,
-				tension: 0.4,
 			},
 		],
 	};
@@ -81,6 +49,23 @@ function ChartLinear() {
 			legend: {
 				display: true,
 				position: "top" as const,
+			},
+			tooltip: {
+				enabled: true,
+				backgroundColor: "rgba(0, 0, 0, 0.7)",
+				titleFont: {
+					size: 16,
+					weight: "bold",
+					family: "'Arial', sans-serif",
+				},
+				bodyFont: {
+					size: 14,
+					family: "'Arial', sans-serif",
+				},
+				padding: 12,
+				caretSize: 8,
+				cornerRadius: 6,
+				displayColors: false,
 			},
 		},
 	};

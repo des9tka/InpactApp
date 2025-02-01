@@ -27,6 +27,7 @@ async def create_project(
 		project_data=project_data,
 	)
 
+# Get User Projects
 @project_router.get('/')
 async def get_user_projects(
 	session: Session = Depends(get_session),
@@ -37,7 +38,18 @@ async def get_user_projects(
 		token=token
 )
 
+# Get Invited Projects;
+@project_router.get('/invited-projects')
+async def get_invited_projects(
+	session: Session = Depends(get_session),
+	token: str = Depends(oauth2_bearer)
+):
+	return await ProjectRepository.get_invited_projects(
+		session=session,
+		token=token
+	)
 
+# Join Team;
 @project_router.get('/join-team')
 async def join_team(
 	session: Session = Depends(get_session),
@@ -49,6 +61,7 @@ async def join_team(
 	)
 
 
+# Invite User To Project;
 @project_router.get('/{project_id}/add-user/{user_id}')
 async def add_user_to_project(
 	background_tasks: BackgroundTasks,

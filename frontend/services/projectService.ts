@@ -11,6 +11,9 @@ const projectService = {
 	getUserProjects: (): AxiosRes<projectType[]> =>
 		axiosService.get(projectUrls.getUserProjects()),
 
+	getInvitedProjects: (): AxiosRes<projectType[]> =>
+		axiosService.get(projectUrls.getInvitedProjects()),
+
 	getProjectById: (id: number): AxiosRes<projectType> =>
 		axiosService.get(projectUrls.getProjectById(id)),
 

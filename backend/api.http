@@ -7,7 +7,7 @@ POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "des9tka2005@ukr.net",
+	"email": "deyume9@gmail.com",
     "password": "Web1@"
 }
 
@@ -76,11 +76,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ1MTU4NX0.gpSxk_AiMmKVbutXKW6-cUMv5gz9a6KPGd5sY3FaAXs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ4NTEyMn0.OP9zhu19SkodRUOEcbKkT2npxb-6ZwMRGAbHuA0lgD4
 
 {
-    "name": "Project"
+    "name": "GmailProject"
 }
+
+### Invited User Projects;
+GET  http://127.0.0.1:8000/projects/invited-projects
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ5NDA0OH0.kUA1XSdOaa-vHIal3LpjwFGeMLCSkCtw5aPqRMOdyjc
 
 ### Get Project by Id;
 GET http://127.0.0.1:8000/projects/1
@@ -90,7 +95,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Get User Projects;
 GET http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ2OTU2OH0.TrXMFUva7t-dC2MYN3E6f3tnky4D_0lLQCX_K1bG4dg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ3NzA0OH0.KXhOyi4ZPUqC8iT5fEm9B7air2KzO7oroLocWJEeYrY
 
 ### Add User to Project;
 GET http://127.0.0.1:8000/projects/1/add-user/2
@@ -130,26 +135,30 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Create Impact;
 POST http://127.0.0.1:8000/impacts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODEyNDc4MX0.yIgNK7oEz2-adqdjoLM3xGI4VusHpX8208YMgAi--8M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ4ODYzMn0.4s6May74EHJpAQDGEn3XLl0talfecxcwieK1wHowvPo
 
 {
-    "title": "Impact1",
-    "description": "Some task to done",
-    "type": "FEAT",
+    "title": "Impact2",
+    "description": "Some task to done 2",
+    "type": "FIX",
     "impactPercent": 0,
     "project_id": 1
 }  
 
 ### Update Impact;
-PATCH http://127.0.0.1:8000/impacts/update/1
+PATCH http://127.0.0.1:8000/impacts/update/9
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNjU2ODR9.AiFZBWdtnZvxwl02-A4M04Z8p4h6TeoNX3m2dBb05Ew
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ4ODY5OX0.dlrar3XOPJ98Gz-TfFFlzLC71vJAhg5thMTc08kjG-w
 
 {
-    "title": "NEEEEWWWW",
-    "description": "New desc",
-    "impactPercent": 50
+    "impactPercent": 11
 }
+
+### Get Impact for Project;
+GET http://127.0.0.1:8000/impacts/for-project/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ4MzA1OX0.36nL8xcqPLiDrMCHt-mm_IFskbzZTrxTFmfD3_EvTeU
+
 
 ###
 DELETE http://127.0.0.1:8000/impacts/delete/1
