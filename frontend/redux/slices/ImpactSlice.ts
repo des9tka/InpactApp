@@ -51,8 +51,7 @@ const impactSlice = createSlice({
 			})
 			.addCase(getUserProjectImpacts.fulfilled, (state, action) => {
 				state.loading = false;
-				state.impacts = action.payload;
-				console.log(action.payload);
+				state.impacts = [...action.payload];
 			})
 			.addCase(getUserProjectImpacts.rejected, (state, action) => {
 				state.loading = false;

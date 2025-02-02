@@ -1,11 +1,7 @@
-data -> description field issues
-refresh -> refresh token issue (interceptor)
-front -> rewrite data table
-back -> write all validation for back
+Refresh Token 
+Data Table
+Validation Equality
+Invite Accept Page
 
-FRONT: 
-	DASHBOARD:
-		- Create Project Button +
-		- List MyProjects/InvitedProjects
-		- Pagination for Projects Section
+Create Project Form
 		  

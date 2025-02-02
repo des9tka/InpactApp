@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 import { projectService } from "@/services/projectService";
-import { ApiResponseError, projectType } from "@/types";
+import { ApiResponseError, createProjectType, projectType } from "@/types";
 
 interface IInitialState {
 	my_projects: projectType[];
@@ -46,6 +46,19 @@ const getInvitedProjects = createAsyncThunk<projectType[], void>(
 	}
 );
 
+const createProject = createAsyncThunk<projectType, createProjectType>(
+	"projectSlice/createProject",
+	async (body, { rejectWithValue }) => {
+		try {
+			const { data } = await projectService.creteProject(body);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const projectSlice = createSlice({
 	name: "projectSlice",
 	initialState,
@@ -80,9 +93,23 @@ const projectSlice = createSlice({
 			})
 			.addCase(getInvitedProjects.fulfilled, (state, action) => {
 				state.loading = false;
-				state.my_projects = action.payload;
+				state.projects = action.payload;
 			})
 			.addCase(getInvitedProjects.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
+			})
+
+			// Create Project;
+			.addCase(createProject.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(createProject.fulfilled, (state, action) => {
+				state.loading = false;
+				state.my_projects = [...state.projects, action.payload];
+			})
+			.addCase(createProject.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
 			}),
@@ -98,6 +125,7 @@ const projectActions = {
 	setError,
 	setLoading,
 	getInvitedProjects,
+	createProject,
 };
 
 export { projectActions, projectReducer };

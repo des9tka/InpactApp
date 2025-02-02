@@ -1,9 +1,9 @@
 "use client";
 import { ChevronRight, LoaderIcon, MenuSquareIcon, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { ChartBar, ChartLinear } from "@/components";
+import { ChartBar, ChartLinear, ProjectCreateForm } from "@/components";
 import { impactActions, useAppDispatch, useAppSelector } from "@/redux";
 import { RadioChartNav } from "../RadioChartNav/RadioChartNav";
 
@@ -11,7 +11,8 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 	const [chart, setChart] = useState<"linear" | "bar">("linear");
 	const [pNumber, setPNumber] = useState<number>(0);
 	const [isPOpen, setIsPOpen] = useState<boolean>(false);
-	const [mounted, setMounted] = useState<boolean>(false);
+	const [createProject, setCreateProject] = useState<boolean>(false);
+	const mounted = useRef(false);
 
 	const router = useRouter();
 	const dispatch = useAppDispatch();
@@ -22,20 +23,28 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 		state => state.projectReducer
 	);
 
-	const projects = owner ? my_projects : invited_projects;
+	const projects = useMemo(
+		() => (owner ? my_projects : invited_projects),
+		[owner, my_projects, invited_projects]
+	);
+
+	const toggleMenu = useCallback(() => {
+		setIsPOpen(prev => !prev);
+	}, []);
 
 	useEffect(() => {
-		const currentProjectId = projects[pNumber]?.id;
+		if (!mounted.current) {
+			mounted.current = true;
+		}
 
+		const currentProjectId = projects[pNumber]?.id;
 		if (
 			currentProjectId &&
-			!impacts.some(impact => impact.project_id === currentProjectId) &&
-			!mounted
+			!impacts.some(impact => impact.project_id === currentProjectId)
 		) {
 			dispatch(impactActions.getUserProjectImpacts(currentProjectId));
-			setMounted(true);
 		}
-	}, [pNumber, projects, impacts]);
+	}, [pNumber]);
 
 	return (
 		<div className="flex flex-col justify-center items-center">
@@ -44,11 +53,17 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 					<LoaderIcon className="animate-spin" color="#00FFFF" size={32} />
 				</div>
 			)}
+			{createProject && (
+				<ProjectCreateForm setCreateProject={setCreateProject} />
+			)}
 
 			{projects.length === 0 ? (
 				<>
 					{owner ? (
-						<h2 className="flex gap-x-2 bg-sky-700 w-[250px] py-2 px-4 text-xl rounded-md text-center items-center justify-center hover:bg-sky-500 cursor-pointer">
+						<h2
+							className="flex gap-x-2 bg-sky-700 w-[250px] py-2 px-4 text-xl rounded-md text-center items-center justify-center hover:bg-sky-500 cursor-pointer"
+							onClick={() => setCreateProject(true)}
+						>
 							Create Project <Plus size={28} />
 						</h2>
 					) : (
@@ -68,8 +83,8 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 										className="cursor-pointer hover:text-sky-500 bg-sky-900 rounded-md py-2 px-4"
 										onClick={() => {
 											setPNumber(index);
-											setIsPOpen(false);
-											setMounted(false);
+											toggleMenu();
+											mounted.current = true;
 										}}
 									>
 										{project && project.name.length > 15

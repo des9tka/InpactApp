@@ -81,7 +81,7 @@ async def get_user_by_token(token: str = Depends(oauth2_bearer), project_id: Opt
         token_type = payload.get("type")
         user_id = payload.get("id")
         if project_id:
-            return user_id, project_id, token_type
+            return user_id, payload.get("project_id"), token_type
         return token_type, user_id
     
     except ExpiredSignatureError:

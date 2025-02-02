@@ -138,10 +138,23 @@ class ProjectRepository:
 	async def join_team(cls, session, invite_token):
 		user_id, project_id, token_type = await get_user_by_token(token=invite_token, project_id=True)
 
+		existing_user_project = session.query(UserProjectModel).filter_by(
+    		user_id=user_id, project_id=project_id
+		).first()
+
+		if existing_user_project:
+			raise HTTPException(status_code=400, detail="User is already in the project.")
+
 		if token_type != "invite":
 			raise HTTPException(detail="Invalid token type.", status_code=400)
 
+		if not user_id or not project_id:
+			raise HTTPException(detail="Missing user or project id.", status_code=400)
+
 		user_project = UserProjectModel(user_id=user_id, project_id=project_id)
+
+		if not user_project:
+			raise HTTPException(detail="Project or user was not found.", status_code=404)
 
 		session.add(user_project)
 		session.commit()    
