@@ -75,7 +75,8 @@ class UserServicesStore:
                 func.lower(UserModel.username).like(f"%{username.lower()}%") if username else False
             )
         )
-        return session.exec(query).first()
+        user = session.exec(query).first()
+        return user
 
     # Get All Users;
     @classmethod

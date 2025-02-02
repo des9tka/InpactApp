@@ -16,4 +16,9 @@ type userUpdateBodyType = {
 	surname?: string | null;
 };
 
-export type { userType, userUpdateBodyType };
+type getInviteUserType = {
+	email?: string;
+	username?: string;
+}
+
+export type { userType, userUpdateBodyType, getInviteUserType };

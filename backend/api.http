@@ -53,7 +53,7 @@ Content-Type: application/json
 ### Get Users By;
 GET http://127.0.0.1:8000/users?id=1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExMzExM30.6lPsD9gh2BTbLcJDElIin5kgKR25yrf9HB9uyuxToGg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODUzODM5NX0.0yftfTPBeNY3D7tXaW_uWOs1ZPaCR9v_ncA45fV4FdA
 
 ### Update User;
 PATCH  http://127.0.0.1:8000/users/update

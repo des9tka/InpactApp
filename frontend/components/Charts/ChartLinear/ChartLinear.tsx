@@ -10,6 +10,7 @@ import {
 	PointElement,
 	Title,
 	Tooltip,
+	Filler
 } from "chart.js";
 import { useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
@@ -21,7 +22,8 @@ ChartJS.register(
 	LineElement,
 	Title,
 	Tooltip,
-	Legend
+	Legend,
+	Filler
 );
 
 function ChartLinear({ impacts }: { impacts: impactType[] }) {

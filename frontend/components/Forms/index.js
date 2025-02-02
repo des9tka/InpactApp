@@ -1,4 +1,4 @@
 export * from "./ForgotPasswordModal/ForgotPasswordModal";
 export * from "./LoginForm/LoginForm";
-export * from "./ProjectCreateForm/ProjectCreateForm";
+export * from "./ProjectCreateUpdateForm/ProjectCreateUpdateForm";
 export * from "./RegisterForm/RegisterForm";

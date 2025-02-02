@@ -2,7 +2,6 @@ import { AxiosRes, axiosService } from "./axiosService";
 
 import { projectUrls } from "@/config";
 import { createProjectType, projectType } from "@/types";
-import { get } from "http"
 
 const projectService = {
 	creteProject: (body: createProjectType): AxiosRes<projectType> =>
@@ -26,8 +25,8 @@ const projectService = {
 	deleteProject: (project_id: number) =>
 		axiosService.delete(projectUrls.deleteProject(project_id)),
 
-	updateProject: (project_id: number) =>
-		axiosService.patch(projectUrls.updateProject(project_id)),
+	updateProject: (project_id: number, body: Partial<projectType>) =>
+		axiosService.patch<projectType>(projectUrls.updateProject(project_id), body),
 };
 
 export { projectService };

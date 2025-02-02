@@ -7,7 +7,7 @@ const userService = {
 		id?: number,
 		email?: string,
 		username?: string
-	): AxiosRes<userType> =>
+	): AxiosRes<userType[]> =>
 		axiosService.get(userUrls.getUserBy(id, email, username)),
 
 	updateUser: (body: userUpdateBodyType): AxiosRes<userType> =>

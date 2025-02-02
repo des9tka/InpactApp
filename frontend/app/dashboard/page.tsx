@@ -47,7 +47,7 @@ function DashboardPage() {
 					</motion.div>
 				</AnimatePresence>
 			</div>
-			<div className="absolute top-1/2 left-4 transform -translate-y-1/2">
+			<div className="z-20 absolute top-1/2 left-4 transform -translate-y-1/2">
 				<button
 					onClick={() => paginate(-1)}
 					className="p-2 rounded-full bg-gray-900 hover:bg-gray-700"
@@ -55,7 +55,7 @@ function DashboardPage() {
 					<ChevronLeft size={32} />
 				</button>
 			</div>
-			<div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+			<div className="z-20 absolute top-1/2 right-4 transform -translate-y-1/2">
 				<button
 					onClick={() => paginate(1)}
 					className="p-2 rounded-full bg-gray-900 hover:bg-gray-700"
