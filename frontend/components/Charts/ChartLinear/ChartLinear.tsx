@@ -45,10 +45,10 @@ function ChartLinear({ impacts }: { impacts: impactType[] }) {
 
 	const options = {
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
-				display: true,
-				position: "top" as const,
+				display: false,
 			},
 			tooltip: {
 				enabled: true,
@@ -84,9 +84,11 @@ function ChartLinear({ impacts }: { impacts: impactType[] }) {
 	}, []);
 
 	return (
-		<div className="w-[85vw] p-4 bg-gray-800 rounded-lg flex-col justify-center items-center">
-			<h2 className="text-center text-lg font-bold text-white">Linear Chart</h2>
-			<div className="w-full h-full">
+		<div className="w-full p-4 bg-gray-800 rounded-lg flex-col justify-center items-center overflow-x-auto relative">
+			<h2 className="text-center text-lg font-bold text-white  bg-gradient-to-r from-transparent via-sky-700 to-transparent  py-2">
+				Linear Chart
+			</h2>
+			<div className="w-[1000px] min-w-[1000px] max-w-none h-[250px] sm:h-[300px] lg:h-[400px]">
 				<Line ref={chartRef} data={data} options={options} />
 			</div>
 		</div>

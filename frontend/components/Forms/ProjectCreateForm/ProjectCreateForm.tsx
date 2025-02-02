@@ -1,7 +1,8 @@
+"use client";
 import { useFormik } from "formik";
 import { motion } from "framer-motion";
 
-import { projectActions, useAppDispatch } from "@/redux";
+import { projectActions, useAppDispatch, useAppSelector } from "@/redux";
 import { createProjectType } from "@/types";
 import { projectValidationSchema } from "@/validators";
 
@@ -11,6 +12,7 @@ function ProjectCreateForm({
 	setCreateProject: Function;
 }) {
 	const dispatch = useAppDispatch();
+	const { errors } = useAppSelector(state => state.projectReducer);
 
 	const formik = useFormik({
 		initialValues: {
@@ -45,8 +47,8 @@ function ProjectCreateForm({
 									</label>
 								</div>
 								<input
-									type="email"
-									name="email"
+									type="text"
+									name="name"
 									value={formik.values.name}
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
@@ -55,6 +57,11 @@ function ProjectCreateForm({
 								{formik.touched.name && formik.errors.name && (
 									<p className="text-red-500 text-xs mt-1 text-center">
 										{formik.errors.name}
+									</p>
+								)}
+								{errors && (
+									<p className="text-red-500 text-xs mt-1 text-center">
+										{errors}
 									</p>
 								)}
 								<div className="flex justify-evenly gap-2">

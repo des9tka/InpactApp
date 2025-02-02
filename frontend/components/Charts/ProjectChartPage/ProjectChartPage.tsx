@@ -67,7 +67,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 							Create Project <Plus size={28} />
 						</h2>
 					) : (
-						<h2 className="flex gap-x-2 bg-gray-700 py-2 px-4 text-xl rounded-md text-center items-center justify-center hover:bg-sky-500 cursor-pointer">
+						<h2 className="flex gap-x-2 bg-sky-900 py-2 px-4 text-xl rounded-md text-center items-center justify-center hover:bg-sky-500 cursor-pointer">
 							You are not Joined in any of projects.
 						</h2>
 					)}
@@ -80,7 +80,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 								{projects.map((project, index) => (
 									<span
 										key={index}
-										className="cursor-pointer hover:text-sky-500 bg-sky-900 rounded-md py-2 px-4"
+										className="z-100 cursor-pointer hover:text-sky-500 bg-sky-900 rounded-md py-2 px-4"
 										onClick={() => {
 											setPNumber(index);
 											toggleMenu();
@@ -107,7 +107,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 
 					<h2 className="text-5xl font-bold my-2">{projects[pNumber]?.name}</h2>
 
-					<div className="w-[95vw] flex justify-center mt-2">
+					<div className="w-[95vw] md:w-[65] lg:w-[50] flex justify-center mt-2">
 						{chart == "linear" && <ChartLinear impacts={impacts} />}
 						{chart == "bar" && <ChartBar impacts={impacts} />}
 					</div>

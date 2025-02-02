@@ -31,10 +31,10 @@ const ChartBar = ({ impacts }: { impacts: impactType[] }) => {
 
 	const barOptions = {
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
-				display: true,
-				position: "top" as const,
+				display: false,
 			},
 		},
 	};
@@ -53,9 +53,9 @@ const ChartBar = ({ impacts }: { impacts: impactType[] }) => {
 	}, []);
 
 	return (
-		<div className="w-[85vw] p-4 bg-gray-800 rounded-lg flex-col justify-center items-center">
-			<h2 className="text-center text-lg font-bold text-white">Bar Chart</h2>
-			<div className="w-full h-full">
+		<div className="w-full p-4 bg-gray-800 rounded-lg flex-col justify-center items-center overflow-x-auto">
+			<h2 className="text-center text-lg font-bold text-white  bg-gradient-to-r from-transparent via-sky-700 to-transparent  py-2">Bar Chart</h2>
+			<div className="w-[1000px] min-w-[1000px] max-w-none h-[250px] sm:h-[300px] lg:h-[400px]">
 				<Bar ref={chartRef} data={barData} options={barOptions} />
 			</div>
 		</div>
