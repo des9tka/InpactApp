@@ -1,8 +1,10 @@
 "use client";
-import { impactType } from "@/types";
 import { Dialog, Transition } from "@headlessui/react";
 import { Field, Formik } from "formik";
 import React, { Fragment, useState } from "react";
+
+import { impactActions, useAppDispatch } from "@/redux";
+import { impactType } from "@/types";
 
 const typeColors: Record<string, string> = {
 	FEAT: "bg-green-500",
@@ -29,7 +31,7 @@ const EditableImpactRow: React.FC<{
 
 	return (
 		<Formik initialValues={impact} onSubmit={onSave} enableReinitialize={true}>
-			{({ values, handleChange, handleBlur }) => (
+			{({ values, handleChange, handleBlur, handleSubmit }) => (
 				<tr className="border-b border-gray-700 hover:bg-gray-800">
 					<td className="py-3 px-4">
 						{isEditing ? (
@@ -57,14 +59,14 @@ const EditableImpactRow: React.FC<{
 								className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none min-h-[150px] max-h-[300px] overflow-auto"
 							/>
 						) : (
-							<span
+							<div
 								className="cursor-pointer text-sky-400 hover:text-sky-300"
 								onClick={() => setIsModalOpen(true)}
 							>
 								{impact.description.length > 25
 									? impact.description.slice(0, 25) + "..."
 									: impact.description}
-							</span>
+							</div>
 						)}
 					</td>
 
@@ -126,6 +128,10 @@ const EditableImpactRow: React.FC<{
 								<button
 									type="submit"
 									className="px-4 py-2 bg-sky-500 text-white rounded-md hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500"
+									onClick={e => {
+										e.preventDefault();
+										handleSubmit();
+									}}
 								>
 									Save
 								</button>
@@ -182,9 +188,10 @@ const EditableImpactRow: React.FC<{
 const ImpactTable: React.FC<{ impacts: impactType[] }> = ({ impacts }) => {
 	const [editableId, setEditableId] = useState<number | null>(null);
 
+	const dispatch = useAppDispatch();
+
 	const handleSave = (values: impactType) => {
-		console.log("Updated Impact Data:", values);
-		setEditableId(null);
+		dispatch(impactActions.updateImpact(values));
 	};
 
 	return (

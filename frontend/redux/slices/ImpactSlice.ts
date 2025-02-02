@@ -31,6 +31,19 @@ const getUserProjectImpacts = createAsyncThunk<impactType[], number>(
 	}
 );
 
+const updateImpact = createAsyncThunk<impactType, impactType>(
+	"projectSlice/updateImpact",
+	async (body, { rejectWithValue }) => {
+		try {
+			const { data } = await impactService.updateImpact(body.id, body);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const impactSlice = createSlice({
 	name: "impactSlice",
 	initialState,
@@ -56,6 +69,22 @@ const impactSlice = createSlice({
 			.addCase(getUserProjectImpacts.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Update Impact;
+			.addCase(updateImpact.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(updateImpact.fulfilled, (state, action) => {
+				state.loading = false;
+				state.impacts = state.impacts.map(i =>
+					i.id === action.payload.id ? action.payload : i
+				);
+			})
+			.addCase(updateImpact.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -68,6 +97,7 @@ const impactActions = {
 	getUserProjectImpacts,
 	setError,
 	setLoading,
+	updateImpact,
 };
 
 export { impactActions, impactReducer };
