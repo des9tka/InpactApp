@@ -77,8 +77,15 @@ const impactSlice = createSlice({
 			})
 			.addCase(getUserProjectImpacts.fulfilled, (state, action) => {
 				state.loading = false;
-				state.impacts = [...state.impacts, ...action.payload];
+				const newImpacts = action.payload;
+				const uniqueImpacts = [
+					...new Map(
+						[...state.impacts, ...newImpacts].map(i => [i.id, i])
+					).values(),
+				];
+				state.impacts = uniqueImpacts;
 			})
+
 			.addCase(getUserProjectImpacts.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;

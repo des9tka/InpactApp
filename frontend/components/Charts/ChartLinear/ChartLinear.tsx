@@ -4,13 +4,13 @@ import { impactType } from "@/types";
 import {
 	CategoryScale,
 	Chart as ChartJS,
+	Filler,
 	Legend,
 	LinearScale,
 	LineElement,
 	PointElement,
 	Title,
 	Tooltip,
-	Filler
 } from "chart.js";
 import { useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
@@ -47,7 +47,7 @@ function ChartLinear({ impacts }: { impacts: impactType[] }) {
 
 	const options = {
 		responsive: true,
-		maintainAspectRatio: false,
+		maintainAspectRatio: false, // Отключаем, чтобы график растягивался по высоте
 		plugins: {
 			legend: {
 				display: false,
@@ -70,11 +70,22 @@ function ChartLinear({ impacts }: { impacts: impactType[] }) {
 				displayColors: false,
 			},
 		},
+		scales: {
+			x: {
+				ticks: {
+					autoSkip: true,
+					maxTicksLimit: 10, // Ограничиваем кол-во подписей оси X
+				},
+			},
+			y: {
+				beginAtZero: true,
+			},
+		},
 	};
 
 	useEffect(() => {
 		const handleResize = () => {
-			if (chartRef && chartRef.current) {
+			if (chartRef.current) {
 				chartRef.current.update();
 			}
 		};
@@ -86,12 +97,17 @@ function ChartLinear({ impacts }: { impacts: impactType[] }) {
 	}, []);
 
 	return (
-		<div className="w-full p-4 bg-gray-800 rounded-lg flex-col justify-center items-center overflow-x-auto relative">
-			<h2 className="text-center text-lg font-bold text-white  bg-gradient-to-r from-transparent via-sky-700 to-transparent  py-2">
-				Linear Chart
-			</h2>
-			<div className="w-[1000px] min-w-[1000px] max-w-none h-[250px] sm:h-[300px] lg:h-[400px]">
-				<Line ref={chartRef} data={data} options={options} />
+		<div className="w-full flex justify-center min-w-[575px]">
+			<div className="w-full max-w-[1000px] p-4 bg-gray-800 rounded-lg flex flex-col items-center relative">
+				<h2 className="text-center text-lg font-bold text-white bg-gradient-to-r from-transparent via-sky-700 to-transparent py-2">
+					Linear Chart
+				</h2>
+
+				<div className="w-full overflow-x-auto md:overflow-x-scroll">
+					<div className="w-full min-w-[1000px] md:w-[1000px] h-[300px] md:h-[350px] lg:h-[400px]">
+						<Line ref={chartRef} data={data} options={options} />
+					</div>
+				</div>
 			</div>
 		</div>
 	);

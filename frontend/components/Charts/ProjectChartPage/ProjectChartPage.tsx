@@ -5,6 +5,7 @@ import {
 	MenuSquareIcon,
 	PencilIcon,
 	PlusIcon,
+	UsersIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -57,8 +58,8 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 		if (
 			projects.length > 0 &&
 			currentProjectId &&
-			!fetchedProjects.has(currentProjectId) && // Если проект ещё не был загружен
-			impacts.every(impact => impact.project_id !== currentProjectId) // Нет данных для текущего проекта
+			!fetchedProjects.has(currentProjectId) && 
+			impacts.every(impact => impact.project_id !== currentProjectId)
 		) {
 			dispatch(impactActions.getUserProjectImpacts(currentProjectId));
 			setFetchedProjects(prev => new Set(prev.add(currentProjectId)));
@@ -140,15 +141,16 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 									}}
 								>
 									Create Project
-									<PlusIcon size={16} />
+									<PlusIcon size={20} />
 								</div>
 							)}
 
 							<div
-								className="z-50 text-center text-bold relative mt-2 hover:text-green-500 bg-green-900 text-white p-2 rounded-md cursor-pointer"
+								className={`flex items-center justify-center gap-2 text-xl text-center cursor-pointer hover:text-green-500 bg-green-900 text-white p-2 rounded-md z-50 relative ${projects.length < 3 ? "mt-2" : "mt-8"}`}
 								onClick={() => setInvite(true)}
 							>
 								Invite User
+								<UsersIcon size={20} />
 							</div>
 						</div>
 					)}

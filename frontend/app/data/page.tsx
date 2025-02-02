@@ -23,17 +23,17 @@ const DataPage: React.FC = () => {
 
 		if (!projectIdFromQuery || isNaN(Number(projectIdFromQuery))) {
 			router.push("/dashboard");
-		} else {
-			if (!impacts.length) {
-				dispatch(
-					impactActions.getUserProjectImpacts(parseInt(projectIdFromQuery, 10))
-				);
-			}
+			return;
 		}
-		if (projectIdFromQuery) setCurrentImpacts(
-			impacts.filter(i => i.project_id === parseInt(projectIdFromQuery, 10))
-		);
-	}, [param, impacts.length, dispatch, router]);
+
+		const projectIdNum = parseInt(projectIdFromQuery, 10);
+
+		if (!impacts.length) {
+			dispatch(impactActions.getUserProjectImpacts(projectIdNum));
+		}
+
+		setCurrentImpacts(impacts.filter(i => i.project_id === projectIdNum));
+	}, [param, impacts, dispatch, router]);
 
 	return (
 		<div className="p-4 flex flex-col items-center justify-center w-full mt-12">
@@ -46,7 +46,7 @@ const DataPage: React.FC = () => {
 				Create Impact <PlusIcon size={16} />
 			</button>
 
-			<ImpactTable impacts={currentImpacts} />
+			<ImpactTable impacts={currentImpacts} projectId={parseInt(projectId ? projectId : "", 10)}/>
 
 			{projectId && (
 				<CreateImpactModal

@@ -63,7 +63,7 @@ class ImpactRepository:
 		
 		
 		if impact_data.impactPercent:
-			if impact_data.impactPercent > 0 and impact.user_id != project.founder_id:
+			if impact_data.impactPercent > 0 and user_id != project.founder_id:
 				impact_data.impactPercent = 0.0
 				
 		return ImpactModel.update_impact(
@@ -138,3 +138,4 @@ class ImpactRepository:
 			raise HTTPException(status_code=400, detail="You are not the owner of this impact")
 		
 		return ImpactModel.delete_impact(session=session, impact_id=impact_id)
+		

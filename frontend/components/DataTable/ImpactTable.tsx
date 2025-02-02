@@ -1,7 +1,7 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import { Field, Formik } from "formik";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import { impactActions, useAppDispatch } from "@/redux";
 import { impactType } from "@/types";
@@ -185,7 +185,10 @@ const EditableImpactRow: React.FC<{
 	);
 };
 
-const ImpactTable: React.FC<{ impacts: impactType[] }> = ({ impacts }) => {
+const ImpactTable: React.FC<{ impacts: impactType[]; projectId: number }> = ({
+	impacts,
+	projectId,
+}) => {
 	const [editableId, setEditableId] = useState<number | null>(null);
 
 	const dispatch = useAppDispatch();
@@ -194,6 +197,12 @@ const ImpactTable: React.FC<{ impacts: impactType[] }> = ({ impacts }) => {
 		dispatch(impactActions.updateImpact(values));
 		setEditableId(null);
 	};
+
+	useEffect(() => {
+		if (!impacts.length) {
+			dispatch(impactActions.getUserProjectImpacts(projectId));
+		}
+	}, []);
 
 	return (
 		<div className="overflow-x-auto p-4">
