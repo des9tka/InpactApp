@@ -112,7 +112,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 			) : (
 				<div className="flex flex-col justify-center items-center relative">
 					{isPOpen && (
-						<div className="absolute top-28 right-4 rounded-md gap-y-2 w-[200px] p-2 ">
+						<div className="absolute top-28 right-4 rounded-md gap-y-2 w-[200px] p-2">
 							<div className="flex flex-col gap-y-4 text-xl text-center items-center justify-center">
 								{projects.map((project, index) => (
 									<div className={"z-20 mt-2"} key={project.id}>
@@ -127,30 +127,28 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 												? project.name.slice(0, 15) + "..."
 												: project.name}
 										</span>
-
-										{projects[projects.length - 1] == projects[index] &&
-											projects.length < 3 && (
-												<div className="mt-8 gap-y-4">
-													<div
-														className="flex items-center gap-2 text-xl text-center cursor-pointer  hover:text-green-500 bg-green-900 text-white p-2 rounded-md mt-2"
-														onClick={() => {
-															setCreate(true);
-															setOpenCreateUpdateProject(true);
-														}}
-													>
-														Create Project
-														<PlusIcon size={16} />
-													</div>
-													<div
-														className="mt-2 hover:text-green-500 bg-green-900  text-white p-2 rounded-md cursor-pointer"
-														onClick={() => setInvite(true)}
-													>
-														Invite User
-													</div>
-												</div>
-											)}
 									</div>
 								))}
+							</div>
+
+							{projects.length < 3 && (
+								<div
+									className="flex items-center gap-2 text-xl text-center cursor-pointer hover:text-green-500 bg-green-900 text-white p-2 rounded-md mt-8 z-50 relative"
+									onClick={() => {
+										setCreate(true);
+										setOpenCreateUpdateProject(true);
+									}}
+								>
+									Create Project
+									<PlusIcon size={16} />
+								</div>
+							)}
+
+							<div
+								className="z-50 relative mt-2 hover:text-green-500 bg-green-900 text-white p-2 rounded-md cursor-pointer"
+								onClick={() => setInvite(true)}
+							>
+								Invite User
 							</div>
 						</div>
 					)}
@@ -175,7 +173,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 						/>
 					</h2>
 
-					<div className="w-[93vw] md:w-[65] lg:w-[50] flex justify-center mt-2 z-10">
+					<div className="w-[93vw] md:w-[65] lg:w-[50] flex justify-center mt-2 z-0 relative">
 						{chart == "linear" && <ChartLinear impacts={currentImpacts} />}
 						{chart == "bar" && <ChartBar impacts={currentImpacts} />}
 					</div>
