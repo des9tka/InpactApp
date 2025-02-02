@@ -17,7 +17,7 @@ const projectService = {
 		axiosService.get(projectUrls.getProjectById(id)),
 
 	addUserToProject: (project_id: number, user_id: number) =>
-		axiosService.post(projectUrls.addUserToProject(project_id, user_id)),
+		axiosService.get(projectUrls.addUserToProject(project_id, user_id)),
 
 	deleteUserFromProject: (project_id: number, user_id: number) =>
 		axiosService.delete(projectUrls.deleteUserFromProject(project_id, user_id)),
@@ -26,7 +26,10 @@ const projectService = {
 		axiosService.delete(projectUrls.deleteProject(project_id)),
 
 	updateProject: (project_id: number, body: Partial<projectType>) =>
-		axiosService.patch<projectType>(projectUrls.updateProject(project_id), body),
+		axiosService.patch<projectType>(
+			projectUrls.updateProject(project_id),
+			body
+		),
 };
 
 export { projectService };

@@ -70,19 +70,18 @@ function InviteUserModal({
 										className="bg-sky-700 text-white px-2 py-2 rounded-md text-sm mr-6 hover:bg-sky-500 cursor-pointer relative"
 										onMouseEnter={() => setUserSee(true)}
 										onMouseLeave={() => setUserSee(false)}
+										onClick={() => {
+											console.log("invite");
+											dispatch(
+												projectActions.inviteUser({
+													project_id: projectId,
+													user_id: user.id,
+												})
+											);
+										}}
 									>
 										{userSee && user && (
-											<div
-												className="absolute -top-16 -right-4 bg-gray-900 opacity-85 flex-col flex justify-center items-center px-4 py-2 rounded-md"
-												onClick={() =>
-													dispatch(
-														projectActions.inviteUser({
-															project_id: projectId,
-															user_id: user.id,
-														})
-													)
-												}
-											>
+											<div className="absolute -top-16 -right-4 bg-gray-900 opacity-85 flex-col flex justify-center items-center px-4 py-2 rounded-md">
 												<span>{user.email}</span>
 												<span>@{user.username}</span>
 											</div>
@@ -98,12 +97,6 @@ function InviteUserModal({
 										className="animate-spin text-sky-500 mr-6"
 									/>
 								)}
-								{extra && (
-									<span className="text-center text-yellow-700">{extra}</span>
-								)}
-								{errors && (
-									<span className="text-center text-red-700">{errors}</span>
-								)}
 							</div>
 
 							<div className="flex items-center gap-2">
@@ -116,6 +109,15 @@ function InviteUserModal({
 								/>
 								<SearchIcon size={20} className="text-gray-500" />
 							</div>
+							<div className="w-full flex justify-center text-center items-center">
+								{extra && (
+									<span className="text-center text-yellow-700">{extra}</span>
+								)}
+								{errors && (
+									<span className="text-center text-red-700">{errors}</span>
+								)}
+							</div>
+
 							<div className="w-full justify-center flex">
 								<button
 									onClick={() => setInvite(false)}
