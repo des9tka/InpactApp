@@ -24,14 +24,17 @@ function RegisterForm({
 	} = useAppSelector(state => state.userReducer);
 	const dispatch = useAppDispatch();
 
+	// State for showing success notification
 	const [showNotification, setShowNotification] = useState<boolean>(false);
 
+	// Show notification when user is registered and loading is false
 	useEffect(() => {
 		if (user && !loading && !sliceErrors) {
 			setShowNotification(true);
 		}
-	}, [user]);
+	}, [user, loading, sliceErrors]);
 
+	// Formik hook to manage form state and validation
 	const { values, handleBlur, errors, touched, handleChange, handleSubmit } =
 		useFormik({
 			initialValues: {
@@ -41,14 +44,15 @@ function RegisterForm({
 				name: "",
 				surname: "",
 			},
-			validationSchema: authRegisterValidationSchema,
+			validationSchema: authRegisterValidationSchema, // Validation schema
 			onSubmit: (data: authRegisterUserType) => {
-				dispatch(userActions.registerUser(data));
+				dispatch(userActions.registerUser(data)); // Dispatch register action
 			},
 		});
 
 	return (
 		<div>
+			{/* Success Notification */}
 			{showNotification && (
 				<Notification
 					message="Success Register! Please, activate your account in email link."
@@ -56,11 +60,12 @@ function RegisterForm({
 					duration={3}
 					isVisible={showNotification}
 					setIsVisible={setShowNotification}
-					endUpFunc={() => setIsLogin(true)}
+					endUpFunc={() => setIsLogin(true)} // Switch to login after success
 				/>
 			)}
 
 			<form onSubmit={handleSubmit} method="POST" className="space-y-2">
+				{/* Email Field */}
 				<div>
 					<label
 						htmlFor="email"
@@ -86,6 +91,7 @@ function RegisterForm({
 					</div>
 				</div>
 
+				{/* Username Field */}
 				<div>
 					<label
 						htmlFor="username"
@@ -111,14 +117,16 @@ function RegisterForm({
 					</div>
 				</div>
 
+				{/* Conditionally Rendered Extra Info */}
 				<div
 					className={`overflow-hidden transition-[max-height] ease-in-out ${
 						isExtra ? "max-h-screen duration-500" : "max-h-0 duration-200"
 					}`}
 				>
+					{/* First Name Field */}
 					<div className="mt-2">
 						<label
-							htmlFor="firstName"
+							htmlFor="name"
 							className="block text-sm/6 font-medium text-gray-300"
 						>
 							First Name
@@ -139,9 +147,11 @@ function RegisterForm({
 							)}
 						</div>
 					</div>
+
+					{/* Last Name Field */}
 					<div className="mt-2">
 						<label
-							htmlFor="lastName"
+							htmlFor="surname"
 							className="block text-sm/6 font-medium text-gray-300"
 						>
 							Last Name
@@ -164,6 +174,7 @@ function RegisterForm({
 					</div>
 				</div>
 
+				{/* Password Field */}
 				<div>
 					<div className="flex items-center justify-between">
 						<label
@@ -173,6 +184,7 @@ function RegisterForm({
 							Password
 						</label>
 						<div className="text-sm flex justify-between items-center mr-2">
+							{/* Toggle extra info */}
 							<span
 								className="font-semibold text-sky-500 hover:text-sky-300 mr-2 cursor-pointer"
 								onClick={() => setIsExtra(!isExtra)}
@@ -212,13 +224,14 @@ function RegisterForm({
 					</div>
 				</div>
 
+				{/* Submit Button */}
 				<div>
 					<button
 						type="submit"
 						className={`flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
 							loading ? "cursor-progress" : ""
 						}`}
-						disabled={loading}
+						disabled={loading} // Disable the button if loading
 					>
 						Sign up
 						{loading && (
@@ -228,6 +241,8 @@ function RegisterForm({
 						)}
 					</button>
 				</div>
+
+				{/* Display Errors */}
 				{sliceErrors && (
 					<p className="text-red-500 text-center">{sliceErrors}</p>
 				)}

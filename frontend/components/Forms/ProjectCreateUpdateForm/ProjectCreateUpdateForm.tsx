@@ -12,47 +12,49 @@ function ProjectCreateUpdateForm({
 	create,
 	setOpenCreateUpdateProject,
 	project,
-	setPNumber
+	setPNumber,
 }: {
 	create: boolean;
 	setOpenCreateUpdateProject: (open: boolean) => void;
 	project?: projectType;
-	setPNumber: Function
+	setPNumber: Function;
 }) {
 	const dispatch = useAppDispatch();
 	const { errors } = useAppSelector(state => state.projectReducer);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [deleteInput, setDeleteInput] = useState("");
 
+	// Initial form values, use existing project name if available
 	const initialValues: createProjectType = {
 		name: project?.name || "",
 	};
 
 	const formik = useFormik<createProjectType>({
 		initialValues,
-		validationSchema: projectValidationSchema,
+		validationSchema: projectValidationSchema, // Apply validation schema
 		onSubmit: (data, { setSubmitting }: FormikHelpers<createProjectType>) => {
+			// Dispatch action based on whether we are creating or updating the project
 			if (create) {
 				dispatch(projectActions.createProject(data));
 			} else if (project) {
 				const updatedProject: updateProjectType = {
 					...data,
-					id: project.id,
+					id: project.id, // Update project with existing ID
 				};
 				dispatch(projectActions.updateProject(updatedProject));
 			}
-			setSubmitting(false);
-			setOpenCreateUpdateProject(false);
+			setSubmitting(false); // Set submitting state to false
+			setOpenCreateUpdateProject(false); // Close the form modal after submission
 		},
 	});
 
+	// Handle project deletion after user confirms
 	const handleDelete = () => {
 		if (project && deleteInput === project.name) {
 			dispatch(projectActions.deleteProject(project.id)).then(() => {
-				setPNumber(0);
-				setOpenCreateUpdateProject(false);
-				}
-			);
+				setPNumber(0); // Reset the current project number
+				setOpenCreateUpdateProject(false); // Close the modal after deletion
+			});
 		}
 	};
 
@@ -67,7 +69,8 @@ function ProjectCreateUpdateForm({
 			>
 				<div className="bg-gray-700 px-6 py-4 rounded-lg w-96 shadow-lg">
 					<h2 className="text-center text-2xl font-bold tracking-tight text-sky-500 mb-8">
-						{create ? "Create Project" : "Update Project"}
+						{create ? "Create Project" : "Update Project"}{" "}
+						{/* Dynamic heading based on create flag */}
 					</h2>
 
 					<form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -87,7 +90,7 @@ function ProjectCreateUpdateForm({
 								{!create && (
 									<button
 										type="button"
-										onClick={() => setShowDeleteModal(true)}
+										onClick={() => setShowDeleteModal(true)} // Trigger the delete modal
 										className="text-red-500 hover:text-red-700"
 									>
 										<Trash2Icon size={20} />
@@ -96,12 +99,12 @@ function ProjectCreateUpdateForm({
 							</div>
 							{formik.touched.name && formik.errors.name && (
 								<p className="text-red-500 text-xs mt-1 text-center">
-									{formik.errors.name}
+									{formik.errors.name} {/* Display validation error for name */}
 								</p>
 							)}
 							{errors && (
 								<p className="text-red-500 text-xs mt-1 text-center">
-									{errors}
+									{errors} {/* Display global errors if any */}
 								</p>
 							)}
 						</div>
@@ -111,11 +114,12 @@ function ProjectCreateUpdateForm({
 								type="submit"
 								className="w-full rounded-md bg-sky-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-500"
 							>
-								{create ? "Create Project" : "Update Project"}
+								{create ? "Create Project" : "Update Project"}{" "}
+								{/* Submit button text */}
 							</button>
 							<button
 								className="w-full rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-500"
-								onClick={() => setOpenCreateUpdateProject(false)}
+								onClick={() => setOpenCreateUpdateProject(false)} // Close modal on cancel
 							>
 								Cancel
 							</button>
@@ -133,19 +137,19 @@ function ProjectCreateUpdateForm({
 						<input
 							type="text"
 							value={deleteInput}
-							onChange={e => setDeleteInput(e.target.value)}
+							onChange={e => setDeleteInput(e.target.value)} // Bind delete input value
 							className="w-full p-2 rounded-md text-black"
 						/>
 						<div className="flex justify-evenly mt-4">
 							<button
-								onClick={handleDelete}
+								onClick={handleDelete} // Trigger deletion
 								className="bg-red-600 px-4 py-2 w-[45%] rounded-md text-white"
-								disabled={deleteInput !== project?.name}
+								disabled={deleteInput !== project?.name} // Disable button until input matches project name
 							>
 								Delete
 							</button>
 							<button
-								onClick={() => setShowDeleteModal(false)}
+								onClick={() => setShowDeleteModal(false)} // Close modal without deletion
 								className="bg-gray-600 px-4 py-2 rounded-md text-white w-[45%] "
 							>
 								Cancel

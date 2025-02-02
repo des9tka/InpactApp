@@ -7,7 +7,15 @@ import { useAppDispatch, useAppSelector, userActions } from "@/redux";
 import { RecoveryRequestType, RecoveryType } from "@/types";
 import { recoveryPasswordValidationSchema } from "@/validators";
 
-function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
+// Prop types for the component
+interface ForgotPasswordModalProps {
+	setIsForgot: (value: boolean) => void;
+}
+
+const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
+	setIsForgot,
+}) => {
+	// State to check if the recovery code has been sent
 	const [isSendedCode, setIsSendedCode] = useState<boolean>(false);
 
 	const dispatch = useAppDispatch();
@@ -15,43 +23,51 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 		state => state.userReducer
 	);
 
+	// Function to send a recovery code request
 	const sendRecoveryCode = async (data: RecoveryRequestType) => {
+		// Dispatch the action to request a recovery password code
 		await dispatch(userActions.requestRecoveryPassword(data)).unwrap();
-		setIsSendedCode(true);
+		setIsSendedCode(true); // Set the flag to true after the code is sent successfully
 	};
 
+	// Function to send the password along with the recovery token
 	const sendPasswordWithCode = async (data: RecoveryType) => {
-		if (!data.recovery_token) {
-			formik.setFieldError("recovery_token", "Recovery token required.");
+		// Check if recovery_token and password are provided before submitting
+		if (!data.recovery_token || !data.password) {
+			formik.setFieldError(
+				"recovery_token",
+				"Recovery token and password are required."
+			);
 			return;
 		}
-		if (!data.password) {
-			formik.setFieldError("password", "Password required.");
-			return;
-		}
+		// Trim spaces from the input fields before sending the data
 		data.recovery_token = data.recovery_token.trim();
 		data.password = data.password.trim();
 
+		// Dispatch the action to recover the password
 		await dispatch(userActions.recoveryPassword(data)).unwrap();
 	};
 
+	// Formik setup for handling form submission and validation
 	const formik = useFormik({
 		initialValues: {
 			email: "",
 			password: "",
 			recovery_token: "",
 		},
-		validationSchema: recoveryPasswordValidationSchema,
+		validationSchema: recoveryPasswordValidationSchema, // Validation schema to ensure correct data input
 		onSubmit: values => {
+			// Check if the code is sent and proceed with the appropriate function
 			if (isSendedCode) sendPasswordWithCode(values as RecoveryType);
 			else sendRecoveryCode(values as RecoveryRequestType);
 		},
 	});
 
+	// Handling slice errors from the Redux store and setting form errors
 	useEffect(() => {
 		if (sliceErrors) {
 			Object.entries(sliceErrors).forEach(([field, message]) => {
-				formik.setFieldError(field, message as string);
+				formik.setFieldError(field, message as string); // Set form errors if any exist
 			});
 		}
 	}, [sliceErrors]);
@@ -71,6 +87,7 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 					</h2>
 
 					<form onSubmit={formik.handleSubmit} className="space-y-4">
+						{/* If the code hasn't been sent yet */}
 						{!isSendedCode ? (
 							<div>
 								<div className="flex justify-between mb-1">
@@ -78,14 +95,14 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 										Email address
 									</label>
 									<label className="flex gap-1 items-center text-sky-300">
-										Sended?
+										Sent?
 										<div>
 											<input
 												type="checkbox"
 												id="extraInfo"
 												className="hidden peer"
 												checked={isSendedCode}
-												onChange={() => setIsSendedCode(!isSendedCode)}
+												onChange={() => setIsSendedCode(!isSendedCode)} // Toggle sending code state
 											/>
 											<label
 												htmlFor="extraInfo"
@@ -117,8 +134,8 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 									<button
 										className="mt-4 w-full rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-indigo-600"
 										onClick={() => {
-											dispatch(userActions.setError(null));
-											setIsForgot(false);
+											dispatch(userActions.setError(null)); // Reset errors when closing
+											setIsForgot(false); // Close the modal
 										}}
 									>
 										Cancel
@@ -127,6 +144,7 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 							</div>
 						) : (
 							<>
+								{/* If the code has been sent, display the recovery token and new password fields */}
 								<div>
 									<label className="block text-sm font-medium text-gray-300">
 										Recovery Token
@@ -174,8 +192,8 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 									<button
 										className="mt-4 w-full rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-indigo-600"
 										onClick={() => {
-											dispatch(userActions.setError(null));
-											setIsForgot(false);
+											dispatch(userActions.setError(null)); // Reset errors when closing
+											setIsForgot(false); // Close the modal
 										}}
 									>
 										Cancel
@@ -183,6 +201,7 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 								</div>
 							</>
 						)}
+						{/* Display additional success or error messages */}
 						{extra && <p className="text-center text-green-600">{extra}</p>}
 						{sliceErrors && (
 							<p className="text-center text-red-600">{sliceErrors}</p>
@@ -192,6 +211,6 @@ function ForgotPasswordModal({ setIsForgot }: { setIsForgot: Function }) {
 			</motion.div>
 		</div>
 	);
-}
+};
 
 export { ForgotPasswordModal };

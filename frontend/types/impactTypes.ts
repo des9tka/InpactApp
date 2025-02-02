@@ -1,5 +1,3 @@
-type typesOfImpactType = {};
-
 type impactType = {
 	description: string;
 	id: number;

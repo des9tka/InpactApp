@@ -9,13 +9,13 @@ from repository import ImpactRepository
 from enums import UpdateImpactDataEnum
 
 
-# Impact Router;
+# Impact Router for handling impact-related routes
 impact_router = APIRouter(
 	prefix="/impacts",
 	tags=["impacts"]
 )
 
-# Create Impact;
+# Create a new impact for a project; returns the created impact model
 @impact_router.post("/")
 async def create_project(
 	impact_data: ImpactModel,
@@ -28,6 +28,7 @@ async def create_project(
 		impact_data=impact_data,
 	)
 
+# Get a list of impacts by project_id; returns impacts related to the given project
 @impact_router.get("/for-project/{project_id}")
 async def get_impacts_by_project_id(
 	project_id: int,
@@ -40,6 +41,7 @@ async def get_impacts_by_project_id(
 		project_id=project_id
 	)
 
+# Update an existing impact using the provided impact data and impact_id
 @impact_router.patch("/update/{impact_id}")
 async def update_project(
 	impact_data: UpdateImpactDataEnum,
@@ -49,6 +51,7 @@ async def update_project(
 ) -> ImpactModel:
 	return await ImpactRepository.update_impact(session=session, token=token, impact_data=impact_data, impact_id=impact_id)
 
+# Delete an impact by its impact_id
 @impact_router.delete("/delete/{impact_id}")
 async def delete_project(
 	impact_id: int,

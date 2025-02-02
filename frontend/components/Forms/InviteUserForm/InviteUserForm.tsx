@@ -1,7 +1,9 @@
-import { projectActions, useAppDispatch, useAppSelector } from "@/redux";
+"use client";
 import { motion } from "framer-motion";
 import { Loader2Icon, SearchIcon } from "lucide-react";
 import { useState } from "react";
+
+import { projectActions, useAppDispatch, useAppSelector } from "@/redux";
 
 function InviteUserModal({
 	setInvite,
@@ -23,24 +25,31 @@ function InviteUserModal({
 		state => state.projectReducer
 	);
 
+	// Handle input changes and debounce the API call to search by email or username
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event.target.value;
 		setInputValue(value);
 
+		// Clear any existing debounce timer to reset the delay
 		if (debounceTimer) {
 			clearTimeout(debounceTimer);
 		}
 
+		// Set a new debounce timer to trigger the API call after 2 seconds
 		const timer = setTimeout(() => {
 			let trimmedInput = value.trim();
+
+			// Check if the input starts with '@' to search by username
 			if (trimmedInput.startsWith("@")) {
 				trimmedInput = trimmedInput.split("@")[1];
 				dispatch(projectActions.getUserForInvite({ username: trimmedInput }));
 			} else {
+				// Otherwise search by email
 				dispatch(projectActions.getUserForInvite({ email: trimmedInput }));
 			}
 		}, 2000);
 
+		// Update the timer state with the new timer reference
 		setDebounceTimer(timer);
 	};
 
@@ -65,6 +74,7 @@ function InviteUserModal({
 									Email or @Username
 								</label>
 
+								{/* User invite button with hover effect to show user details */}
 								{user && (
 									<label
 										className="bg-sky-700 text-white px-2 py-2 rounded-md text-sm mr-6 hover:bg-sky-500 cursor-pointer relative"
@@ -72,6 +82,7 @@ function InviteUserModal({
 										onMouseLeave={() => setUserSee(false)}
 										onClick={() => {
 											console.log("invite");
+											// Dispatch action to invite the user to the project
 											dispatch(
 												projectActions.inviteUser({
 													project_id: projectId,
@@ -86,11 +97,14 @@ function InviteUserModal({
 												<span>@{user.username}</span>
 											</div>
 										)}
+										{/* Display email or username depending on input value */}
 										{inputValue.startsWith("@")
 											? "@" + user?.username?.slice(0, 15) + "..."
 											: user?.email?.slice(0, 15) + "..."}
 									</label>
 								)}
+
+								{/* Show loading spinner if data is being fetched */}
 								{loading && (
 									<Loader2Icon
 										size={20}
@@ -100,6 +114,7 @@ function InviteUserModal({
 							</div>
 
 							<div className="flex items-center gap-2">
+								{/* Search input field */}
 								<input
 									type="text"
 									value={inputValue}
@@ -109,6 +124,8 @@ function InviteUserModal({
 								/>
 								<SearchIcon size={20} className="text-gray-500" />
 							</div>
+
+							{/* Display error or extra messages */}
 							<div className="w-full flex justify-center text-center items-center">
 								{extra && (
 									<span className="text-center text-yellow-700">{extra}</span>
@@ -118,6 +135,7 @@ function InviteUserModal({
 								)}
 							</div>
 
+							{/* Cancel button to close the modal */}
 							<div className="w-full justify-center flex">
 								<button
 									onClick={() => setInvite(false)}

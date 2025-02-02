@@ -3,9 +3,9 @@ import { impactActions, useAppDispatch } from "@/redux";
 import { impactType } from "@/types";
 import { Dialog, Transition } from "@headlessui/react";
 import { Field, Formik } from "formik";
-import { useRouter, useSearchParams } from "next/navigation";
 import React, { Fragment } from "react";
 
+// A mapping of different types to their respective color codes
 const typeColors: Record<string, string> = {
 	FEAT: "bg-green-500",
 	FIX: "bg-red-500",
@@ -20,14 +20,68 @@ const typeColors: Record<string, string> = {
 	MERGE: "bg-cyan-500",
 };
 
-const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose: () => void }> = ({
-	isOpen,
-	onClose,
-	projectId
-}) => {
+// InputField component to handle generic input fields with validation
+const InputField: React.FC<{
+	id: string;
+	label: string;
+	value: string;
+	onChange: React.ChangeEventHandler;
+	onBlur: React.FocusEventHandler;
+}> = ({ id, label, value, onChange, onBlur }) => (
+	<div className="space-y-2">
+		<label htmlFor={id} className="block text-sm font-semibold">
+			{label}
+		</label>
+		<Field
+			id={id}
+			name={id}
+			value={value || ""} // Fallback to empty string if value is undefined
+			onChange={onChange}
+			onBlur={onBlur}
+			className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
+		/>
+	</div>
+);
 
+// SelectField component to handle select dropdown fields
+const SelectField: React.FC<{
+	id: string;
+	label: string;
+	value: string;
+	onChange: React.ChangeEventHandler;
+	onBlur: React.FocusEventHandler;
+}> = ({ id, label, value, onChange, onBlur }) => (
+	<div className="space-y-2">
+		<label htmlFor={id} className="block text-sm font-semibold">
+			{label}
+		</label>
+		<Field
+			id={id}
+			as="select"
+			name={id}
+			value={value || ""} // Fallback to empty string if value is undefined
+			onChange={onChange}
+			onBlur={onBlur}
+			className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
+		>
+			{Object.keys(typeColors).map(type => (
+				<option key={type} value={type}>
+					{type}
+				</option>
+			))}
+		</Field>
+	</div>
+);
+
+// Main modal component for creating a new impact
+const CreateImpactModal: React.FC<{
+	projectId: string;
+	isOpen: boolean;
+	onClose: () => void;
+}> = ({ isOpen, onClose, projectId }) => {
 	const dispatch = useAppDispatch();
 
+	// Initial form values, where projectId will be added later
 	const initialValues: Partial<impactType> = {
 		id: 0,
 		title: "",
@@ -36,13 +90,15 @@ const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose:
 		type: "FEAT",
 	};
 
+	// Handle form submission: add the projectId and dispatch the createImpact action
 	const handleSubmit = (values: Partial<impactType>) => {
-		values.project_id = parseInt(projectId, 10);
-		dispatch(impactActions.createImpact(values));
-		onClose();
+		values.project_id = parseInt(projectId, 10); // Ensure projectId is a number
+		dispatch(impactActions.createImpact(values)); // Dispatch action to create impact
+		onClose(); // Close the modal after submission
 	};
 
 	return (
+		// Transition component for smooth modal visibility
 		<Transition appear show={isOpen} as={Fragment}>
 			<Dialog as="div" className="relative z-10" onClose={onClose}>
 				<div className="fixed inset-0 bg-black bg-opacity-50" />
@@ -52,9 +108,11 @@ const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose:
 							Create New Impact
 						</Dialog.Title>
 
+						{/* Formik to handle the form submission and validation */}
 						<Formik initialValues={initialValues} onSubmit={handleSubmit}>
 							{({ values, handleChange, handleBlur, handleSubmit }) => (
-								<form onSubmit={handleSubmit} className="mt-4 space-y-4">
+								<form onSubmit={handleSubmit}>
+									{/* Title input field */}
 									<div className="space-y-2">
 										<label
 											htmlFor="title"
@@ -65,13 +123,14 @@ const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose:
 										<Field
 											id="title"
 											name="title"
-											value={values.title}
+											value={values.title || ""} // Fallback to empty string if undefined
 											onChange={handleChange}
 											onBlur={handleBlur}
 											className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
 										/>
 									</div>
 
+									{/* Description input field */}
 									<div className="space-y-2">
 										<label
 											htmlFor="description"
@@ -83,13 +142,14 @@ const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose:
 											id="description"
 											as="textarea"
 											name="description"
-											value={values.description}
+											value={values.description || ""} // Fallback to empty string if undefined
 											onChange={handleChange}
 											onBlur={handleBlur}
 											className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none min-h-[150px] max-h-[300px] overflow-auto"
 										/>
 									</div>
 
+									{/* Type selection dropdown */}
 									<div className="space-y-2">
 										<label
 											htmlFor="type"
@@ -101,7 +161,7 @@ const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose:
 											id="type"
 											as="select"
 											name="type"
-											value={values.type}
+											value={values.type || ""} // Fallback to empty string if undefined
 											onChange={handleChange}
 											onBlur={handleBlur}
 											className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
@@ -114,6 +174,7 @@ const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose:
 										</Field>
 									</div>
 
+									{/* Action buttons: Cancel and Submit */}
 									<div className="mt-4 flex justify-end space-x-4">
 										<button
 											type="button"
@@ -138,4 +199,5 @@ const CreateImpactModal: React.FC<{ projectId: string; isOpen: boolean; onClose:
 		</Transition>
 	);
 };
+
 export default CreateImpactModal;

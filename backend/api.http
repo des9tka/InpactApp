@@ -7,7 +7,7 @@ POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
 {
-	"email": "deyume9@gmail.com",
+	"email": "des9tka2005@ukr.net",
     "password": "Web1@"
 }
 
@@ -117,9 +117,9 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsImV4cCI6MTczODExNjk5Nn0.9lFmq-iDwb341bLJ-qQcieRqbQJ-GVTZLDj3_b1mlsA
 
 ### Delete Project;
-DELETE http://127.0.0.1:8000/projects/delete/2
+DELETE http://127.0.0.1:8000/projects/delete/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ5ODI2N30.1uuDv2fL5GL47h-zLn_bInZJuXl0VSUEdgVnZQCURO0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODU4MjE1N30.bqaJIAgGsENjlE9E6qv_UFNUBu1WrwdctAiYpIqGf1w
 
 ### Update Project;
 PATCH http://127.0.0.1:8000/projects/update/1

@@ -8,13 +8,13 @@ from models.UserModels import UserModel
 from repository import UserRepository
 from enums import UpdateUserDataEnum
 
-# User Router; 
+# User Router for handling user-related routes
 user_router = APIRouter(
 	prefix="/users",
 	tags=["users"]
 )
 
-# Get User by Params;
+# Get user by ID, username, or email; returns a list of users that match the criteria
 @user_router.get("/")
 async def get_user_by(
 	id: Optional[int] = None,
@@ -31,6 +31,7 @@ async def get_user_by(
 		username=username	
 	)
 
+# Update user data using the provided user data enum; returns the updated user
 @user_router.patch('/update')
 async def update_user(
 	user_data: UpdateUserDataEnum,
@@ -43,6 +44,7 @@ async def update_user(
 		user_data=user_data
 	)
 
+# Get all users in the system; returns a list of all users
 @user_router.get('/all')
 async def get_all_users(session: Session = Depends(get_session)) -> List[UserModel]:
 	return await UserRepository.get_all_users(session=session)

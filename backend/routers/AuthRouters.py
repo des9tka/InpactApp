@@ -10,11 +10,13 @@ from core.tokens import oauth2_bearer
 from enums import RegisterUserEnum, RecoveryPasswordRequestEnum, RecoveryDataEnum
 from core.limiter import limiter
 
+# Create the router for authentication-related endpoints
 auth_router = APIRouter(
     prefix="/auth",
     tags=["auth"]
 )
 
+# Login endpoint with rate limiting
 @auth_router.post("/login")
 @limiter.limit("6/minute", per_method=True)
 async def login(
@@ -25,6 +27,7 @@ async def login(
 ):
     return await AuthRepository.login(session=session, login_data=login_data, background_tasks=background_tasks)
 
+# Register endpoint with rate limiting
 @auth_router.post("/register")
 @limiter.limit("1/minute", per_method=True)
 async def register(
@@ -35,7 +38,7 @@ async def register(
 ) -> UserModel:
     return await AuthRepository.register(session=session, user_data=user_data, background_tasks=background_tasks)
 
-
+# Refresh token endpoint with rate limiting
 @auth_router.post("/refresh")
 @limiter.limit("1/hour", per_method=True)
 async def refresh(
@@ -44,6 +47,7 @@ async def refresh(
 ):
     return await AuthRepository.refresh(refresh_token=refresh_token)
 
+# Get user info using the access token
 @auth_router.get("/get-info")
 async def refresh(
     access_token: str = Depends(oauth2_bearer),
@@ -51,6 +55,7 @@ async def refresh(
 ):
     return await AuthRepository.get_info(access_token=access_token, session=session)
 
+# User activation endpoint
 @auth_router.get("/activate/{activate_token}")
 async def activate(
 	request: Request,
@@ -59,6 +64,7 @@ async def activate(
 ):
     return await AuthRepository.activate_user(activate_token=activate_token, session=session)
 
+# Password recovery request endpoint with rate limiting
 @auth_router.post("/recovery_request")
 @limiter.limit("4/day", per_method=True)
 async def recovery_request(
@@ -73,6 +79,7 @@ async def recovery_request(
         background_tasks=background_tasks
     )
 
+# Password recovery endpoint with rate limiting
 @auth_router.post("/recovery")
 @limiter.limit("4/day", per_method=True)
 async def recovery(

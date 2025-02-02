@@ -16,39 +16,47 @@ function LoginForm() {
 		state => state.userReducer
 	);
 	const dispatch = useAppDispatch();
-
-	const [isForgot, setIsForgot] = useState<boolean>(false);
 	const router = useRouter();
 
+	// State to manage Forgot Password modal visibility
+	const [isForgot, setIsForgot] = useState<boolean>(false);
+
+	// Formik hook to handle form state and validation
 	const { values, handleBlur, errors, touched, handleChange, handleSubmit } =
 		useFormik({
 			initialValues: {
 				email: "",
 				password: "",
 			},
-			validationSchema: authLoginValidationSchema,
+			validationSchema: authLoginValidationSchema, // Validation schema
 			onSubmit: (data: authLoginUserType) => {
+				// Dispatch login action
 				dispatch(userActions.loginUser(data)).then(() => {
-					if (!sliceErrors && cookieService.getCookieAccessRefreshTokens())
+					// Redirect to dashboard if login is successful and tokens are present
+					if (!sliceErrors && cookieService.getCookieAccessRefreshTokens()) {
 						router.push("/dashboard");
+					}
 				});
 			},
 		});
 
 	return (
 		<div className="relative">
+			{/* Display Forgot Password Modal if triggered */}
 			<AnimatePresence>
 				{isForgot && <ForgotPasswordModal setIsForgot={setIsForgot} />}
 			</AnimatePresence>
 
+			{/* Login Form */}
 			<form
 				onSubmit={e => {
 					e.preventDefault();
-					handleSubmit();
+					handleSubmit(); // Prevent default and trigger Formik's handleSubmit
 				}}
 				method="POST"
 				className="space-y-2"
 			>
+				{/* Email Input */}
 				<div>
 					<label
 						htmlFor="email"
@@ -67,6 +75,7 @@ function LoginForm() {
 							className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 						/>
 					</div>
+					{/* Email Validation Error */}
 					{touched.email && errors.email && (
 						<div className="text-sm text-red-500 text-center capitalize">
 							{errors.email}
@@ -74,6 +83,7 @@ function LoginForm() {
 					)}
 				</div>
 
+				{/* Password Input */}
 				<div>
 					<div className="flex items-center justify-between">
 						<label
@@ -83,9 +93,10 @@ function LoginForm() {
 							Password
 						</label>
 						<div className="text-sm flex justify-between items-center">
+							{/* Forgot Password Link */}
 							<span
 								className="font-semibold text-sky-500 hover:text-sky-300 mr-2 cursor-pointer"
-								onClick={() => setIsForgot(true)}
+								onClick={() => setIsForgot(true)} // Toggle Forgot Password modal
 							>
 								Forgot password?
 							</span>
@@ -102,6 +113,7 @@ function LoginForm() {
 							className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-600 sm:text-sm/6"
 						/>
 					</div>
+					{/* Password Validation Error */}
 					{touched.password && errors.password && (
 						<div className="text-sm text-red-500 text-center capitalize">
 							{errors.password}
@@ -109,15 +121,17 @@ function LoginForm() {
 					)}
 				</div>
 
+				{/* Submit Button */}
 				<div>
 					<button
 						type="submit"
 						className={`flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-sky-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
 							loading ? "cursor-progress" : ""
 						}`}
-						disabled={loading}
+						disabled={loading} // Disable button when loading
 					>
 						Sign in
+						{/* Loader Animation if loading */}
 						{loading && (
 							<span className="ml-2 animate-spin">
 								<Loader2 />
@@ -125,6 +139,8 @@ function LoginForm() {
 						)}
 					</button>
 				</div>
+
+				{/* Display Error Messages if any */}
 				{sliceErrors && !isForgot && (
 					<p className="text-red-500 text-center">{sliceErrors}</p>
 				)}

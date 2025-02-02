@@ -7,6 +7,7 @@ import { ApiResponseError, impactType } from "@/types";
 interface IInitialState {
 	impacts: impactType[];
 	loading: boolean;
+	isLoaded: boolean;
 	errors: string | null;
 	extra: string | null;
 }
@@ -14,6 +15,7 @@ interface IInitialState {
 const initialState: IInitialState = {
 	impacts: [],
 	loading: false,
+	isLoaded: false,
 	errors: null,
 	extra: null,
 };
@@ -74,10 +76,13 @@ const impactSlice = createSlice({
 			.addCase(getUserProjectImpacts.pending, state => {
 				state.loading = true;
 				state.errors = null;
+				state.isLoaded = false;
 			})
 			.addCase(getUserProjectImpacts.fulfilled, (state, action) => {
 				state.loading = false;
 				const newImpacts = action.payload;
+				state.isLoaded = true;
+
 				const uniqueImpacts = [
 					...new Map(
 						[...state.impacts, ...newImpacts].map(i => [i.id, i])
@@ -89,6 +94,7 @@ const impactSlice = createSlice({
 			.addCase(getUserProjectImpacts.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+				state.isLoaded = true;
 			})
 
 			// Update Impact;

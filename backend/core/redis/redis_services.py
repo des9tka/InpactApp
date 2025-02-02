@@ -10,172 +10,184 @@ from core.redis.db import redis_retry, RedisConnection
 
 load_dotenv()
 
-# V.2 -> Tokens Valid Store Check; 
+# Helper function to generate token keys based on user and token type
 def keys(
-	user_id, 
-	access: Optional[bool] = False, 
-	refresh: Optional[bool] = False,
-	activate: Optional[bool] = False, 
-	recovery: Optional[bool] = False,
-	invite: Optional[bool] = False
+    user_id, 
+    access: Optional[bool] = False, 
+    refresh: Optional[bool] = False,
+    activate: Optional[bool] = False, 
+    recovery: Optional[bool] = False,
+    invite: Optional[bool] = False
 ) -> Optional[str]:
-	if access: return f"user:{user_id}:access_token"
-	elif refresh: return f"user:{user_id}:refresh_token"
-	elif activate: return f"user:{user_id}:activate_token"
-	elif recovery: return f"user:{user_id}:recovery_token"
-	elif invite: return f"user:{user_id}:invite_token"
-	else: return None
+    if access: return f"user:{user_id}:access_token"
+    elif refresh: return f"user:{user_id}:refresh_token"
+    elif activate: return f"user:{user_id}:activate_token"
+    elif recovery: return f"user:{user_id}:recovery_token"
+    elif invite: return f"user:{user_id}:invite_token"
+    else: return None
 
+# Store various user tokens in Redis with expiration times
 @redis_retry
 async def store_user_token(
-	user_id: int, 
-	access_expiration: Optional[int] = None, 
-	refresh_expiration: Optional[int] = None, 
-	activate_expiration: Optional[int] = None, 
-	recovery_expiration: Optional[int] = None, 
-	invite_expiration: Optional[int] = None,
-	access_token: Optional[str] = None, 
-	refresh_token: Optional[str] = None,
-	activate_token: Optional[str] = None, 
-	recovery_token: Optional[str] = None,
-	invite_token: Optional[str] = None,
-	project_id: Optional[int] = None
+    user_id: int, 
+    access_expiration: Optional[int] = None, 
+    refresh_expiration: Optional[int] = None, 
+    activate_expiration: Optional[int] = None, 
+    recovery_expiration: Optional[int] = None, 
+    invite_expiration: Optional[int] = None,
+    access_token: Optional[str] = None, 
+    refresh_token: Optional[str] = None,
+    activate_token: Optional[str] = None, 
+    recovery_token: Optional[str] = None,
+    invite_token: Optional[str] = None,
+    project_id: Optional[int] = None
 ):
-	redis = RedisConnection.get_instance()
+    redis = RedisConnection.get_instance()
 
-	if access_token and access_expiration:
-		access_key = keys(user_id=user_id, access=True)
-		redis.delete(access_key)
-		redis.set(access_key, access_token, ex=access_expiration)	
+    # Store each token type with its expiration time if provided
+    if access_token and access_expiration:
+        access_key = keys(user_id=user_id, access=True)
+        redis.delete(access_key)  # Delete existing token if it exists
+        redis.set(access_key, access_token, ex=access_expiration)  # Set new token with expiration
 
-	if refresh_token and refresh_expiration:
-		refresh_key = keys(user_id=user_id, refresh=True)
-		redis.delete(refresh_key)
-		redis.set(refresh_key, refresh_token, ex=refresh_expiration)
+    if refresh_token and refresh_expiration:
+        refresh_key = keys(user_id=user_id, refresh=True)
+        redis.delete(refresh_key)
+        redis.set(refresh_key, refresh_token, ex=refresh_expiration)
 
-	if activate_token and activate_expiration:
-		activate_key = keys(user_id=user_id, activate=True)
-		redis.delete(activate_key)
-		redis.set(activate_key, activate_token, ex=activate_expiration)
+    if activate_token and activate_expiration:
+        activate_key = keys(user_id=user_id, activate=True)
+        redis.delete(activate_key)
+        redis.set(activate_key, activate_token, ex=activate_expiration)
 
-	if recovery_token and recovery_expiration:
-		recovery_key = keys(user_id=user_id, recovery=True)	
-		redis.delete(recovery_key)
-		redis.set(recovery_key, recovery_token, ex=recovery_expiration)
+    if recovery_token and recovery_expiration:
+        recovery_key = keys(user_id=user_id, recovery=True)    
+        redis.delete(recovery_key)
+        redis.set(recovery_key, recovery_token, ex=recovery_expiration)
 
-	if invite_token and invite_expiration and project_id:
-		invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
-		redis.delete(invite_key)
-		redis.set(invite_key, invite_token, ex=invite_expiration)
+    if invite_token and invite_expiration and project_id:
+        invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
+        redis.delete(invite_key)
+        redis.set(invite_key, invite_token, ex=invite_expiration)
 
+# Check if a token exists in Redis and matches the provided token
 @redis_retry
 async def is_in_store(
-	user_id: int, 
-	access_token: Optional[str] = None, 
-	refresh_token: Optional[str] = None,
-	activate_token: Optional[str] = None, 
-	recovery_token: Optional[str] = None,
-	invite_token: Optional[str] = None,
-	project_id: Optional[int] = None
-	):
-	redis = RedisConnection.get_instance()
-	     
-	if access_token:
-		access_key = keys(user_id=user_id, access=True)
-		if redis.get(access_key) != access_token:
-			return None
+    user_id: int, 
+    access_token: Optional[str] = None, 
+    refresh_token: Optional[str] = None,
+    activate_token: Optional[str] = None, 
+    recovery_token: Optional[str] = None,
+    invite_token: Optional[str] = None,
+    project_id: Optional[int] = None
+):
+    redis = RedisConnection.get_instance()
+         
+    # Check if the specified token exists and matches the value in Redis
+    if access_token:
+        access_key = keys(user_id=user_id, access=True)
+        if redis.get(access_key) != access_token:
+            return None
 
-	elif refresh_token:
-		refresh_key = keys(user_id=user_id, refresh=True)
-		if redis.get(refresh_key) != refresh_token:
-			return None
+    elif refresh_token:
+        refresh_key = keys(user_id=user_id, refresh=True)
+        if redis.get(refresh_key) != refresh_token:
+            return None
 
-	elif activate_token:
-		activate_key = keys(user_id=user_id, activate=True)
-		if redis.get(activate_key) != activate_token:
-			return None
+    elif activate_token:
+        activate_key = keys(user_id=user_id, activate=True)
+        if redis.get(activate_key) != activate_token:
+            return None
 
-	elif recovery_token:
-		recovery_key = keys(user_id=user_id, recovery=True)
-		if redis.get(recovery_key) != recovery_token:
-			return None
+    elif recovery_token:
+        recovery_key = keys(user_id=user_id, recovery=True)
+        if redis.get(recovery_key) != recovery_token:
+            return None
 
-	elif invite_token and project_id:
-		invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
-		if redis.get(invite_key) != invite_token:
-			return None
-	else: return None
-	
-	return True
+    elif invite_token and project_id:
+        invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
+        if redis.get(invite_key) != invite_token:
+            return None
+    else: 
+        return None
+    
+    return True
 
+# Remove specific user tokens from Redis
 @redis_retry
 async def remove_tokens(
-	user_id: int,
-	access_token: Optional[bool] = None, 
-	refresh_token: Optional[bool] = None,
-	activate_token: Optional[bool] = None, 
-	recovery_token: Optional[bool] = None,
-	invite_token: Optional[bool] = None,
-	project_id: Optional[int] = None
+    user_id: int,
+    access_token: Optional[bool] = None, 
+    refresh_token: Optional[bool] = None,
+    activate_token: Optional[bool] = None, 
+    recovery_token: Optional[bool] = None,
+    invite_token: Optional[bool] = None,
+    project_id: Optional[int] = None
 ):
-	redis = RedisConnection.get_instance()
+    redis = RedisConnection.get_instance()
 
-	if access_token:
-		access_key = keys(user_id=user_id, access=True)
-		redis.delete(access_key)
-	elif refresh_token:
-		refresh_key = keys(user_id=user_id, refresh=True)
-		redis.delete(refresh_key)
-	elif activate_token:
-		activate_key = keys(user_id=user_id, activate=True)
-		redis.delete(activate_key)
-	elif recovery_token:
-		recovery_key = keys(user_id=user_id, recovery=True)
-		redis.delete(recovery_key)
-	elif invite_token:
-		invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
-		redis.delete(invite_key)
-	else: return None
-	return True
+    # Delete the specified token type from Redis
+    if access_token:
+        access_key = keys(user_id=user_id, access=True)
+        redis.delete(access_key)
+    elif refresh_token:
+        refresh_key = keys(user_id=user_id, refresh=True)
+        redis.delete(refresh_key)
+    elif activate_token:
+        activate_key = keys(user_id=user_id, activate=True)
+        redis.delete(activate_key)
+    elif recovery_token:
+        recovery_key = keys(user_id=user_id, recovery=True)
+        redis.delete(recovery_key)
+    elif invite_token:
+        invite_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
+        redis.delete(invite_key)
+    else: 
+        return None
+    return True
 
+# Get the token value from Redis based on token type
 @redis_retry
 async def get_token_by_user_id(user_id: int, token_type: str, project_id: Optional[int] = None):
-	redis = RedisConnection.get_instance()
+    redis = RedisConnection.get_instance()
 
-	if token_type == "access":
-		access_key = keys(user_id=user_id, access=True)
-		return redis.get(access_key)
-	elif token_type == "refresh":
-		refresh_key = keys(user_id=user_id, refresh=True)
-		return redis.get(refresh_key)
-	elif token_type == "activate":
-		activate_key = keys(user_id=user_id,activate=True)
-		return redis.get(activate_key)
-	elif token_type == "recovery":
-		recovery_key = keys(user_id=user_id, recovery=True)
-		return redis.get(recovery_key)
-	elif token_type == "invite":
-		recovery_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
-		return redis.get(recovery_key)
-	else: return None
+    # Retrieve the appropriate token from Redis based on type
+    if token_type == "access":
+        access_key = keys(user_id=user_id, access=True)
+        return redis.get(access_key)
+    elif token_type == "refresh":
+        refresh_key = keys(user_id=user_id, refresh=True)
+        return redis.get(refresh_key)
+    elif token_type == "activate":
+        activate_key = keys(user_id=user_id, activate=True)
+        return redis.get(activate_key)
+    elif token_type == "recovery":
+        recovery_key = keys(user_id=user_id, recovery=True)
+        return redis.get(recovery_key)
+    elif token_type == "invite":
+        recovery_key = keys(user_id=user_id, invite=True) + ":" + str(project_id)
+        return redis.get(recovery_key)
+    else: 
+        return None
 
-# Dev Get all Info from Redis (for debug);
+# Debugging: Retrieve all information from Redis
 @redis_retry
 async def get_all_info_from_redis():
-	state = []
-	redis = RedisConnection.get_instance()
-	cursor, keys = redis.scan(cursor=0)
-	for key in keys:
-		value = redis.get(key)
-		state.append(f"Key: {key}, Value: {value}")
-	return state
+    state = []
+    redis = RedisConnection.get_instance()
+    cursor, keys = redis.scan(cursor=0)  # Get keys with scan method
+    for key in keys:
+        value = redis.get(key)  # Get value for each key
+        state.append(f"Key: {key}, Value: {value}")
+    return state
 
-# Dev Clear Redis (for debug);
+# Debugging: Clear all data from Redis
 @redis_retry
 async def clear_redis():
     redis = RedisConnection.get_instance()
-    redis.flushall()
+    redis.flushall()  # Clear all Redis data
     return True
+
 
 # V.1 -> BlackListing Tokens;
 # @redis_retry

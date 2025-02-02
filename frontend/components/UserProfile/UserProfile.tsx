@@ -2,8 +2,8 @@
 import { useAppDispatch, useAppSelector, userActions } from "@/redux";
 import { useFormik } from "formik";
 import { DoorOpenIcon, PenIcon, SaveIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 import { cookieService } from "@/services/cookieService";
 import { userUpdateBodyType } from "@/types";
@@ -11,9 +11,9 @@ import { userUpdateValidator } from "@/validators";
 import { Notification, UserGuestIcon } from "../UI";
 
 function UserProfile() {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const [isEdit, setIsEdit] = useState<boolean>(false);
-	const [showNotification, setShowNotification] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
+	const [showNotification, setShowNotification] = useState(false);
 	const pathname = usePathname();
 
 	const {
@@ -23,6 +23,7 @@ function UserProfile() {
 	} = useAppSelector(state => state.userReducer);
 	const dispatch = useAppDispatch();
 
+	// Setup formik for user profile form
 	const {
 		values,
 		setFieldValue,
@@ -39,6 +40,7 @@ function UserProfile() {
 		},
 		validationSchema: userUpdateValidator,
 		onSubmit: (data: userUpdateBodyType) => {
+			// Only update user data if there are changes
 			if (
 				user?.username !== data.username ||
 				user?.name !== data.name ||
@@ -49,6 +51,7 @@ function UserProfile() {
 		},
 	});
 
+	// Sync form fields with user data if user info is available
 	useEffect(() => {
 		if (user) {
 			setFieldValue("username", user.username || "");
@@ -57,6 +60,7 @@ function UserProfile() {
 		}
 	}, [user, setFieldValue]);
 
+	// Toggle edit mode and handle form submission
 	const handleEditToggle = (e: React.MouseEvent) => {
 		e.preventDefault();
 		if (isEdit) {
@@ -66,6 +70,7 @@ function UserProfile() {
 		}
 	};
 
+	// Cancel the edits and reset the form fields
 	const handleCancelEdit = () => {
 		setIsEdit(false);
 		setFieldValue("username", user?.username || "");
@@ -75,8 +80,9 @@ function UserProfile() {
 
 	return (
 		<div
-			className={`absolute top-4 right-4 z-30 
-			${pathname === "/dashboard" || pathname === "/data" ? "block" : "hidden"}`}
+			className={`absolute top-4 right-4 z-30 ${
+				pathname === "/dashboard" || pathname === "/data" ? "block" : "hidden"
+			}`}
 		>
 			<div className="relative">
 				<UserGuestIcon onClick={() => setIsOpen(!isOpen)} />
@@ -98,6 +104,7 @@ function UserProfile() {
 						Profile
 					</h2>
 					<form onSubmit={handleSubmit} className="space-y-4">
+						{/* Username Input */}
 						<div className="space-y-2">
 							<input
 								type="text"
@@ -114,6 +121,7 @@ function UserProfile() {
 							)}
 						</div>
 
+						{/* Name Input */}
 						<div className="space-y-2">
 							<input
 								type="text"
@@ -130,6 +138,7 @@ function UserProfile() {
 							)}
 						</div>
 
+						{/* Surname Input */}
 						<div className="space-y-2">
 							<input
 								type="text"
@@ -146,12 +155,14 @@ function UserProfile() {
 							)}
 						</div>
 
+						{/* Display slice errors */}
 						{sliceErrors && (
 							<div className="text-red-500 text-sm text-center">
 								{sliceErrors}
 							</div>
 						)}
 
+						{/* Action buttons */}
 						<div className="flex justify-evenly">
 							<button
 								type="button"

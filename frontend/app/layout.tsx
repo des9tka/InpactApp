@@ -5,30 +5,31 @@ import "./globals.css";
 import { UserProfile } from "@/components";
 import { StoreProvider, StoreSetupProvider } from "@/redux";
 
-const geistSans = Geist({
+const geistSansFont = Geist({
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+const geistMonoFont = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-	title: "",
-	description: "",
+	title: "Graph App",
+	description:
+		"Make project section and manage impacts that makes your team and you.",
 };
 
 export default function RootLayout({
 	children,
-}: Readonly<{
+}: {
 	children: React.ReactNode;
-}>) {
+}) {
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased min-w-[575px] overflow-y-auto`}
+				className={`${geistSansFont.variable} ${geistMonoFont.variable} antialiased min-w-[575px] overflow-y-auto`}
 			>
 				<StoreProvider>
 					<StoreSetupProvider>

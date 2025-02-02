@@ -18,6 +18,7 @@ interface IInitialState {
 	my_projects: projectType[];
 	projects: projectType[];
 	user: userType | null;
+	users: userType[];
 	loading: boolean;
 	errors: string | null;
 	extra: string | null;
@@ -26,6 +27,7 @@ interface IInitialState {
 const initialState: IInitialState = {
 	my_projects: [],
 	projects: [],
+	users: [],
 	user: null,
 	loading: false,
 	errors: null,
@@ -90,8 +92,8 @@ const deleteProject = createAsyncThunk<number, number>(
 	"projectSlice/deleteProject",
 	async (project_id, { rejectWithValue }) => {
 		try {
-			const { data } = await projectService.deleteProject(project_id);
-			return data;
+			await projectService.deleteProject(project_id);
+			return project_id;
 		} catch (err) {
 			const typedError = err as AxiosError<ApiResponseError>;
 			return rejectWithValue(typedError.response?.data?.detail);
@@ -146,11 +148,24 @@ const inviteUser = createAsyncThunk<ApiResponse, addUserToProjectType>(
 	}
 );
 
+const getUsersFromProject = createAsyncThunk<userType[], number>(
+	"projectSlice/getUsersFromProject",
+	async (project_id, { rejectWithValue }) => {
+		try {
+			const { data } = await projectService.getUsersFromProject(project_id);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const joinTeam = createAsyncThunk<ApiResponse, string>(
 	"projectSlice/joinTeam",
 	async (invite_token, { rejectWithValue }) => {
 		try {
-			const { data } = await projectService.joinProject(invite_token)
+			const { data } = await projectService.joinProject(invite_token);
 			return data;
 		} catch (err) {
 			const typedError = err as AxiosError<ApiResponseError>;
@@ -286,6 +301,20 @@ const projectSlice = createSlice({
 			.addCase(joinTeam.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Get Users from Project;
+			.addCase(getUsersFromProject.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(getUsersFromProject.fulfilled, (state, action) => {
+				state.loading = false;
+				state.users = action.payload;
+			})
+			.addCase(getUsersFromProject.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -304,7 +333,8 @@ const projectActions = {
 	deleteProject,
 	getUserForInvite,
 	inviteUser,
-	joinTeam
+	joinTeam,
+	getUsersFromProject,
 };
 
 export { projectActions, projectReducer };

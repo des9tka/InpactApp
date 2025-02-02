@@ -6,6 +6,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { impactActions, useAppDispatch } from "@/redux";
 import { impactType } from "@/types";
 
+// Colors for different impact types
 const typeColors: Record<string, string> = {
 	FEAT: "bg-green-500",
 	FIX: "bg-red-500",
@@ -30,9 +31,10 @@ const EditableImpactRow: React.FC<{
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	return (
-		<Formik initialValues={impact} onSubmit={onSave} enableReinitialize={true}>
+		<Formik initialValues={impact} onSubmit={onSave} enableReinitialize>
 			{({ values, handleChange, handleBlur, handleSubmit }) => (
 				<tr className="border-b border-gray-700 hover:bg-gray-800">
+					{/* Title */}
 					<td className="py-3 px-4">
 						{isEditing ? (
 							<Field
@@ -47,7 +49,7 @@ const EditableImpactRow: React.FC<{
 						)}
 					</td>
 
-					{/* Description with larger text area */}
+					{/* Description */}
 					<td className="py-3 px-4 relative">
 						{isEditing ? (
 							<Field
@@ -64,13 +66,13 @@ const EditableImpactRow: React.FC<{
 								onClick={() => setIsModalOpen(true)}
 							>
 								{impact.description.length > 25
-									? impact.description.slice(0, 25) + "..."
+									? `${impact.description.slice(0, 25)}...`
 									: impact.description}
 							</div>
 						)}
 					</td>
 
-					{/* Impact Percent with smaller input */}
+					{/* Impact Percent */}
 					<td className="py-3 px-4">
 						{isEditing ? (
 							<Field
@@ -94,7 +96,7 @@ const EditableImpactRow: React.FC<{
 						)}
 					</td>
 
-					{/* Type */}
+					{/* Impact Type */}
 					<td className="py-3 px-4">
 						{isEditing ? (
 							<Field
@@ -122,6 +124,19 @@ const EditableImpactRow: React.FC<{
 						)}
 					</td>
 
+					{/* Created and Updated At */}
+					<td className="py-3 px-4 text-center">
+						<div>{impact.created_at}</div>
+						<div>
+							{impact.updated_at ? (
+								impact.updated_at
+							) : (
+								<span className="text-red-500">❌</span> // Red cross if updated_at is null
+							)}
+						</div>
+					</td>
+
+					{/* Actions */}
 					<td className="py-3 px-4">
 						{isEditing ? (
 							<div className="flex flex-col space-y-2">
@@ -154,6 +169,7 @@ const EditableImpactRow: React.FC<{
 						)}
 					</td>
 
+					{/* Modal for full description */}
 					<Transition appear show={isModalOpen} as={Fragment}>
 						<Dialog
 							as="div"
@@ -190,7 +206,6 @@ const ImpactTable: React.FC<{ impacts: impactType[]; projectId: number }> = ({
 	projectId,
 }) => {
 	const [editableId, setEditableId] = useState<number | null>(null);
-
 	const dispatch = useAppDispatch();
 
 	const handleSave = (values: impactType) => {
@@ -198,38 +213,39 @@ const ImpactTable: React.FC<{ impacts: impactType[]; projectId: number }> = ({
 		setEditableId(null);
 	};
 
+	// Fetch impacts if not already available
 	useEffect(() => {
 		if (!impacts.length) {
 			dispatch(impactActions.getUserProjectImpacts(projectId));
 		}
-	}, []);
+	}, [impacts.length, projectId, dispatch]);
 
 	return (
 		<div className="overflow-x-auto p-4">
 			<table className="min-w-full border border-gray-700 shadow-lg rounded-lg bg-gray-900 text-gray-300">
 				<thead>
 					<tr className="bg-gray-800 text-white">
-						<th className="py-3 px-4 text-left text-sm font-semibold uppercase">
-							Title
-						</th>
-						<th className="py-3 px-4 text-left text-sm font-semibold uppercase">
-							Description
-						</th>
-						<th className="py-3 px-4 text-left text-sm font-semibold uppercase">
-							Impact Percent
-						</th>
-						<th className="py-3 px-4 text-left text-sm font-semibold uppercase">
-							Type
-						</th>
-						<th className="py-3 px-4 text-left text-sm font-semibold uppercase">
-							Actions
-						</th>
+						{[
+							"Title",
+							"Description",
+							"Impact Percent",
+							"Type",
+							"Created / Updated",
+							"Actions",
+						].map(header => (
+							<th
+								key={header}
+								className="py-3 px-4 text-left text-sm font-semibold uppercase"
+							>
+								{header}
+							</th>
+						))}
 					</tr>
 				</thead>
 				<tbody>
-					{impacts.map((impact, index) => (
+					{impacts.map(impact => (
 						<EditableImpactRow
-							key={index}
+							key={impact.id}
 							impact={impact}
 							isEditing={editableId === impact.id}
 							onEdit={() => setEditableId(impact.id)}
