@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChartBar, ChartLinear, ProjectCreateUpdateForm } from "@/components";
 import { InviteUserModal } from "@/components/Forms/InviteUserForm/InviteUserForm";
 import { impactActions, useAppDispatch, useAppSelector } from "@/redux";
+import { impactType } from "@/types";
 import { RadioChartNav } from "../RadioChartNav/RadioChartNav";
 
 function ProjectChartPage({ owner }: { owner: boolean }) {
@@ -22,10 +23,14 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 	const [createUpdateProject, setOpenCreateUpdateProject] =
 		useState<boolean>(false);
 	const [invite, setInvite] = useState<boolean>(false);
+	const [currentImpacts, setCurrentImpacts] = useState<impactType[]>([]);
 	const mounted = useRef(false);
 
 	const router = useRouter();
 	const dispatch = useAppDispatch();
+	const [fetchedProjects, setFetchedProjects] = useState<Set<number>>(
+		new Set()
+	);
 
 	const { impacts, loading } = useAppSelector(state => state.impactReducer);
 
@@ -46,18 +51,23 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 		if (!mounted.current) {
 			mounted.current = true;
 		}
+
 		const currentProjectId = projects[pNumber]?.id;
 
 		if (
-			pNumber > 0 &&
 			projects.length > 0 &&
 			currentProjectId &&
-			!impacts.some(impact => impact.project_id === currentProjectId) &&
-			!projects.some(project => project.id === currentProjectId)
+			!fetchedProjects.has(currentProjectId) && // Если проект ещё не был загружен
+			impacts.every(impact => impact.project_id !== currentProjectId) // Нет данных для текущего проекта
 		) {
 			dispatch(impactActions.getUserProjectImpacts(currentProjectId));
+			setFetchedProjects(prev => new Set(prev.add(currentProjectId)));
 		}
-	}, [pNumber, projects, impacts]);
+
+		setCurrentImpacts(
+			impacts.filter(i => i.project_id === projects[pNumber]?.id)
+		);
+	}, [pNumber, projects, impacts, fetchedProjects, dispatch]);
 
 	if (loading)
 		return (
@@ -77,7 +87,12 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 				/>
 			)}
 
-			{invite && <InviteUserModal setInvite={setInvite} projectId={projects[pNumber]?.id}/>}
+			{invite && (
+				<InviteUserModal
+					setInvite={setInvite}
+					projectId={projects[pNumber]?.id}
+				/>
+			)}
 
 			{projects.length === 0 ? (
 				<>
@@ -161,8 +176,8 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 					</h2>
 
 					<div className="w-[93vw] md:w-[65] lg:w-[50] flex justify-center mt-2 z-10">
-						{chart == "linear" && <ChartLinear impacts={impacts} />}
-						{chart == "bar" && <ChartBar impacts={impacts} />}
+						{chart == "linear" && <ChartLinear impacts={currentImpacts} />}
+						{chart == "bar" && <ChartBar impacts={currentImpacts} />}
 					</div>
 
 					<button

@@ -3,7 +3,7 @@ import { impactType } from "@/types";
 import { AxiosRes, axiosService } from "./axiosService";
 
 const impactService = {
-	createImpact: (impactData: impactType): AxiosRes<impactType> =>
+	createImpact: (impactData: Partial<impactType>): AxiosRes<impactType> =>
 		axiosService.post(impactUrls.createImpact(), impactData),
 
 	updateImpact: (

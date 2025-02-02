@@ -192,6 +192,7 @@ const ImpactTable: React.FC<{ impacts: impactType[] }> = ({ impacts }) => {
 
 	const handleSave = (values: impactType) => {
 		dispatch(impactActions.updateImpact(values));
+		setEditableId(null);
 	};
 
 	return (

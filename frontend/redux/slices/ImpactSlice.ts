@@ -44,6 +44,19 @@ const updateImpact = createAsyncThunk<impactType, impactType>(
 	}
 );
 
+const createImpact = createAsyncThunk<impactType, Partial<impactType>>(
+	"projectSlice/createImpact",
+	async (body, { rejectWithValue }) => {
+		try {
+			const { data } = await impactService.createImpact(body);
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const impactSlice = createSlice({
 	name: "impactSlice",
 	initialState,
@@ -64,7 +77,7 @@ const impactSlice = createSlice({
 			})
 			.addCase(getUserProjectImpacts.fulfilled, (state, action) => {
 				state.loading = false;
-				state.impacts = [...action.payload];
+				state.impacts = [...state.impacts, ...action.payload];
 			})
 			.addCase(getUserProjectImpacts.rejected, (state, action) => {
 				state.loading = false;
@@ -85,6 +98,20 @@ const impactSlice = createSlice({
 			.addCase(updateImpact.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Create Impact;
+			.addCase(createImpact.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(createImpact.fulfilled, (state, action) => {
+				state.loading = false;
+				state.impacts = [...state.impacts, action.payload];
+			})
+			.addCase(createImpact.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -98,6 +125,7 @@ const impactActions = {
 	setError,
 	setLoading,
 	updateImpact,
+	createImpact,
 };
 
 export { impactActions, impactReducer };

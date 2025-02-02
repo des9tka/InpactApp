@@ -1,7 +1,6 @@
 "use client";
 import { UserIcon } from "lucide-react";
 
-import { projectType } from "@/types";
 import ProjectChartPage from "./ProjectChartPage/ProjectChartPage";
 
 function UserProjects() {
