@@ -133,7 +133,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 
 							{projects.length < 3 && (
 								<div
-									className="flex items-center gap-2 text-xl text-center cursor-pointer hover:text-green-500 bg-green-900 text-white p-2 rounded-md mt-8 z-50 relative"
+									className="flex items-center justify-center gap-2 text-xl text-center cursor-pointer hover:text-green-500 bg-green-900 text-white p-2 rounded-md mt-8 z-50 relative"
 									onClick={() => {
 										setCreate(true);
 										setOpenCreateUpdateProject(true);
@@ -145,7 +145,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 							)}
 
 							<div
-								className="z-50 relative mt-2 hover:text-green-500 bg-green-900 text-white p-2 rounded-md cursor-pointer"
+								className="z-50 text-center text-bold relative mt-2 hover:text-green-500 bg-green-900 text-white p-2 rounded-md cursor-pointer"
 								onClick={() => setInvite(true)}
 							>
 								Invite User

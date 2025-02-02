@@ -16,4 +16,6 @@ export const projectUrls = {
 
 	deleteUserFromProject: (project_id: number, user_id: number) =>
 		`projects/${project_id}/delete-user/${user_id}`,
+
+	joinTeam: (invite_token: string) => `/projects/join-team/${invite_token}`,
 };

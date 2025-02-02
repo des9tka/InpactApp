@@ -103,9 +103,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ5NjExN30.TYpJP9uuoEN26kgy4jpNCwbOV29LiGLJVZe9kF04Wkg
 
 ### Join to project by token;
-GET http://127.0.0.1:8000/projects/join-team
+GET http://127.0.0.1:8000/projects/join-team/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6MiwiZXhwIjoxNzM4NDYwMTI5fQ.X0eSKHWACqMIxJNdTQ3OMbQuqHyQfrfiar_bLswV5Qk
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJ0eXBlIjoiaW52aXRlIiwicHJvamVjdF9pZCI6MiwiZXhwIjoxNzM4NDYwMTI5fQ.X0eSKHWACqMIxJNdTQ3OMbQuqHyQfrfiar_bLswV5Qk
 
 ### Delete User from project 
 DELETE http://127.0.0.1:8000/projects/1/delete-user/2

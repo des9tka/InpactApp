@@ -30,6 +30,9 @@ const projectService = {
 			projectUrls.updateProject(project_id),
 			body
 		),
+	
+	joinProject: (invite_token: string) =>
+		axiosService.get(projectUrls.joinTeam(invite_token)),
 };
 
 export { projectService };

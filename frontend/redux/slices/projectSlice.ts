@@ -146,6 +146,19 @@ const inviteUser = createAsyncThunk<ApiResponse, addUserToProjectType>(
 	}
 );
 
+const joinTeam = createAsyncThunk<ApiResponse, string>(
+	"projectSlice/joinTeam",
+	async (invite_token, { rejectWithValue }) => {
+		try {
+			const { data } = await projectService.joinProject(invite_token)
+			return data;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const projectSlice = createSlice({
 	name: "projectSlice",
 	initialState,
@@ -259,6 +272,20 @@ const projectSlice = createSlice({
 			.addCase(inviteUser.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Add User To Project;
+			.addCase(joinTeam.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(joinTeam.fulfilled, (state, action) => {
+				state.loading = false;
+				state.extra = action.payload.detail;
+			})
+			.addCase(joinTeam.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -277,6 +304,7 @@ const projectActions = {
 	deleteProject,
 	getUserForInvite,
 	inviteUser,
+	joinTeam
 };
 
 export { projectActions, projectReducer };

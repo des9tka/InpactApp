@@ -218,9 +218,9 @@ const ImpactTable: React.FC<{ impacts: impactType[] }> = ({ impacts }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{impacts.map(impact => (
+					{impacts.map((impact, index) => (
 						<EditableImpactRow
-							key={impact.id}
+							key={index}
 							impact={impact}
 							isEditing={editableId === impact.id}
 							onEdit={() => setEditableId(impact.id)}

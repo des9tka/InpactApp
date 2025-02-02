@@ -74,12 +74,12 @@ async def create_access_refresh_tokens(user_id: int):
     
     return {"access_token": access_token, "refresh_token": refresh_token}
 
-async def get_user_by_token(token: str = Depends(oauth2_bearer), project_id: Optional[bool] = None):
+async def get_user_by_token(token: str = Depends(oauth2_bearer), project_id: Optional[bool] = False):
     try:
         payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=[os.getenv("ALGORITHM")])
-        print("payload: " + str(payload))
         token_type = payload.get("type")
         user_id = payload.get("id")
+
         if project_id:
             return user_id, payload.get("project_id"), token_type
         return token_type, user_id

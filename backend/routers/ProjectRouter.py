@@ -50,10 +50,10 @@ async def get_invited_projects(
 	)
 
 # Join Team;
-@project_router.get('/join-team')
+@project_router.get('/join-team/{invite_token}')
 async def join_team(
+	invite_token: str,
 	session: Session = Depends(get_session),
-	invite_token: str = Depends(oauth2_bearer),
 ):
 	return await ProjectRepository.join_team(
 		session=session,
