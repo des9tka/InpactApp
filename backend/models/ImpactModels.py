@@ -3,9 +3,10 @@ from datetime import date
 from pydantic import field_validator
 from typing import Optional, Annotated, TYPE_CHECKING
 from sqlalchemy import Enum as SQLAlchemyEnum
+
 from enums import ImpactTypeEnum
 from services import ImpactServiceStore
-
+from enums.model_validators import ImpactValidator
 
 if TYPE_CHECKING:
     # Importing UserModel and ProjectModel only for type checking
@@ -32,8 +33,8 @@ class ImpactModel(SQLModel, table=True):
 
     # Define the model fields
     id: Optional[int] = Field(default=None, primary_key=True)  # Primary key, auto-incremented ID
-    title: Annotated[str, (0, 50)] = Field(..., max_length=50)  # Title field with max length of 50
-    description: Annotated[str, (0, 500)] = Field(..., max_length=500)  # Description field with max length of 500
+    title: Annotated[str, (2, 50)] = Field(..., max_length=50, min_length=2)  # Title field with max length of 50
+    description: Annotated[str, (2, 500)] = Field(..., max_length=500, min_length=2)  # Description field with max length of 500
     type: ImpactTypeEnum  # Enum for impact type
     impactPercent: Annotated[float, 100] = Field(...)  # Impact percentage, must be between 0 and 100
     user_id: int = Field(..., foreign_key="user.id")  # Foreign key to user model
@@ -41,12 +42,32 @@ class ImpactModel(SQLModel, table=True):
     created_at: Optional[date] = Field(default_factory=date.today)  # Timestamp of when the impact was created
     updated_at: Optional[date] = Field(default=None)  # Timestamp for when the impact was last updated
 
+    @classmethod
+    def validate_impact_data(cls, values):
+        # Custom validation logic for the entire user object
+        title = values.title if values.title else "0" if hasattr(values, 'title') else None
+        description = values.description if values.description else "0" if hasattr(values, 'description') else None
+        impactPercent = values.impactPercent if hasattr(values, 'impactPercent') else None
+        type = values.type if hasattr(values, 'type') else None
+
+        # Use ImpactValidation to validate individual fields
+        if title:
+            ImpactValidator.validate_title(title)
+        if description:
+            ImpactValidator.validate_description(description)
+        if impactPercent:
+            ImpactValidator.validate_impact_percent(impactPercent)
+        if type:
+            ImpactValidator.validate_type(type)
+        return values
+
     class Config:
         from_attributes = True  # Allows Pydantic models to be populated from SQLModel attributes
 
     # Class method to create an impact record in the database
     @classmethod
     def create_impact(cls, session: Session, impact_data):
+        cls.validate_impact_data(impact_data)
         return ImpactServiceStore.createImpactService(
             session=session,
             impact_data=impact_data,

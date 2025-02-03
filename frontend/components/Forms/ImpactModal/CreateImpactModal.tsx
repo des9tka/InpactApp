@@ -1,9 +1,11 @@
 "use client";
+import { Dialog, Transition } from "@headlessui/react";
+import { ErrorMessage, Field, Formik } from "formik";
+import React, { Fragment } from "react";
+
 import { impactActions, useAppDispatch } from "@/redux";
 import { impactType } from "@/types";
-import { Dialog, Transition } from "@headlessui/react";
-import { Field, Formik } from "formik";
-import React, { Fragment } from "react";
+import { impactValidationSchema } from "@/validators";
 
 // A mapping of different types to their respective color codes
 const typeColors: Record<string, string> = {
@@ -109,10 +111,14 @@ const CreateImpactModal: React.FC<{
 						</Dialog.Title>
 
 						{/* Formik to handle the form submission and validation */}
-						<Formik initialValues={initialValues} onSubmit={handleSubmit}>
+						<Formik
+							initialValues={initialValues}
+							onSubmit={handleSubmit}
+							validationSchema={impactValidationSchema}
+						>
 							{({ values, handleChange, handleBlur, handleSubmit }) => (
 								<form onSubmit={handleSubmit}>
-									{/* Title input field */}
+									{/* // Title input field with error display */}
 									<div className="space-y-2">
 										<label
 											htmlFor="title"
@@ -123,14 +129,21 @@ const CreateImpactModal: React.FC<{
 										<Field
 											id="title"
 											name="title"
-											value={values.title || ""} // Fallback to empty string if undefined
+											value={values.title || ""}
 											onChange={handleChange}
 											onBlur={handleBlur}
 											className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
 										/>
+										{/* Error message for Title */}
+										<div className="flex justify-center">
+											<ErrorMessage
+												name="title"
+												component="div"
+												className="text-sm text-red-500 mt-1"
+											/>
+										</div>
 									</div>
-
-									{/* Description input field */}
+									{/* // Description input field with error display */}
 									<div className="space-y-2">
 										<label
 											htmlFor="description"
@@ -142,14 +155,21 @@ const CreateImpactModal: React.FC<{
 											id="description"
 											as="textarea"
 											name="description"
-											value={values.description || ""} // Fallback to empty string if undefined
+											value={values.description || ""}
 											onChange={handleChange}
 											onBlur={handleBlur}
 											className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none min-h-[150px] max-h-[300px] overflow-auto"
 										/>
+										{/* Error message for Description */}
+										<div className="flex justify-center">
+											<ErrorMessage
+												name="description"
+												component="div"
+												className="text-sm text-red-500 mt-1"
+											/>
+										</div>
 									</div>
-
-									{/* Type selection dropdown */}
+									{/* // Type selection dropdown with error display */}
 									<div className="space-y-2">
 										<label
 											htmlFor="type"
@@ -161,7 +181,7 @@ const CreateImpactModal: React.FC<{
 											id="type"
 											as="select"
 											name="type"
-											value={values.type || ""} // Fallback to empty string if undefined
+											value={values.type || ""}
 											onChange={handleChange}
 											onBlur={handleBlur}
 											className="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
@@ -172,8 +192,15 @@ const CreateImpactModal: React.FC<{
 												</option>
 											))}
 										</Field>
+										{/* Error message for Type */}
+										<div className="flex justify-center">
+											<ErrorMessage
+												name="type"
+												component="div"
+												className="text-sm text-red-500 mt-1"
+											/>
+										</div>
 									</div>
-
 									{/* Action buttons: Cancel and Submit */}
 									<div className="mt-4 flex justify-end space-x-4">
 										<button

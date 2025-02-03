@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session
 from typing import List
 
@@ -7,6 +7,7 @@ from core.tokens import oauth2_bearer
 from models import ImpactModel
 from repository import ImpactRepository
 from enums import UpdateImpactDataEnum
+from core.limiter import limiter
 
 
 # Impact Router for handling impact-related routes
@@ -43,7 +44,9 @@ async def get_impacts_by_project_id(
 
 # Update an existing impact using the provided impact data and impact_id
 @impact_router.patch("/update/{impact_id}")
+@limiter.limit("1/minute", per_method=True)
 async def update_project(
+	request: Request,
 	impact_data: UpdateImpactDataEnum,
 	impact_id: int,
 	session: Session = Depends(get_session),

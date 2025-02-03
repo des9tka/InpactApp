@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Request
 from sqlmodel import Session
 from typing import Optional, List
 
@@ -7,6 +7,8 @@ from core.tokens import oauth2_bearer
 from models import ProjectModel, UserModel
 from repository import ProjectRepository
 from enums import UpdateProjectDataEnum
+from core.limiter import limiter
+
 
 # Project Router for handling project-related routes
 project_router = APIRouter(
@@ -40,7 +42,9 @@ async def get_user_projects(
 
 # Get projects that the user has been invited to; returns a list of invited projects
 @project_router.get('/invited-projects')
+@limiter.limit("1/minute", per_method=True)
 async def get_invited_projects(
+	request: Request,
 	session: Session = Depends(get_session),
 	token: str = Depends(oauth2_bearer)
 ):
@@ -120,7 +124,9 @@ async def delete_project(
 
 # Update project information using the provided data and project_id
 @project_router.patch("/update/{project_id}")
+@limiter.limit("1/hour", per_method=True)
 async def update_project(
+	request: Request,
 	project_data: UpdateProjectDataEnum,
 	project_id: int,
 	session: Session = Depends(get_session),

@@ -16,11 +16,11 @@ POST http://127.0.0.1:8000/auth/register
 Content-Type: application/json
 
 {
-	"email": "deyume9@gmail.com",
-    "password": "deyume9",
-    "username": "deyume9",
-    "name": "deyume9",
-    "surname": "deyume9"
+	"email": "testdawdadawdaawdadaawdawddadwd2e3фцв4@gmail.com",
+    "password": "deyфвume92y4deyфвuDme92e92y4deyфвume92y4deyфвume92y4",
+    "username": "dewawadadaawdadyumeadwadфцв9233234",
+    "name": "deyume9243",
+    "surname": "deyume923"
 }
 
 ### Refresh Access/Refresh Tokens;
@@ -76,10 +76,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6I
 ### Create Project;
 POST http://127.0.0.1:8000/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ5NTc0N30.vWEnd9Y-8Q5J30Ir37KmvTptXJIbd3q4WKg7tgfPze0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODYyOTI0N30.BUse2N8qYDwfCCJVgshsmxsmEBBZrGqX0d9Am_--ooc
 
 {
-    "name": "YumeProject"
+    "name": "PPPP"
 }
 
 ### Invited User Projects;
@@ -134,14 +134,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6I
 ### Create Impact;
 POST http://127.0.0.1:8000/impacts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODQ4ODYzMn0.4s6May74EHJpAQDGEn3XLl0talfecxcwieK1wHowvPo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODYyOTI0N30.BUse2N8qYDwfCCJVgshsmxsmEBBZrGqX0d9Am_--ooc
 
 {
-    "title": "Impact2",
-    "description": "Some task to done 2",
-    "type": "FIX",
-    "impactPercent": 0,
-    "project_id": 1
+    "title": "awdawda",
+    "description": "dawdawd",
+    "type": "FEAT",
+    "impactPercent": 21313,
+    "project_id": 2
 }  
 
 ### Update Impact;

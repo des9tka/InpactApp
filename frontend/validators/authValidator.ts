@@ -19,8 +19,8 @@ const authRegisterValidationSchema = yup.object().shape({
 
 	password: yup
 		.string()
-		.min(2, "Min 2 characters.")
-		.max(100, "Max 20 characters.")
+		.min(4, "Min 4 characters.")
+		.max(20, "Max 20 characters.")
 		.matches(passwordRegExp, {
 			message:
 				"Password must include 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
@@ -46,7 +46,7 @@ const authLoginValidationSchema = yup.object().shape({
 	password: yup
 		.string()
 		.min(2)
-		.max(100)
+		.max(20)
 		.matches(passwordRegExp, {
 			message:
 				"Password must include 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
@@ -62,7 +62,7 @@ const recoveryPasswordValidationSchema = yup.object().shape({
 		.email("Invalid email.")
 		.required("Email required."),
 
-	password: yup.string().min(4).max(100).matches(passwordRegExp, {
+	password: yup.string().min(4).max(20).matches(passwordRegExp, {
 		message:
 			"Password must include 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
 	}),

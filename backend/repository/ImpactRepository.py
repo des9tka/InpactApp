@@ -23,6 +23,15 @@ class ImpactRepository:
 
         if not result:
             raise HTTPException(status_code=404, detail="User or project not found")
+
+        query = select(ImpactModel).where(
+            (ImpactModel.user_id == user_id) & 
+            (ImpactModel.project_id == impact_data.project_id)
+        )
+        result = session.exec(query).all()
+
+        if len(result) == 10:
+            raise HTTPException(status_code=400, detail="Limit is 10 impacts for this project")
         
         # Set the user ID and default impact percentage
         impact_data.user_id = user_id

@@ -3,6 +3,7 @@ from datetime import date
 from typing import Optional, Annotated, List, TYPE_CHECKING
 
 from services import ProjectServicesStore
+from enums.model_validators import ProjectValidator
 from models.RelationsModels import UserProjectModel
 
 # To avoid circular imports, TYPE_CHECKING is used
@@ -16,7 +17,7 @@ class ProjectModel(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     
     # The name of the project with a maximum length of 50 characters
-    name: Annotated[str, (0, 50)] = Field(..., max_length=50)
+    name: Annotated[str, (2, 50)] = Field(..., max_length=50, min_length=2)
     
     # The ID of the founder (foreign key referencing the User model)
     founder_id: int = Field(foreign_key="user.id")
@@ -30,6 +31,16 @@ class ProjectModel(SQLModel, table=True):
     # Relationship to the UserModel, indicating that each project can have many users
     users: List["UserModel"] = Relationship(back_populates="projects", link_model=UserProjectModel)
 
+    @classmethod
+    def validate_project_data(cls, values):
+        # Custom validation logic for the entire user object
+        name = values.name if hasattr(values, 'name') else None
+
+        # Use UserValidator to validate individual fields
+        if name:
+            ProjectValidator.validate_project_name(name)
+        return values
+
     class Config:
         # This ensures that attributes are mapped from the response model
         from_attributes = True
@@ -37,6 +48,7 @@ class ProjectModel(SQLModel, table=True):
     # Class method to create a new project
     @classmethod
     def create_project(cls, session: Session, project_data):
+        cls.validate_project_data(project_data)
         return ProjectServicesStore.createProjectService(
             session=session,
             project_data=project_data,

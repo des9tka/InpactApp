@@ -10,6 +10,7 @@ from core.tokens import oauth2_bearer
 from enums import RegisterUserEnum, RecoveryPasswordRequestEnum, RecoveryDataEnum, AuthRefreshRequest
 from core.limiter import limiter
 
+
 # Create the router for authentication-related endpoints
 auth_router = APIRouter(
     prefix="/auth",
@@ -18,7 +19,7 @@ auth_router = APIRouter(
 
 # Login endpoint with rate limiting
 @auth_router.post("/login")
-@limiter.limit("6/minute", per_method=True)
+@limiter.limit("10/minute", per_method=True)
 async def login(
 	request: Request,
 	background_tasks: BackgroundTasks,
@@ -29,7 +30,7 @@ async def login(
 
 # Register endpoint with rate limiting
 @auth_router.post("/register")
-@limiter.limit("1/minute", per_method=True)
+@limiter.limit("10/minute", per_method=True)
 async def register(
 	request: Request,
     user_data: RegisterUserEnum, 
@@ -40,7 +41,7 @@ async def register(
 
 # Refresh token endpoint with rate limiting
 @auth_router.get("/refresh/{refresh_token}")
-# @limiter.limit("1/hour", per_method=True)
+@limiter.limit("12/hour", per_method=True)
 async def refresh(
 	request: Request,
     refresh_token: str,
@@ -66,7 +67,7 @@ async def activate(
 
 # Password recovery request endpoint with rate limiting
 @auth_router.post("/recovery_request")
-@limiter.limit("4/day", per_method=True)
+@limiter.limit("1/hour", per_method=True)
 async def recovery_request(
 	request: Request,
     background_tasks: BackgroundTasks,
@@ -81,7 +82,7 @@ async def recovery_request(
 
 # Password recovery endpoint with rate limiting
 @auth_router.post("/recovery")
-@limiter.limit("4/day", per_method=True)
+@limiter.limit("1/hour", per_method=True)
 async def recovery(
     request: Request,
     recovery_data: RecoveryDataEnum,

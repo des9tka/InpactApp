@@ -4,6 +4,7 @@ from datetime import date
 
 from services import UserServicesStore
 from models.RelationsModels import UserProjectModel
+from enums.model_validators import UserValidator
 
 # To avoid circular imports, TYPE_CHECKING is used
 if TYPE_CHECKING:
@@ -20,7 +21,7 @@ class UserModel(SQLModel, table=True):
     
     # Password field with a minimum length of 4 and max length of 25
     # This will be excluded from the output
-    password: str = Field(..., min_length=4, max_length=25, exclude=True)
+    password: str = Field(..., min_length=4, max_length=20, exclude=True)
     
     # Unique username for the user, with a minimum of 2 and maximum of 50 characters
     username: str = Field(..., min_length=2, max_length=50, unique=True)
@@ -41,6 +42,31 @@ class UserModel(SQLModel, table=True):
     # Many-to-many relationship with projects (via the UserProjectModel)
     projects: List["ProjectModel"] = Relationship(back_populates="users", link_model=UserProjectModel)
 
+
+    @classmethod
+    def validate_user_data(cls, values):
+        # Custom validation logic for the entire user object
+        password = values.password if hasattr(values, 'password') else None
+        name = values.name if hasattr(values, 'name') else None
+        surname = values.surname if hasattr(values, 'surname') else None
+        username = values.username if hasattr(values, 'username') else None
+        email = values.email if hasattr(values, 'email') else None
+
+        # Use UserValidator to validate individual fields
+        if password:
+            UserValidator.validate_password(password)
+        if name:
+            UserValidator.validate_name(name)
+        if surname:
+            UserValidator.validate_name(surname)
+        if username:
+            UserValidator.validate_username(username)
+        if email:
+            UserValidator.validate_email(email)
+        
+        return values
+
+
     class Config:
         # This ensures that attributes are mapped from the response model
         from_attributes = True
@@ -48,6 +74,7 @@ class UserModel(SQLModel, table=True):
     # Class method to create a new user with hashed password
     @classmethod
     def create_user(cls, session: Session, user_data, hashed_password):
+        cls.validate_user_data(user_data)
         return UserServicesStore.createUserService(
             session=session,
             user_data=user_data,
