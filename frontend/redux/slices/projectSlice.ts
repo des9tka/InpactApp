@@ -8,6 +8,7 @@ import {
 	ApiResponse,
 	ApiResponseError,
 	createProjectType,
+	deleteUserFromProjectType,
 	getInviteUserType,
 	projectType,
 	updateProjectType,
@@ -174,6 +175,19 @@ const joinTeam = createAsyncThunk<ApiResponse, string>(
 	}
 );
 
+const deleteUserFromProject = createAsyncThunk<
+	deleteUserFromProjectType,
+	deleteUserFromProjectType
+>("projectSlice/deleteUserFromProject", async (body, { rejectWithValue }) => {
+	try {
+		await projectService.deleteUserFromProject(body.project_id, body.user_id);
+		return body;
+	} catch (err) {
+		const typedError = err as AxiosError<ApiResponseError>;
+		return rejectWithValue(typedError.response?.data?.detail);
+	}
+});
+
 const projectSlice = createSlice({
 	name: "projectSlice",
 	initialState,
@@ -315,6 +329,28 @@ const projectSlice = createSlice({
 			.addCase(getUsersFromProject.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Delete User From Project;
+			.addCase(deleteUserFromProject.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(deleteUserFromProject.fulfilled, (state, action) => {
+				state.loading = false;
+				if (action.payload.self) {
+					state.projects = state.projects.filter(
+						p => p.id !== action.payload.project_id
+					);
+				} else {
+					state.users = state.users.filter(
+						u => u.id !== action.payload.user_id
+					);
+				}
+			})
+			.addCase(deleteUserFromProject.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -335,6 +371,7 @@ const projectActions = {
 	inviteUser,
 	joinTeam,
 	getUsersFromProject,
+	deleteUserFromProject
 };
 
 export { projectActions, projectReducer };

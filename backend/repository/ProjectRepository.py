@@ -195,6 +195,7 @@ class ProjectRepository:
 
         # Ensure the user is not removing themselves
         if user_id == projectUser_id and project.founder_id == user_id:
+            print(user_id, projectUser_id, project.founder_id)
             raise HTTPException(detail="You cannot remove yourself from the project.", status_code=400)
 
         # Ensure the user is part of the project

@@ -1,10 +1,7 @@
 Refresh Token 
 Validation Equality
-Delete Project UnUpdate Issue		
 
 limiter 
 Rounded
 
-Error Request -> No limits
-
-Clean Up code
+Docker

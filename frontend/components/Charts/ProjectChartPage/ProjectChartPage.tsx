@@ -146,7 +146,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 							</div>
 
 							{/* Option to create a project if there are fewer than 3 projects */}
-							{projects.length < 3 && (
+							{projects.length < 3 && owner && (
 								<div
 									className="flex items-center justify-center gap-2 text-xl text-center cursor-pointer hover:text-green-500 bg-green-900 text-white p-2 rounded-md mt-8 z-50 relative"
 									onClick={() => {
@@ -160,15 +160,17 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 							)}
 
 							{/* Option to invite a user */}
-							<div
-								className={`flex items-center justify-center gap-2 text-xl text-center cursor-pointer hover:text-green-500 bg-green-900 text-white p-2 rounded-md z-50 relative ${
-									projects.length < 3 ? "mt-2" : "mt-8"
-								}`}
-								onClick={() => setInvite(true)}
-							>
-								Invite User
-								<UsersIcon size={20} />
-							</div>
+							{owner && (
+								<div
+									className={`flex items-center justify-center gap-2 text-xl text-center cursor-pointer hover:text-green-500 bg-green-900 text-white p-2 rounded-md z-50 relative ${
+										projects.length < 3 ? "mt-2" : "mt-8"
+									}`}
+									onClick={() => setInvite(true)}
+								>
+									Invite User
+									<UsersIcon size={20} />
+								</div>
+							)}
 						</div>
 					)}
 
@@ -186,13 +188,15 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 					{/* Project name with edit icon */}
 					<h2 className="text-5xl font-bold my-2 text-center flex gap-4 items-center">
 						{projects[pNumber]?.name}
-						<PencilIcon
-							className="hover:text-sky-500 mt-1"
-							onClick={() => {
-								setCreate(false);
-								setOpenCreateUpdateProject(!createUpdateProject);
-							}}
-						/>
+						{owner && (
+							<PencilIcon
+								className="hover:text-sky-500 mt-1"
+								onClick={() => {
+									setCreate(false);
+									setOpenCreateUpdateProject(!createUpdateProject);
+								}}
+							/>
+						)}
 					</h2>
 
 					{/* Chart rendering */}

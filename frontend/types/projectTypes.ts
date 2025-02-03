@@ -20,9 +20,16 @@ type addUserToProjectType = {
 	project_id: number;
 };
 
+type deleteUserFromProjectType = {
+	user_id: number;
+	project_id: number;
+	self?: boolean;
+};
+
 export type {
 	addUserToProjectType,
 	createProjectType,
 	projectType,
 	updateProjectType,
+	deleteUserFromProjectType
 };
