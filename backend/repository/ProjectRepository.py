@@ -162,6 +162,12 @@ class ProjectRepository:
         if not user_id or not project_id:
             raise HTTPException(detail="Missing user or project id.", status_code=400)
 
+        query = select(UserProjectModel).where(UserModel.id == user_id)
+        projects_with_user = session.exec(query).all()
+
+        if len(projects_with_user) == 10:
+            raise HTTPException(status_code=400, detail="You can join only in 7 projects.")
+
         # Add the user to the project
         user_project = UserProjectModel(user_id=user_id, project_id=project_id)
         session.add(user_project)

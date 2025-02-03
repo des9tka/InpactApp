@@ -42,9 +42,7 @@ async def get_user_projects(
 
 # Get projects that the user has been invited to; returns a list of invited projects
 @project_router.get('/invited-projects')
-@limiter.limit("1/minute", per_method=True)
 async def get_invited_projects(
-	request: Request,
 	session: Session = Depends(get_session),
 	token: str = Depends(oauth2_bearer)
 ):
