@@ -4,7 +4,7 @@ import { Field, Formik } from "formik";
 import React, { Fragment, useEffect, useState } from "react";
 
 import { impactActions, useAppDispatch } from "@/redux";
-import { impactType } from "@/types";
+import { impactType, userType } from "@/types";
 
 // Colors for different impact types
 const typeColors: Record<string, string> = {
@@ -23,11 +23,12 @@ const typeColors: Record<string, string> = {
 
 const EditableImpactRow: React.FC<{
 	impact: impactType;
+	user: userType | null;
 	isEditing: boolean;
 	onEdit: () => void;
 	onCancel: () => void;
 	onSave: (values: impactType) => void;
-}> = ({ impact, isEditing, onEdit, onCancel, onSave }) => {
+}> = ({ impact, isEditing, onEdit, onCancel, onSave, user }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	return (
@@ -136,6 +137,16 @@ const EditableImpactRow: React.FC<{
 						</div>
 					</td>
 
+					<td className="py-3 px-4">
+						{user && (
+							<span className="text-sky-400">
+								@
+								{user.email.slice(0, 10) +
+									(user.email.length > 10 ? "..." : "")}
+							</span>
+						)}
+					</td>
+
 					{/* Actions */}
 					<td className="py-3 px-4">
 						{isEditing ? (
@@ -201,10 +212,11 @@ const EditableImpactRow: React.FC<{
 	);
 };
 
-const ImpactTable: React.FC<{ impacts: impactType[]; projectId: number }> = ({
-	impacts,
-	projectId,
-}) => {
+const ImpactTable: React.FC<{
+	impacts: impactType[];
+	projectId: number;
+	users: userType[];
+}> = ({ impacts, projectId, users }) => {
 	const [editableId, setEditableId] = useState<number | null>(null);
 	const dispatch = useAppDispatch();
 
@@ -221,8 +233,8 @@ const ImpactTable: React.FC<{ impacts: impactType[]; projectId: number }> = ({
 	}, [impacts.length, projectId, dispatch]);
 
 	return (
-		<div className="overflow-x-auto p-4">
-			<table className="min-w-full border border-gray-700 shadow-lg rounded-lg bg-gray-900 text-gray-300">
+		<div className="overflow-x-auto p-4 rounded-lg">
+			<table className="min-w-full border border-gray-500 shadow-lg bg-gray-900 text-gray-300 rounded-xl">
 				<thead>
 					<tr className="bg-gray-800 text-white">
 						{[
@@ -231,6 +243,7 @@ const ImpactTable: React.FC<{ impacts: impactType[]; projectId: number }> = ({
 							"Impact Percent",
 							"Type",
 							"Created / Updated",
+							"Created By",
 							"Actions",
 						].map(header => (
 							<th
@@ -246,6 +259,7 @@ const ImpactTable: React.FC<{ impacts: impactType[]; projectId: number }> = ({
 					{impacts.map(impact => (
 						<EditableImpactRow
 							key={impact.id}
+							user={users.find(user => user.id === impact.user_id) || null}
 							impact={impact}
 							isEditing={editableId === impact.id}
 							onEdit={() => setEditableId(impact.id)}

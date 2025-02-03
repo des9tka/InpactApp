@@ -87,6 +87,7 @@ const DataPage: React.FC = () => {
 
 			{/* Render Impact Table */}
 			<ImpactTable
+				users={users}
 				impacts={currentImpacts}
 				projectId={parseInt(projectId || "", 10)}
 			/>
