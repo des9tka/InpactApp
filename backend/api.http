@@ -24,9 +24,9 @@ Content-Type: application/json
 }
 
 ### Refresh Access/Refresh Tokens;
-POST http://127.0.0.1:8000/auth/refresh
+GET http://127.0.0.1:8000/auth/refresh/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6InJlZnJlc2giLCJwcm9qZWN0X2lkIjpudWxsLCJleHAiOjE3Mzg1Nzc1NTl9.Wmw1fLg28cvrUWl3LHIEp42PdyHVG-KRG5bwAUIiU_U
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3MzgxNTYyMjd9.wFsh1Cm8LkxcGEzPhjRNjs_r9qsT-pIs0aM4rK-0pXA
+ 
 
 ### Activate Account;
 GET http://127.0.0.1:8000/auth/activate/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjdGl2YXRlIiwiZXhwIjoxNzM4MzYyMDYyfQ.vgWYkWaaNVQydIbhOpuyWU9hbfcyPP8KPjV6TJle9mg
@@ -53,7 +53,7 @@ Content-Type: application/json
 ### Get Users By;
 GET http://127.0.0.1:8000/users?id=1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODUzODM5NX0.0yftfTPBeNY3D7tXaW_uWOs1ZPaCR9v_ncA45fV4FdA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFjY2VzcyIsInByb2plY3RfaWQiOm51bGwsImV4cCI6MTczODU3NDY1NX0.9OKgP-QO6V10fdZ5tBAuchZBFKHJRJN5HRaORgvm0O4
 
 ### Update User;
 PATCH  http://127.0.0.1:8000/users/update

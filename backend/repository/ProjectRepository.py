@@ -185,17 +185,20 @@ class ProjectRepository:
 
         # Get project relation
         query = select(UserProjectModel).where(ProjectModel.id == project_id)
-        user_project = session.exec(query).first()
+        user_project = session.exec(query).all()
         
         if not project:
             raise HTTPException(detail="Project not found.", status_code=404)
+
+        # Ensure the user is a member of the project
+        user_ids = [up.user_id for up in user_project]
+        user_in_project = user_id in user_ids
         
-        if project.founder_id != user_id and user_project.user_id != user_id:
+        if project.founder_id != user_id and not user_in_project:
             raise HTTPException(detail="You are not the founder/user of this project to remove users.", status_code=400)
 
         # Ensure the user is not removing themselves
         if user_id == projectUser_id and project.founder_id == user_id:
-            print(user_id, projectUser_id, project.founder_id)
             raise HTTPException(detail="You cannot remove yourself from the project.", status_code=400)
 
         # Ensure the user is part of the project

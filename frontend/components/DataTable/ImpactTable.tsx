@@ -5,6 +5,8 @@ import React, { Fragment, useEffect, useState } from "react";
 
 import { impactActions, useAppDispatch } from "@/redux";
 import { impactType, userType } from "@/types";
+import { Trash2Icon } from "lucide-react";
+import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 
 // Colors for different impact types
 const typeColors: Record<string, string> = {
@@ -21,6 +23,11 @@ const typeColors: Record<string, string> = {
 	MERGE: "bg-cyan-500",
 };
 
+type SortConfig = {
+	key: keyof impactType | null;
+	direction: "asc" | "desc";
+};
+
 const EditableImpactRow: React.FC<{
 	impact: impactType;
 	user: userType | null;
@@ -30,6 +37,7 @@ const EditableImpactRow: React.FC<{
 	onSave: (values: impactType) => void;
 }> = ({ impact, isEditing, onEdit, onCancel, onSave, user }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const dispatch = useAppDispatch();
 
 	return (
 		<Formik initialValues={impact} onSubmit={onSave} enableReinitialize>
@@ -138,12 +146,14 @@ const EditableImpactRow: React.FC<{
 					</td>
 
 					<td className="py-3 px-4">
-						{user && (
+						{user ? (
 							<span className="text-sky-400">
 								@
 								{user.email.slice(0, 10) +
 									(user.email.length > 10 ? "..." : "")}
 							</span>
+						) : (
+							<span className="text-sm">N/A</span>
 						)}
 					</td>
 
@@ -170,13 +180,21 @@ const EditableImpactRow: React.FC<{
 								</button>
 							</div>
 						) : (
-							<button
-								type="button"
-								onClick={onEdit}
-								className="px-4 py-2 bg-sky-500 text-white rounded-md hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500"
-							>
-								Edit
-							</button>
+							<div className="flex items-center space-x-2">
+								<button
+									type="button"
+									onClick={onEdit}
+									className="px-4 py-2 bg-sky-500 text-white rounded-md hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500"
+								>
+									Edit
+								</button>
+								<Trash2Icon
+									className="cursor-pointer hover:text-red-500 text-red-700"
+									onClick={() =>
+										dispatch(impactActions.deleteImpact(impact.id))
+									}
+								/>
+							</div>
 						)}
 					</td>
 
@@ -218,45 +236,97 @@ const ImpactTable: React.FC<{
 	users: userType[];
 }> = ({ impacts, projectId, users }) => {
 	const [editableId, setEditableId] = useState<number | null>(null);
+	const [sortConfig, setSortConfig] = useState<SortConfig>({
+		key: null,
+		direction: "asc",
+	});
+	const [isReversed, setIsReversed] = useState(false);
 	const dispatch = useAppDispatch();
 
-	const handleSave = (values: impactType) => {
-		dispatch(impactActions.updateImpact(values));
-		setEditableId(null);
-	};
-
-	// Fetch impacts if not already available
 	useEffect(() => {
 		if (!impacts.length) {
 			dispatch(impactActions.getUserProjectImpacts(projectId));
 		}
 	}, [impacts.length, projectId, dispatch]);
 
+	const sortedImpacts = [...impacts].sort((a, b) => {
+		if (!sortConfig.key) return 0;
+		const key = sortConfig.key;
+		const direction = sortConfig.direction === "asc" ? 1 : -1;
+
+		if (key === "title") {
+			return direction * a.title.localeCompare(b.title);
+		} else if (key === "impactPercent") {
+			return direction * (a.impactPercent - b.impactPercent);
+		} else {
+			return 0;
+		}
+	});
+
+	if (isReversed) {
+		sortedImpacts.reverse();
+	}
+
+	const handleSort = (key: keyof impactType) => {
+		setSortConfig(prev => ({
+			key,
+			direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+		}));
+	};
+
+	const renderSortIcon = (key: keyof impactType) => {
+		if (sortConfig.key !== key) return <FaSort />;
+		return sortConfig.direction === "asc" ? <FaSortUp /> : <FaSortDown />;
+	};
+
 	return (
 		<div className="overflow-x-auto p-4 rounded-lg">
+			<div className="flex items-center mb-2">
+				<input
+					type="checkbox"
+					id="extraInfo"
+					className="hidden peer"
+					checked={isReversed}
+					onChange={() => setIsReversed(!isReversed)}
+				/>
+				<label
+					htmlFor="extraInfo"
+					className="w-4 h-4 flex items-center justify-center bg-gray-300 rounded-md cursor-pointer peer-checked:bg-sky-500 transition-colors duration-200"
+				></label>
+				<span className="text-gray-300 ml-2">Reverse</span>
+			</div>
 			<table className="min-w-full border border-gray-500 shadow-lg bg-gray-900 text-gray-300 rounded-xl">
 				<thead>
 					<tr className="bg-gray-800 text-white">
 						{[
-							"Title",
-							"Description",
-							"Impact Percent",
-							"Type",
-							"Created / Updated",
-							"Created By",
-							"Actions",
-						].map(header => (
+							{ key: "title", label: "Title" },
+							{ key: "description", label: "Description" },
+							{ key: "impactPercent", label: "Impact Percent" },
+							{ key: "type", label: "Type" },
+							{ key: "created_at", label: "Created / Updated" },
+							{ key: "user", label: "Created By" },
+							{ key: "actions", label: "Actions" },
+						].map(({ key, label }) => (
 							<th
-								key={header}
-								className="py-3 px-4 text-left text-sm font-semibold uppercase"
+								key={key}
+								onClick={() =>
+									(key == "title" || key == "impactPercent") &&
+									handleSort(key as keyof impactType)
+								}
+								className="py-3 px-4 text-left text-sm font-semibold uppercase cursor-pointer select-none whitespace-nowrap"
 							>
-								{header}
+								{label}
+								{(key == "title" || key == "impactPercent") && (
+									<span className="ml-1 inline-block">
+										{renderSortIcon(key as keyof impactType)}
+									</span>
+								)}
 							</th>
 						))}
 					</tr>
 				</thead>
 				<tbody>
-					{impacts.map(impact => (
+					{sortedImpacts.map(impact => (
 						<EditableImpactRow
 							key={impact.id}
 							user={users.find(user => user.id === impact.user_id) || null}
@@ -264,7 +334,10 @@ const ImpactTable: React.FC<{
 							isEditing={editableId === impact.id}
 							onEdit={() => setEditableId(impact.id)}
 							onCancel={() => setEditableId(null)}
-							onSave={handleSave}
+							onSave={values => {
+								dispatch(impactActions.updateImpact(values));
+								setEditableId(null);
+							}}
 						/>
 					))}
 				</tbody>

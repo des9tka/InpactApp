@@ -17,8 +17,8 @@ const authService = {
 	authLoginUser: (body: authLoginUserType): AxiosRes<TokensType> =>
 		axiosService.post(authUrls.loginUser(), body),
 
-	authRefreshTokens: (): AxiosRes<TokensType> =>
-		axiosService.post(authUrls.refreshTokens()),
+	authRefreshTokens: (refresh_token: string): AxiosRes<TokensType> =>
+		axiosService.get(authUrls.refreshTokens(refresh_token)),
 
 	authGetUserInfo: (): AxiosRes<userType> =>
 		axiosService.get(authUrls.getUserInfo()),

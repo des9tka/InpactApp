@@ -5,4 +5,6 @@ export const impactUrls = {
 	updateImpact: (impactId: number) => baseUrl + `/update/${impactId}`,
 	getImpactsOfProject: (project_id: number) =>
 		baseUrl + `/for-project/${project_id}`,
+
+	deleteImpact: (impactId: number) => baseUrl + `/delete/${impactId}`,
 };

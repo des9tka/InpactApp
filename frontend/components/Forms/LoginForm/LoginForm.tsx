@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector, userActions } from "@/redux";
 import { cookieService } from "@/services/cookieService";
 import { authLoginUserType } from "@/types";
 import { authLoginValidationSchema } from "@/validators";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 function LoginForm() {
 	const { errors: sliceErrors, loading } = useAppSelector(
@@ -17,6 +17,7 @@ function LoginForm() {
 	);
 	const dispatch = useAppDispatch();
 	const router = useRouter();
+	const param = useSearchParams();
 
 	// State to manage Forgot Password modal visibility
 	const [isForgot, setIsForgot] = useState<boolean>(false);
@@ -143,6 +144,9 @@ function LoginForm() {
 				{/* Display Error Messages if any */}
 				{sliceErrors && !isForgot && (
 					<p className="text-red-500 text-center">{sliceErrors}</p>
+				)}
+				{param.get("expired") && (
+					<div className="text-yellow-500 text-center">Session is expired</div>
 				)}
 			</form>
 		</div>

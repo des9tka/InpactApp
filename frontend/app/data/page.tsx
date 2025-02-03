@@ -39,6 +39,11 @@ const DataPage: React.FC = () => {
 			dispatch(impactActions.getUserProjectImpacts(projectIdNum));
 		}
 
+		// Fetch users only if not already loaded
+		if (!users.length && projectId) {
+			dispatch(projectActions.getUsersFromProject(parseInt(projectId, 10)));
+		}
+
 		// Filter impacts to only show the ones related to the current project
 		setCurrentImpacts(impacts.filter(i => i.project_id === projectIdNum));
 	}, [param, impacts, isLoaded, dispatch, router]);

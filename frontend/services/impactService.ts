@@ -14,6 +14,9 @@ const impactService = {
 
 	getImpactsOfProject: (projectId: number): AxiosRes<impactType[]> =>
 		axiosService.get(impactUrls.getImpactsOfProject(projectId)),
+
+	deleteImpact: (impactId: number): AxiosRes<impactType> =>
+		axiosService.delete(impactUrls.deleteImpact(impactId)),
 };
 
 export { impactService };

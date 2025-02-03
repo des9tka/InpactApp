@@ -7,7 +7,7 @@ from repository.AuthRepository import AuthRepository
 from models.UserModels import UserModel
 from enums.UserEnums import LoginUserEnum
 from core.tokens import oauth2_bearer
-from enums import RegisterUserEnum, RecoveryPasswordRequestEnum, RecoveryDataEnum
+from enums import RegisterUserEnum, RecoveryPasswordRequestEnum, RecoveryDataEnum, AuthRefreshRequest
 from core.limiter import limiter
 
 # Create the router for authentication-related endpoints
@@ -39,11 +39,11 @@ async def register(
     return await AuthRepository.register(session=session, user_data=user_data, background_tasks=background_tasks)
 
 # Refresh token endpoint with rate limiting
-@auth_router.post("/refresh")
-@limiter.limit("1/hour", per_method=True)
+@auth_router.get("/refresh/{refresh_token}")
+# @limiter.limit("1/hour", per_method=True)
 async def refresh(
 	request: Request,
-    refresh_token: str = Depends(oauth2_bearer),
+    refresh_token: str,
 ):
     return await AuthRepository.refresh(refresh_token=refresh_token)
 

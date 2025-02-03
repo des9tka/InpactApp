@@ -1,6 +1,7 @@
 "use client";
 import {
 	ChevronRightIcon,
+	DoorOpenIcon,
 	LoaderIcon,
 	MenuSquareIcon,
 	PencilIcon,
@@ -12,7 +13,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ChartBar, ChartLinear, ProjectCreateUpdateForm } from "@/components";
 import { InviteUserModal } from "@/components/Forms/InviteUserForm/InviteUserForm";
-import { impactActions, useAppDispatch, useAppSelector } from "@/redux";
+import {
+	impactActions,
+	projectActions,
+	useAppDispatch,
+	useAppSelector,
+} from "@/redux";
 import { impactType } from "@/types";
 import { RadioChartNav } from "../RadioChartNav/RadioChartNav";
 
@@ -39,6 +45,7 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 	const { my_projects, projects: invited_projects } = useAppSelector(
 		state => state.projectReducer
 	);
+	const { user } = useAppSelector(state => state.userReducer);
 
 	// Memoize projects to avoid unnecessary re-renders
 	const projects = useMemo(
@@ -188,12 +195,27 @@ function ProjectChartPage({ owner }: { owner: boolean }) {
 					{/* Project name with edit icon */}
 					<h2 className="text-5xl font-bold my-2 text-center flex gap-4 items-center">
 						{projects[pNumber]?.name}
-						{owner && (
+						{owner ? (
 							<PencilIcon
 								className="hover:text-sky-500 mt-1"
 								onClick={() => {
 									setCreate(false);
 									setOpenCreateUpdateProject(!createUpdateProject);
+								}}
+							/>
+						) : (
+							<DoorOpenIcon
+								className="hover:text-red-500 mt-1"
+								size={32}
+								onClick={() => {
+									if (user)
+										dispatch(
+											projectActions.deleteUserFromProject({
+												user_id: user.id,
+												project_id: projects[pNumber]?.id,
+												self: true,
+											})
+										);
 								}}
 							/>
 						)}

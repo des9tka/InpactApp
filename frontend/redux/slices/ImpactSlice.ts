@@ -59,6 +59,19 @@ const createImpact = createAsyncThunk<impactType, Partial<impactType>>(
 	}
 );
 
+const deleteImpact = createAsyncThunk<number, number>(
+	"projectSlice/deleteImpact",
+	async (impactId, { rejectWithValue }) => {
+		try {
+			await impactService.deleteImpact(impactId);
+			return impactId;
+		} catch (err) {
+			const typedError = err as AxiosError<ApiResponseError>;
+			return rejectWithValue(typedError.response?.data?.detail);
+		}
+	}
+);
+
 const impactSlice = createSlice({
 	name: "impactSlice",
 	initialState,
@@ -125,6 +138,20 @@ const impactSlice = createSlice({
 			.addCase(createImpact.rejected, (state, action) => {
 				state.loading = false;
 				state.errors = action.payload as string;
+			})
+
+			// Delete Impact;
+			.addCase(deleteImpact.pending, state => {
+				state.loading = true;
+				state.errors = null;
+			})
+			.addCase(deleteImpact.fulfilled, (state, action) => {
+				state.loading = false;
+				state.impacts = state.impacts.filter(i => i.id !== action.payload);
+			})
+			.addCase(deleteImpact.rejected, (state, action) => {
+				state.loading = false;
+				state.errors = action.payload as string;
 			}),
 });
 
@@ -139,6 +166,7 @@ const impactActions = {
 	setLoading,
 	updateImpact,
 	createImpact,
+	deleteImpact,
 };
 
 export { impactActions, impactReducer };

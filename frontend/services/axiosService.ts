@@ -1,103 +1,48 @@
 import { baseURL } from "@/config";
-import axios, {
-	AxiosError,
-	AxiosResponse,
-	InternalAxiosRequestConfig,
-} from "axios";
-import Cookies from "js-cookie";
+import axios, { AxiosResponse } from "axios";
 
-import { TokensType } from "@/types";
+import { authService } from "./authService";
 import { cookieService } from "./cookieService";
-
 
 export const axiosService = axios.create({
 	baseURL,
 });
 
 let isRefreshing = false;
-let failedQueue: any[] = [];
+axiosService.interceptors.request.use(config => {
+	const access = cookieService.getCookieAccessRefreshTokens()?.access_token;
 
-const processQueue = (error: any = null) => {
-	failedQueue.forEach(prom => {
-		if (error) {
-			prom.reject(error);
-		} else {
-			prom.resolve();
-		}
-	});
-
-	failedQueue = [];
-};
-
-axiosService.interceptors.request.use(
-	(config: InternalAxiosRequestConfig) => {
-		const accessToken =
-			cookieService.getCookieAccessRefreshTokens()?.access_token;
-
-		if (accessToken) {
-			config.headers.Authorization = `Bearer ${accessToken}`;
-		}
-
-		return config;
-	},
-	error => {
-		return Promise.reject(error);
+	if (access) {
+		config.headers.Authorization = `Bearer ${access}`;
 	}
-);
+	return config;
+});
 
 axiosService.interceptors.response.use(
-	(response: AxiosResponse) => {
-		return response;
-	},
-	async (error: AxiosError) => {
-		const originalRequest = error.config;
+	config => config,
+	async error => {
+		const refresh = cookieService.getCookieAccessRefreshTokens()?.refresh_token;
 
-		if (
-			error.response?.status === 401 &&
-			originalRequest &&
-			originalRequest.url !== "/auth/refresh"
-		) {
-			if (isRefreshing) {
-				return new Promise((resolve, reject) => {
-					failedQueue.push({ resolve, reject });
-				})
-					.then(() => {
-						return axiosService(originalRequest);
-					})
-					.catch(err => {
-						return Promise.reject(err);
-					});
-			}
-
+		if (error.response?.status === 401 && refresh && !isRefreshing) {
 			isRefreshing = true;
 
 			try {
-				const refreshToken =
+				const refresh_token =
 					cookieService.getCookieAccessRefreshTokens()?.refresh_token;
 
-				if (!refreshToken) {
-					throw new Error("No refresh token");
-				}
+				const { data } = await authService.authRefreshTokens(
+					refresh_token || ""
+				);
 
-				const response = await axiosService.post<TokensType>("/auth/refresh", {
-					refresh_token: refreshToken,
-				});
+				cookieService.deleteCookieAccessRefreshTokens();
+				cookieService.setCookieAccessRefreshTokens(data);
 
-				const { access_token, refresh_token } = response.data;
-				Cookies.set("access_token", access_token);
-				Cookies.set("refresh_token", refresh_token);
+				axiosService.defaults.headers.common.Authorization = `Bearer ${data.access_token}`;
 
-				originalRequest.headers.Authorization = `Bearer ${access_token}`;
-
-				processQueue();
-
-				return axiosService(originalRequest);
+				return axiosService(error.config);
 			} catch (err) {
-				processQueue(err);
-				Cookies.remove("access_token");
-				Cookies.remove("refresh_token");
-				window.location.href = "/login";
-				return Promise.reject(err);
+				cookieService.deleteCookieAccessRefreshTokens();
+				window.location.href = "/login?expired=true";
 			} finally {
 				isRefreshing = false;
 			}

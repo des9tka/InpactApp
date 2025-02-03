@@ -3,7 +3,6 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import { Loader } from "@/components";
-import { cookieService } from "@/services/cookieService";
 import { useAppDispatch, useAppSelector } from "./appDispatchHook";
 import { userActions } from "./slices";
 
@@ -17,13 +16,7 @@ const StoreSetupProvider = ({ children }: { children: React.ReactNode }) => {
 	useEffect(() => {
 		// If the user is not logged in and is trying to access restricted pages, set up user info
 		if (!user && (pathname === "/dashboard" || pathname === "/data")) {
-			dispatch(userActions.setUpUserInfo())
-				.then(() => setMounted(true))
-				.catch(e => {
-					// If error occurs, delete cookies and redirect to login page
-					cookieService.deleteCookieAccessRefreshTokens();
-					router.push("/login?expired=true");
-				});
+			dispatch(userActions.setUpUserInfo()).then(() => setMounted(true));
 		} else {
 			// If user exists or no restricted page is being accessed, just mount the component
 			setMounted(true);

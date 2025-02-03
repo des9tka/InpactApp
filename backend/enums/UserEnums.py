@@ -34,3 +34,6 @@ class UpdateUserDataEnum(BaseModel):
 	name: Optional[str] = None
 	username: Optional[str] = None
 	surname: Optional[str] = None
+
+class AuthRefreshRequest(BaseModel):
+	refresh_token: str

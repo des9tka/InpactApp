@@ -2,8 +2,6 @@ Refresh Token
 Validation Equality
 
 limiter 
-Rounded
-
-Table Sorting
 
 Docker
+
