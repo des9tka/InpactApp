@@ -1,6 +1,6 @@
 "use client";
 
-import { impactType } from "@/types";
+import { impactType } from "@/types"
 import {
 	CategoryScale,
 	Chart as ChartJS,
@@ -11,9 +11,9 @@ import {
 	PointElement,
 	Title,
 	Tooltip,
-} from "chart.js";
-import { useEffect, useMemo, useRef } from "react";
-import { Line } from "react-chartjs-2";
+} from "chart.js"
+import { useEffect, useMemo, useRef } from "react"
+import { Line } from "react-chartjs-2"
 
 // Register necessary components for the chart
 ChartJS.register(
@@ -63,7 +63,7 @@ function ChartLinear({ impacts }: { impacts: impactType[] }) {
 					backgroundColor: "rgba(0, 0, 0, 0.7)",
 					titleFont: {
 						size: 16,
-						weight: "bold",
+						weight: "bold" as const,
 						family: "'Arial', sans-serif",
 					},
 					bodyFont: {
@@ -123,4 +123,5 @@ function ChartLinear({ impacts }: { impacts: impactType[] }) {
 	);
 }
 
-export { ChartLinear };
+export { ChartLinear }
+
